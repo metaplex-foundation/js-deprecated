@@ -1,0 +1,23 @@
+# IDE & OS specific
+.DS_Store
+.idea
+
+# Logs
+logs
+*.log
+
+# Dependencies
+node_modules
+
+# Coverage
+coverage
+.nyc_output
+
+# Release
+lib
+
+# Generated docs
+doc
+
+# Tests
+test/dist
