@@ -21,3 +21,6 @@ doc
 
 # Tests
 test/dist
+
+# Ignored
+*.ignore.*
