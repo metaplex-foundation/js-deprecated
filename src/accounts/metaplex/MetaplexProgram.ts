@@ -1,5 +1,5 @@
-import { Program } from "../Program";
-import { PublicKey } from "@solana/web3.js";
+import { Program } from '../Program'
+import { PublicKey } from '@solana/web3.js'
 
 export enum MetaplexKey {
   Uninitialized = 0,
@@ -18,12 +18,10 @@ export enum MetaplexKey {
 }
 
 export class MetaplexProgram<T> extends Program<T> {
-  static readonly PREFIX = "metaplex";
-  static readonly PUBKEY = new PublicKey(
-    "p1exdMJcjVao65QdewkaZRUnU6VPSXhus9n2GzWfh98"
-  );
+  static readonly PREFIX = 'metaplex'
+  static readonly PUBKEY = new PublicKey('p1exdMJcjVao65QdewkaZRUnU6VPSXhus9n2GzWfh98')
 
   isOwner() {
-    return this.info?.owner.equals(MetaplexProgram.PUBKEY);
+    return this.info?.owner.equals(MetaplexProgram.PUBKEY)
   }
 }
