@@ -41,7 +41,7 @@ export class SafetyDepositBox extends VaultProgram<SafetyDepositBoxData> {
   }
 
   static async getPDA(vault: AnyPublicKey, mint: AnyPublicKey) {
-    return await SafetyDepositBox.findProgramAddress(
+    return SafetyDepositBox.findProgramAddress(
       [
         Buffer.from(VaultProgram.PREFIX),
         new PublicKey(vault).toBuffer(),

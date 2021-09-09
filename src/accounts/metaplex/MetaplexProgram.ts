@@ -1,5 +1,5 @@
 import { Program } from '../Program'
-import { PublicKey } from '@solana/web3.js'
+import { Commitment, Connection, GetProgramAccountsConfig, PublicKey } from '@solana/web3.js'
 
 export enum MetaplexKey {
   Uninitialized = 0,
@@ -23,5 +23,12 @@ export class MetaplexProgram<T> extends Program<T> {
 
   isOwner() {
     return this.info?.owner.equals(MetaplexProgram.PUBKEY)
+  }
+
+  getProgramAccounts(
+    connection: Connection,
+    configOrCommitment?: GetProgramAccountsConfig | Commitment,
+  ) {
+    return connection.getProgramAccounts(MetaplexProgram.PUBKEY, configOrCommitment)
   }
 }

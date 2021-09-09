@@ -1,5 +1,5 @@
 import { Program } from '../Program'
-import { PublicKey } from '@solana/web3.js'
+import { Commitment, Connection, GetProgramAccountsConfig, PublicKey } from '@solana/web3.js'
 
 export enum MetadataKey {
   Uninitialized = 0,
@@ -16,5 +16,12 @@ export class MetadataProgram<T> extends Program<T> {
 
   isOwner() {
     return this.info?.owner.equals(MetadataProgram.PUBKEY)
+  }
+
+  getProgramAccounts(
+    connection: Connection,
+    configOrCommitment?: GetProgramAccountsConfig | Commitment,
+  ) {
+    return connection.getProgramAccounts(MetadataProgram.PUBKEY, configOrCommitment)
   }
 }

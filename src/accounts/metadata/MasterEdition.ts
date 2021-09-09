@@ -1,7 +1,9 @@
-import { AccountInfo, PublicKey } from '@solana/web3.js'
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
+import bs58 from 'bs58'
 import { AnyPublicKey, StringPublicKey } from '../../types'
 import { borsh } from '../../utils'
+import { Edition } from './Edition'
 import { MetadataKey, MetadataProgram } from './MetadataProgram'
 
 export interface MasterEditionData {
@@ -68,7 +70,7 @@ export class MasterEdition extends MetadataProgram<MasterEditionData> {
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return await MasterEdition.findProgramAddress(
+    return MasterEdition.findProgramAddress(
       [
         Buffer.from(this.PREFIX),
         this.PUBKEY.toBuffer(),
@@ -89,5 +91,26 @@ export class MasterEdition extends MetadataProgram<MasterEditionData> {
 
   static isMasterEditionV2(data: Buffer) {
     return data[0] === MetadataKey.MasterEditionV2
+  }
+
+  async getEditions(connection: Connection) {
+    const accounts = await this.getProgramAccounts(connection, {
+      filters: [
+        {
+          memcmp: {
+            offset: 0,
+            bytes: bs58.encode(Buffer.from([MetadataKey.EditionV1])),
+          },
+        },
+        {
+          memcmp: {
+            offset: 1,
+            bytes: this.pubkey.toBase58(),
+          },
+        },
+      ],
+    })
+
+    return accounts.map(({ pubkey, account }) => new Edition(pubkey, account))
   }
 }

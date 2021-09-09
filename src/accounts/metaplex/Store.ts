@@ -1,7 +1,9 @@
 import { AnyPublicKey, StringPublicKey } from '../../types'
 import { borsh } from '../../utils'
 import { MetaplexProgram, MetaplexKey } from './MetaplexProgram'
-import { AccountInfo } from '@solana/web3.js'
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js'
+import bs58 from 'bs58'
+import { WhitelistedCreator } from './WhitelistedCreator'
 
 export interface StoreData {
   key: MetaplexKey
@@ -36,5 +38,32 @@ export class Store extends MetaplexProgram<StoreData> {
 
   static isStore(data: Buffer) {
     return data[0] === MetaplexKey.StoreV1
+  }
+
+  static async getPDA(ownerAddress: AnyPublicKey) {
+    return MetaplexProgram.findProgramAddress(
+      [
+        Buffer.from(MetaplexProgram.PREFIX),
+        MetaplexProgram.PUBKEY.toBuffer(),
+        new PublicKey(ownerAddress).toBuffer(),
+      ],
+      MetaplexProgram.PUBKEY,
+    )
+  }
+
+  // TODO: we need some filter for current store
+  async getWhitelistedCreators(connection: Connection) {
+    const accounts = await this.getProgramAccounts(connection, {
+      filters: [
+        {
+          memcmp: {
+            offset: 0,
+            bytes: bs58.encode(Buffer.from([MetaplexKey.WhitelistedCreatorV1])),
+          },
+        },
+      ],
+    })
+
+    return accounts.map(({ pubkey, account }) => new WhitelistedCreator(pubkey, account))
   }
 }

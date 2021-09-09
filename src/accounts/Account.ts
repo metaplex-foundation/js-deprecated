@@ -32,13 +32,14 @@ export class Account<T> {
     pubkey: AnyPublicKey,
   ): Promise<T> {
     const info = await Account.getInfo(connection, pubkey)
+
     return new this(pubkey, info)
   }
 
   static async getInfo(connection: Connection, pubkey: AnyPublicKey) {
-    pubkey = new PublicKey(pubkey)
-    const info = await connection.getAccountInfo(pubkey)
-    if (!info) throw `Unable to find account: ${pubkey.toString()}`
+    const info = await connection.getAccountInfo(new PublicKey(pubkey))
+    if (!info) throw `Unable to find account: ${pubkey}`
+
     return { ...info, data: Buffer.from(info?.data) }
   }
 

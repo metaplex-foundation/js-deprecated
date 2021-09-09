@@ -1,9 +1,23 @@
-import { PublicKey } from '@solana/web3.js'
+import { PublicKey, Connection } from '@solana/web3.js'
 import { Account } from '../accounts'
 
 export abstract class Program<T> extends Account<T> {
   // abstract static readonly PREFIX: String;
-  // abstract static readonly PUBKEY: PublicKey;
+  // static readonly PUBKEY: PublicKey
+
+  static async findProgramAddress(seeds: (Buffer | Uint8Array)[], programPubkey: PublicKey) {
+    return (await PublicKey.findProgramAddress(seeds, programPubkey))[0]
+  }
+
+  // getProgramAccounts<T>(connection: Connection) {
+  //   console.log(this.PUBKEY)
+
+  //   // return connection.getProgramAccounts(Program.PUBKEY)
+  // }
+
+  // static async getProgramAccounts<T>(connection: Connection): Promise<T> {
+  //   return connection.getProgramAccounts(Program.PUBKEY)
+  // }
 
   // static async getProgramAccounts<T>(
   //   this: AccountConstructor<T>,
@@ -30,8 +44,4 @@ export abstract class Program<T> extends Account<T> {
   //     throw new Error(e)
   //   }
   // }
-
-  static async findProgramAddress(seeds: (Buffer | Uint8Array)[], programPubkey: PublicKey) {
-    return (await PublicKey.findProgramAddress(seeds, programPubkey))[0]
-  }
 }

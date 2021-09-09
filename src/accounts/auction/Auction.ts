@@ -1,8 +1,10 @@
 import { borsh } from '../../utils'
 import { AnyPublicKey, StringPublicKey } from '../../types'
 import { AuctionProgram } from './AuctionProgram'
-import { AccountInfo } from '@solana/web3.js'
+import { AccountInfo, Connection } from '@solana/web3.js'
 import BN from 'bn.js'
+import { BidderPot } from './BidderPot'
+import { BidderMetadata } from './BidderMetadata'
 
 export enum AuctionState {
   Created = 0,
@@ -140,5 +142,41 @@ export class Auction extends AuctionProgram<AuctionData & Partial<AuctionDataExt
 
   static isExtendedData(data: Buffer) {
     return data.length === Auction.EXTENDED_DATA_SIZE
+  }
+
+  async getBidderPots(connection: Connection) {
+    const accounts = await this.getProgramAccounts(connection, {
+      filters: [
+        {
+          dataSize: BidderPot.DATA_SIZE,
+        },
+        {
+          memcmp: {
+            offset: 32 + 32,
+            bytes: this.pubkey.toBase58(),
+          },
+        },
+      ],
+    })
+
+    return accounts.map(({ pubkey, account }) => new BidderPot(pubkey, account))
+  }
+
+  async getBidderMetadata(connection: Connection) {
+    const accounts = await this.getProgramAccounts(connection, {
+      filters: [
+        {
+          dataSize: BidderMetadata.DATA_SIZE,
+        },
+        {
+          memcmp: {
+            offset: 32,
+            bytes: this.pubkey.toBase58(),
+          },
+        },
+      ],
+    })
+
+    return accounts.map(({ pubkey, account }) => new BidderMetadata(pubkey, account))
   }
 }

@@ -83,30 +83,33 @@ export class Metadata extends MetadataProgram<MetadataData> {
     return data[0] === MetadataKey.MetadataV1
   }
 
-  async getEdition(connection: Connection) {
-    const mint = this.data?.mint
-    if (!mint) return
-    const pda = await Edition.getPDA(mint)
-    if (!pda) return
-    const info = await Account.getInfo(connection, pda)
-    const key = info?.data[0]
-    if (key === MetadataKey.EditionV1) {
-      return new Edition(pda, info)
-    } else if (key === MetadataKey.MasterEditionV1 || key === MetadataKey.MasterEditionV2) {
-      return new MasterEdition(pda, info)
-    }
-    return
-  }
-
-  async getPDA() {
-    if (!this.data?.mint) return
-    return await Metadata.findProgramAddress(
+  static async getPDA(mint: AnyPublicKey) {
+    return Metadata.findProgramAddress(
       [
         Buffer.from(MetadataProgram.PREFIX),
         MetadataProgram.PUBKEY.toBuffer(),
-        new PublicKey(this.data?.mint).toBuffer(),
+        new PublicKey(mint).toBuffer(),
       ],
       MetadataProgram.PUBKEY,
     )
+  }
+
+  async getEdition(connection: Connection) {
+    const mint = this.data?.mint
+    if (!mint) return
+
+    const pda = await Edition.getPDA(mint)
+    const info = await Account.getInfo(connection, pda)
+    const key = info?.data[0]
+
+    switch (key) {
+      case MetadataKey.EditionV1:
+        return new Edition(pda, info)
+      case MetadataKey.MasterEditionV1:
+      case MetadataKey.MasterEditionV2:
+        return new MasterEdition(pda, info)
+      default:
+        return
+    }
   }
 }

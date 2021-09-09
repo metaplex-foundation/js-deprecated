@@ -1,4 +1,4 @@
-import { AccountInfo } from '@solana/web3.js'
+import { AccountInfo, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import { AnyPublicKey, StringPublicKey } from '../../types'
 import { borsh } from '../../utils'
@@ -72,14 +72,18 @@ export class Vault extends VaultProgram<VaultData> {
     }
   }
 
-  static isVault(data: Buffer) {
-    return data[0] === VaultKey.VaultV1
-  }
-
-  async getPDA() {
+  static async getPDA(pubkey: AnyPublicKey) {
     return await Vault.findProgramAddress(
-      [Buffer.from(VaultProgram.PREFIX), VaultProgram.PUBKEY.toBuffer(), this.pubkey.toBuffer()],
+      [
+        Buffer.from(VaultProgram.PREFIX),
+        VaultProgram.PUBKEY.toBuffer(),
+        new PublicKey(pubkey).toBuffer(),
+      ],
       VaultProgram.PUBKEY,
     )
+  }
+
+  static isVault(data: Buffer) {
+    return data[0] === VaultKey.VaultV1
   }
 }

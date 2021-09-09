@@ -35,7 +35,7 @@ export class Edition extends MetadataProgram<EditionData> {
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return await Edition.findProgramAddress(
+    return Edition.findProgramAddress(
       [
         Buffer.from(this.PREFIX),
         this.PUBKEY.toBuffer(),

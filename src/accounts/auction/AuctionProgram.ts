@@ -1,5 +1,5 @@
 import { Program } from '../Program'
-import { PublicKey } from '@solana/web3.js'
+import { Commitment, Connection, GetProgramAccountsConfig, PublicKey } from '@solana/web3.js'
 
 export class AuctionProgram<T> extends Program<T> {
   static readonly PREFIX = 'auction'
@@ -7,5 +7,12 @@ export class AuctionProgram<T> extends Program<T> {
 
   isOwner() {
     return this.info?.owner.equals(AuctionProgram.PUBKEY)
+  }
+
+  getProgramAccounts(
+    connection: Connection,
+    configOrCommitment?: GetProgramAccountsConfig | Commitment,
+  ) {
+    return connection.getProgramAccounts(AuctionProgram.PUBKEY, configOrCommitment)
   }
 }
