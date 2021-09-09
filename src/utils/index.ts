@@ -1,1 +1,1 @@
-export * as borsh from './borsh'
+export * as borsh from './borsh';

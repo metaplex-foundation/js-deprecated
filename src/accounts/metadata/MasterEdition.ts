@@ -1,19 +1,19 @@
-import { AccountInfo, Connection, PublicKey } from '@solana/web3.js'
-import BN from 'bn.js'
-import bs58 from 'bs58'
-import { AnyPublicKey, StringPublicKey } from '../../types'
-import { borsh } from '../../utils'
-import { Edition } from './Edition'
-import { MetadataKey, MetadataProgram } from './MetadataProgram'
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import BN from 'bn.js';
+import bs58 from 'bs58';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { Edition } from './Edition';
+import { MetadataKey, MetadataProgram } from './MetadataProgram';
 
 export interface MasterEditionData {
-  key: MetadataKey
-  supply: BN
-  maxSupply?: BN
+  key: MetadataKey;
+  supply: BN;
+  maxSupply?: BN;
 
   /// V1 Only Field
   /// Can be used to mint tokens that give one-time permission to mint a single limited edition.
-  printingMint: StringPublicKey
+  printingMint: StringPublicKey;
   /// V1 Only Field
   /// If you don't know how many printing tokens you are going to need, but you do know
   /// you are going to need some amount in the future, you can use a token from this mint.
@@ -25,7 +25,7 @@ export interface MasterEditionData {
   /// but at the end we will. At the end it then burns this token with token-metadata to
   /// get the printing tokens it needs to give to bidders. Each bidder then redeems a printing token
   /// to get their limited editions.
-  oneTimePrintingAuthorizationMint: StringPublicKey
+  oneTimePrintingAuthorizationMint: StringPublicKey;
 }
 
 const masterEditionV2Struct = borsh.struct<MasterEditionData>(
@@ -36,10 +36,10 @@ const masterEditionV2Struct = borsh.struct<MasterEditionData>(
   ],
   [],
   (data) => {
-    data.key = MetadataKey.MasterEditionV2
-    return data
+    data.key = MetadataKey.MasterEditionV2;
+    return data;
   },
-)
+);
 
 const masterEditionV1Struct = borsh.struct<MasterEditionData>(
   [
@@ -49,22 +49,22 @@ const masterEditionV1Struct = borsh.struct<MasterEditionData>(
   ],
   [],
   (data) => {
-    data.key = MetadataKey.MasterEditionV1
-    return data
+    data.key = MetadataKey.MasterEditionV1;
+    return data;
   },
-)
+);
 
 export class MasterEdition extends MetadataProgram<MasterEditionData> {
-  static readonly EDITION_PREFIX = 'edition'
+  static readonly EDITION_PREFIX = 'edition';
 
   constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
-    super(key, info)
+    super(key, info);
 
     if (this.info && this.isOwner()) {
       if (MasterEdition.isMasterEditionV1(this.info.data)) {
-        this.data = masterEditionV1Struct.deserialize(this.info.data)
+        this.data = masterEditionV1Struct.deserialize(this.info.data);
       } else if (MasterEdition.isMasterEditionV2(this.info.data)) {
-        this.data = masterEditionV2Struct.deserialize(this.info.data)
+        this.data = masterEditionV2Struct.deserialize(this.info.data);
       }
     }
   }
@@ -78,19 +78,19 @@ export class MasterEdition extends MetadataProgram<MasterEditionData> {
         Buffer.from(MasterEdition.EDITION_PREFIX),
       ],
       this.PUBKEY,
-    )
+    );
   }
 
   static isMasterEdition(data: Buffer) {
-    return MasterEdition.isMasterEditionV1(data) || MasterEdition.isMasterEditionV2(data)
+    return MasterEdition.isMasterEditionV1(data) || MasterEdition.isMasterEditionV2(data);
   }
 
   static isMasterEditionV1(data: Buffer) {
-    return data[0] === MetadataKey.MasterEditionV1
+    return data[0] === MetadataKey.MasterEditionV1;
   }
 
   static isMasterEditionV2(data: Buffer) {
-    return data[0] === MetadataKey.MasterEditionV2
+    return data[0] === MetadataKey.MasterEditionV2;
   }
 
   async getEditions(connection: Connection) {
@@ -109,8 +109,8 @@ export class MasterEdition extends MetadataProgram<MasterEditionData> {
           },
         },
       ],
-    })
+    });
 
-    return accounts.map(({ pubkey, account }) => new Edition(pubkey, account))
+    return accounts.map(({ pubkey, account }) => new Edition(pubkey, account));
   }
 }

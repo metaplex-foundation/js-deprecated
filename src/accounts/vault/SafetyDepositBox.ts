@@ -1,19 +1,19 @@
-import { AccountInfo, PublicKey } from '@solana/web3.js'
-import { AnyPublicKey, StringPublicKey } from '../../types'
-import { borsh } from '../../utils'
-import { VaultKey, VaultProgram } from './VaultProgram'
+import { AccountInfo, PublicKey } from '@solana/web3.js';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { VaultKey, VaultProgram } from './VaultProgram';
 
 export interface SafetyDepositBoxData {
   /// Each token type in a vault has it's own box that contains it's mint and a look-back
-  key: VaultKey
+  key: VaultKey;
   /// VaultKey pointing to the parent vault
-  vault: StringPublicKey
+  vault: StringPublicKey;
   /// This particular token's mint
-  tokenMint: StringPublicKey
+  tokenMint: StringPublicKey;
   /// Account that stores the tokens under management
-  store: StringPublicKey
+  store: StringPublicKey;
   /// the order in the array of registries
-  order: number
+  order: number;
 }
 
 const safetyDepositStruct = borsh.struct<SafetyDepositBoxData>(
@@ -26,17 +26,17 @@ const safetyDepositStruct = borsh.struct<SafetyDepositBoxData>(
   ],
   [],
   (data) => {
-    data.key = VaultKey.SafetyDepositBoxV1
-    return data
+    data.key = VaultKey.SafetyDepositBoxV1;
+    return data;
   },
-)
+);
 
 export class SafetyDepositBox extends VaultProgram<SafetyDepositBoxData> {
   constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
-    super(key, info)
+    super(key, info);
 
     if (this.info && this.isOwner() && SafetyDepositBox.isSafetyDepositBox(this.info.data)) {
-      this.data = safetyDepositStruct.deserialize(this.info.data)
+      this.data = safetyDepositStruct.deserialize(this.info.data);
     }
   }
 
@@ -48,10 +48,10 @@ export class SafetyDepositBox extends VaultProgram<SafetyDepositBoxData> {
         new PublicKey(mint).toBuffer(),
       ],
       VaultProgram.PUBKEY,
-    )
+    );
   }
 
   static isSafetyDepositBox(data: Buffer) {
-    return data[0] === VaultKey.SafetyDepositBoxV1
+    return data[0] === VaultKey.SafetyDepositBoxV1;
   }
 }

@@ -1,5 +1,5 @@
-import { Commitment, clusterApiUrl, Connection as SolanaConnection } from '@solana/web3.js'
-import { ENV as ChainId } from '@solana/spl-token-registry'
+import { Commitment, clusterApiUrl, Connection as SolanaConnection } from '@solana/web3.js';
+import { ENV as ChainId } from '@solana/spl-token-registry';
 
 export const ENV: Record<string, { endpoint: string; ChainId: ChainId }> = {
   'mainnet-beta': {
@@ -22,11 +22,11 @@ export const ENV: Record<string, { endpoint: string; ChainId: ChainId }> = {
     endpoint: clusterApiUrl('devnet'),
     ChainId: ChainId.Devnet,
   },
-}
+};
 
 export class Connection extends SolanaConnection {
   constructor(endpoint: keyof typeof ENV | string = 'mainnet-beta', commitment?: Commitment) {
-    if (endpoint in ENV) endpoint = ENV[endpoint].endpoint
-    super(endpoint, commitment)
+    if (endpoint in ENV) endpoint = ENV[endpoint].endpoint;
+    super(endpoint, commitment);
   }
 }

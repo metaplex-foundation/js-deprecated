@@ -1,15 +1,15 @@
-import { AnyPublicKey } from '../../types'
-import { borsh } from '../../utils'
-import { MetaplexProgram, MetaplexKey } from './MetaplexProgram'
-import { AccountInfo } from '@solana/web3.js'
-import BN from 'bn.js'
+import { AnyPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { MetaplexProgram, MetaplexKey } from './MetaplexProgram';
+import { AccountInfo } from '@solana/web3.js';
+import BN from 'bn.js';
 
 export interface PrizeTrackingTicketData {
-  key: MetaplexKey
-  metadata: string
-  supplySnapshot: BN
-  expectedRedemptions: BN
-  redemptions: BN
+  key: MetaplexKey;
+  metadata: string;
+  supplySnapshot: BN;
+  expectedRedemptions: BN;
+  redemptions: BN;
 }
 
 const prizeTrackingTicketStruct = borsh.struct<PrizeTrackingTicketData>(
@@ -22,21 +22,21 @@ const prizeTrackingTicketStruct = borsh.struct<PrizeTrackingTicketData>(
   ],
   [],
   (data) => {
-    data.key = MetaplexKey.PrizeTrackingTicketV1
-    return data
+    data.key = MetaplexKey.PrizeTrackingTicketV1;
+    return data;
   },
-)
+);
 
 export class PrizeTrackingTicket extends MetaplexProgram<PrizeTrackingTicketData> {
   constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
-    super(pubkey, info)
+    super(pubkey, info);
 
     if (this.info && this.isOwner() && PrizeTrackingTicket.isPrizeTrackingTicket(this.info.data)) {
-      this.data = prizeTrackingTicketStruct.deserialize(this.info.data)
+      this.data = prizeTrackingTicketStruct.deserialize(this.info.data);
     }
   }
 
   static isPrizeTrackingTicket(data: Buffer) {
-    return data[0] === MetaplexKey.PrizeTrackingTicketV1
+    return data[0] === MetaplexKey.PrizeTrackingTicketV1;
   }
 }

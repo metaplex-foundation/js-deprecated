@@ -1,12 +1,12 @@
-import { PublicKey, Connection } from '@solana/web3.js'
-import { Account } from '../accounts'
+import { PublicKey, Connection } from '@solana/web3.js';
+import { Account } from '../accounts';
 
 export abstract class Program<T> extends Account<T> {
   // abstract static readonly PREFIX: String;
   // static readonly PUBKEY: PublicKey
 
   static async findProgramAddress(seeds: (Buffer | Uint8Array)[], programPubkey: PublicKey) {
-    return (await PublicKey.findProgramAddress(seeds, programPubkey))[0]
+    return (await PublicKey.findProgramAddress(seeds, programPubkey))[0];
   }
 
   // getProgramAccounts<T>(connection: Connection) {

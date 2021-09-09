@@ -1,13 +1,13 @@
-import { borsh } from '../../utils'
-import { AnyPublicKey, StringPublicKey } from '../../types'
-import { MetadataProgram, MetadataKey } from './MetadataProgram'
-import { AccountInfo, PublicKey } from '@solana/web3.js'
-import BN from 'bn.js'
+import { borsh } from '../../utils';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { MetadataProgram, MetadataKey } from './MetadataProgram';
+import { AccountInfo, PublicKey } from '@solana/web3.js';
+import BN from 'bn.js';
 
 export interface EditionData {
-  key: MetadataKey
-  parent: StringPublicKey
-  edition: BN
+  key: MetadataKey;
+  parent: StringPublicKey;
+  edition: BN;
 }
 
 const editionStruct = borsh.struct<EditionData>(
@@ -18,19 +18,19 @@ const editionStruct = borsh.struct<EditionData>(
   ],
   [],
   (data) => {
-    data.key = MetadataKey.EditionV1
-    return data
+    data.key = MetadataKey.EditionV1;
+    return data;
   },
-)
+);
 
 export class Edition extends MetadataProgram<EditionData> {
-  static readonly EDITION_PREFIX = 'edition'
+  static readonly EDITION_PREFIX = 'edition';
 
   constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
-    super(key, info)
+    super(key, info);
 
     if (this.info && this.isOwner() && Edition.isEdition(this.info.data)) {
-      this.data = editionStruct.deserialize(this.info.data)
+      this.data = editionStruct.deserialize(this.info.data);
     }
   }
 
@@ -43,10 +43,10 @@ export class Edition extends MetadataProgram<EditionData> {
         Buffer.from(Edition.EDITION_PREFIX),
       ],
       this.PUBKEY,
-    )
+    );
   }
 
   static isEdition(data: Buffer) {
-    return data[0] === MetadataKey.EditionV1
+    return data[0] === MetadataKey.EditionV1;
   }
 }

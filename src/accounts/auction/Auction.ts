@@ -1,10 +1,10 @@
-import { borsh } from '../../utils'
-import { AnyPublicKey, StringPublicKey } from '../../types'
-import { AuctionProgram } from './AuctionProgram'
-import { AccountInfo, Connection } from '@solana/web3.js'
-import BN from 'bn.js'
-import { BidderPot } from './BidderPot'
-import { BidderMetadata } from './BidderMetadata'
+import { borsh } from '../../utils';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { AuctionProgram } from './AuctionProgram';
+import { AccountInfo, Connection } from '@solana/web3.js';
+import BN from 'bn.js';
+import { BidderPot } from './BidderPot';
+import { BidderMetadata } from './BidderMetadata';
 
 export enum AuctionState {
   Created = 0,
@@ -24,19 +24,19 @@ export enum PriceFloorType {
 }
 
 export interface Bid {
-  key: StringPublicKey
-  amount: BN
+  key: StringPublicKey;
+  amount: BN;
 }
 
 const bidStruct = borsh.struct<Bid>([
   ['key', 'pubkeyAsString'],
   ['amount', 'u64'],
-])
+]);
 
 export interface BidState {
-  type: BidStateType
-  bids: Bid[]
-  max: BN
+  type: BidStateType;
+  bids: Bid[];
+  max: BN;
 }
 
 const bidStateStruct = borsh.struct<BidState>(
@@ -46,14 +46,14 @@ const bidStateStruct = borsh.struct<BidState>(
     ['max', 'u64'],
   ],
   [bidStruct],
-)
+);
 
 export interface PriceFloor {
-  type: PriceFloorType
+  type: PriceFloorType;
   // It's an array of 32 u8s, when minimum, only first 8 are used (a u64), when blinded price, the entire
   // thing is a hash and not actually a public key, and none is all zeroes
-  hash: Uint8Array
-  minPrice?: BN
+  hash: Uint8Array;
+  minPrice?: BN;
 }
 
 const priceFloorStruct = borsh.struct<PriceFloor>(
@@ -63,39 +63,39 @@ const priceFloorStruct = borsh.struct<PriceFloor>(
   ],
   [],
   (data) => {
-    if (!data.hash) data.hash = new Uint8Array(32)
+    if (!data.hash) data.hash = new Uint8Array(32);
     if (data.type === PriceFloorType.Minimum) {
       if (data.minPrice) {
-        data.hash.set(data.minPrice.toArrayLike(Buffer, 'le', 8), 0)
+        data.hash.set(data.minPrice.toArrayLike(Buffer, 'le', 8), 0);
       } else {
-        data.minPrice = new BN((data.hash || new Uint8Array(0)).slice(0, 8), 'le')
+        data.minPrice = new BN((data.hash || new Uint8Array(0)).slice(0, 8), 'le');
       }
     }
-    return data
+    return data;
   },
-)
+);
 
 export interface AuctionData {
   /// Pubkey of the authority with permission to modify this auction.
-  authority: StringPublicKey
+  authority: StringPublicKey;
   /// Token mint for the SPL token being used to bid
-  tokenMint: StringPublicKey
+  tokenMint: StringPublicKey;
   /// The time the last bid was placed, used to keep track of auction timing.
-  lastBid: BN | null
+  lastBid: BN | null;
   /// Slot time the auction was officially ended by.
-  endedAt: BN | null
+  endedAt: BN | null;
   /// End time is the cut-off point that the auction is forced to end by.
-  endAuctionAt: BN | null
+  endAuctionAt: BN | null;
   /// Gap time is the amount of time in slots after the previous bid at which the auction ends.
-  auctionGap: BN | null
+  auctionGap: BN | null;
   /// Minimum price for any bid to meet.
-  priceFloor: PriceFloor
+  priceFloor: PriceFloor;
   /// The state the auction is in, whether it has started or ended.
-  state: AuctionState
+  state: AuctionState;
   /// Auction Bids, each user may have one bid open at a time.
-  bidState: BidState
+  bidState: BidState;
   /// Used for precalculation on the front end, not a backend key
-  bidRedemptionKey?: StringPublicKey
+  bidRedemptionKey?: StringPublicKey;
 }
 
 const auctionDataStruct = borsh.struct<AuctionData>(
@@ -111,37 +111,37 @@ const auctionDataStruct = borsh.struct<AuctionData>(
     ['bidState', bidStateStruct.type],
   ],
   [priceFloorStruct, bidStateStruct],
-)
+);
 
 export interface AuctionDataExtended {
-  totalUncancelledBids: BN
-  tickSize: BN | null
-  gapTickSizePercentage: number | null
+  totalUncancelledBids: BN;
+  tickSize: BN | null;
+  gapTickSizePercentage: number | null;
 }
 
 const auctionDataExtendedStruct = borsh.struct<AuctionDataExtended>([
   ['totalUncancelledBids', 'u64'],
   ['tickSize', { kind: 'option', type: 'u64' }],
   ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
-])
+]);
 
 export class Auction extends AuctionProgram<AuctionData & Partial<AuctionDataExtended>> {
-  static readonly EXTENDED_DATA_SIZE = 8 + 9 + 2 + 200
+  static readonly EXTENDED_DATA_SIZE = 8 + 9 + 2 + 200;
 
   constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
-    super(pubkey, info)
+    super(pubkey, info);
 
     if (this.info && this.isOwner()) {
-      this.data = auctionDataStruct.deserialize(this.info.data)
+      this.data = auctionDataStruct.deserialize(this.info.data);
 
       if (Auction.isExtendedData(this.info.data)) {
-        Object.assign(this.data, auctionDataExtendedStruct.deserialize(this.info.data))
+        Object.assign(this.data, auctionDataExtendedStruct.deserialize(this.info.data));
       }
     }
   }
 
   static isExtendedData(data: Buffer) {
-    return data.length === Auction.EXTENDED_DATA_SIZE
+    return data.length === Auction.EXTENDED_DATA_SIZE;
   }
 
   async getBidderPots(connection: Connection) {
@@ -157,9 +157,9 @@ export class Auction extends AuctionProgram<AuctionData & Partial<AuctionDataExt
           },
         },
       ],
-    })
+    });
 
-    return accounts.map(({ pubkey, account }) => new BidderPot(pubkey, account))
+    return accounts.map(({ pubkey, account }) => new BidderPot(pubkey, account));
   }
 
   async getBidderMetadata(connection: Connection) {
@@ -175,8 +175,8 @@ export class Auction extends AuctionProgram<AuctionData & Partial<AuctionDataExt
           },
         },
       ],
-    })
+    });
 
-    return accounts.map(({ pubkey, account }) => new BidderMetadata(pubkey, account))
+    return accounts.map(({ pubkey, account }) => new BidderMetadata(pubkey, account));
   }
 }

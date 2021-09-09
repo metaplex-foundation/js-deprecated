@@ -1,6 +1,6 @@
 {
-  "name": "metaplex-js",
-  "version": "0.1.0",
+  "name": "@metaplex/js",
+  "version": "0.0.1",
   "license": "MIT",
   "description": "Metaplex JavaScript API",
   "keywords": [
@@ -17,6 +17,9 @@
   "scripts": {
     "build": "rimraf dist && tsc -p ./tsconfig.build.json",
     "dev": "tsc --watch -p ./tsconfig.build.json",
+    "fix:prettier": "prettier --write \"{src,test}/**/*.ts\"",
+    "fix:eslint": "eslint . --format stylish --fix",
+    "fix": "yarn fix:eslint && fix:prettier",
     "test": "jest",
     "test:watch": "jest --watch"
   },

@@ -1,5 +1,5 @@
-import { Program } from '../Program'
-import { PublicKey } from '@solana/web3.js'
+import { Program } from '../Program';
+import { Commitment, Connection, GetProgramAccountsConfig, PublicKey } from '@solana/web3.js';
 
 export enum VaultKey {
   Uninitialized = 0,
@@ -9,10 +9,17 @@ export enum VaultKey {
 }
 
 export class VaultProgram<T> extends Program<T> {
-  static readonly PREFIX = 'vault'
-  static readonly PUBKEY = new PublicKey('vau1zxA2LbssAUEF7Gpw91zMM1LvXrvpzJtmZ58rPsn')
+  static readonly PREFIX = 'vault';
+  static readonly PUBKEY = new PublicKey('vau1zxA2LbssAUEF7Gpw91zMM1LvXrvpzJtmZ58rPsn');
 
   isOwner() {
-    return this.info?.owner.equals(VaultProgram.PUBKEY)
+    return this.info?.owner.equals(VaultProgram.PUBKEY);
+  }
+
+  getProgramAccounts(
+    connection: Connection,
+    configOrCommitment?: GetProgramAccountsConfig | Commitment,
+  ) {
+    return connection.getProgramAccounts(VaultProgram.PUBKEY, configOrCommitment);
   }
 }
