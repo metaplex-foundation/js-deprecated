@@ -1,10 +1,11 @@
-import { AnyPublicKey, StringPublicKey } from "../../types";
-import { borsh } from "../../utils";
-import { MetaplexProgram, MetaplexKey } from "./MetaplexProgram";
-import { AccountInfo } from "@solana/web3.js";
-import BN from "bn.js";
-
-const struct = borsh.Struct.create;
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import BN from 'bn.js';
+import bs58 from 'bs58';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { Account } from '../Account';
+import Program, { MetaplexKey } from './MetaplexProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface PayoutTicketData {
   key: MetaplexKey;
@@ -12,33 +13,58 @@ export interface PayoutTicketData {
   amountPaid: BN;
 }
 
-const payoutTicketStruct = struct<PayoutTicketData>(
+const payoutTicketStruct = borsh.struct<PayoutTicketData>(
   [
-    ["key", "u8"],
-    ["recipient", "pubkeyAsString"],
-    ["amountPaid", "u64"],
+    ['key', 'u8'],
+    ['recipient', 'pubkeyAsString'],
+    ['amountPaid', 'u64'],
   ],
   [],
   (data) => {
     data.key = MetaplexKey.PayoutTicketV1;
     return data;
-  }
+  },
 );
 
-export class PayoutTicket extends MetaplexProgram<PayoutTicketData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class PayoutTicket extends Account<PayoutTicketData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (
-      this.info &&
-      this.isOwner() &&
-      PayoutTicket.isPayoutTicket(this.info.data)
-    ) {
-      this.data = payoutTicketStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!PayoutTicket.isPayoutTicket(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = payoutTicketStruct.deserialize(this.info.data);
   }
 
   static isPayoutTicket(data: Buffer) {
     return data[0] === MetaplexKey.PayoutTicketV1;
+  }
+
+  static async getPayoutTicketsByRecipient(connection: Connection, recipient: AnyPublicKey) {
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for PayoutTicketV1 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([MetaplexKey.PayoutTicketV1])),
+            },
+          },
+          // Filter for assigned to recipient
+          {
+            memcmp: {
+              offset: 1,
+              bytes: new PublicKey(recipient).toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => PayoutTicket.from(account));
   }
 }

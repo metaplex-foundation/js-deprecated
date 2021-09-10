@@ -1,8 +1,10 @@
-import { AnyPublicKey, StringPublicKey } from "../../types";
-import { MetaplexProgram, MetaplexKey } from "./MetaplexProgram";
-import { AccountInfo } from "@solana/web3.js";
-import BN from "bn.js";
-import bs58 from "bs58";
+import { AccountInfo } from '@solana/web3.js';
+import BN from 'bn.js';
+import bs58 from 'bs58';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { Account } from '../Account';
+import Program, { MetaplexKey } from './MetaplexProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export enum WinningConfigType {
   /// You may be selling your one-of-a-kind NFT for the first time, but not it's accompanying Metadata,
@@ -49,20 +51,16 @@ export enum TupleNumericType {
   U64 = 8,
 }
 
-const getBNFromData = (
-  data: Uint8Array,
-  offset: number,
-  dataType: TupleNumericType
-): BN => {
+const getBNFromData = (data: Uint8Array, offset: number, dataType: TupleNumericType): BN => {
   switch (dataType) {
     case TupleNumericType.U8:
-      return new BN(data[offset], "le");
+      return new BN(data[offset], 'le');
     case TupleNumericType.U16:
-      return new BN(data.slice(offset, offset + 2), "le");
+      return new BN(data.slice(offset, offset + 2), 'le');
     case TupleNumericType.U32:
-      return new BN(data.slice(offset, offset + 4), "le");
+      return new BN(data.slice(offset, offset + 4), 'le');
     case TupleNumericType.U64:
-      return new BN(data.slice(offset, offset + 8), "le");
+      return new BN(data.slice(offset, offset + 8), 'le');
   }
 };
 
@@ -93,24 +91,30 @@ export interface SafetyDepositConfigData {
   participationState: ParticipationStateV2 | null;
 }
 
-export class SafetyDepositConfig extends MetaplexProgram<SafetyDepositConfigData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class SafetyDepositConfig extends Account<SafetyDepositConfigData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (
-      this.info &&
-      this.isOwner() &&
-      SafetyDepositConfig.isSafetyDepositConfig(this.info.data)
-    ) {
-      this.data = this.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!SafetyDepositConfig.isSafetyDepositConfig(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = this.deserialize(this.info.data);
+  }
+
+  static isSafetyDepositConfig(data: Buffer) {
+    return data[0] === MetaplexKey.SafetyDepositConfigV1;
   }
 
   private deserialize(buffer: Buffer) {
     const data: SafetyDepositConfigData = {
       key: MetaplexKey.SafetyDepositConfigV1,
       auctionManager: bs58.encode(buffer.slice(1, 33)),
-      order: new BN(buffer.slice(33, 41), "le"),
+      order: new BN(buffer.slice(33, 41), 'le'),
       winningConfigType: buffer[41],
       amountType: buffer[42],
       lengthType: buffer[43],
@@ -119,7 +123,7 @@ export class SafetyDepositConfig extends MetaplexProgram<SafetyDepositConfigData
       participationState: null,
     };
 
-    let lengthOfArray = new BN(buffer.slice(44, 48), "le");
+    const lengthOfArray = new BN(buffer.slice(44, 48), 'le');
     let offset = 48;
 
     for (let i = 0; i < lengthOfArray.toNumber(); i++) {
@@ -141,7 +145,7 @@ export class SafetyDepositConfig extends MetaplexProgram<SafetyDepositConfigData
       offset += 3;
 
       if (buffer[offset] == 1) {
-        fixedPrice = new BN(buffer.slice(offset + 1, offset + 9), "le");
+        fixedPrice = new BN(buffer.slice(offset + 1, offset + 9), 'le');
         offset += 9;
       } else {
         offset += 1;
@@ -158,10 +162,7 @@ export class SafetyDepositConfig extends MetaplexProgram<SafetyDepositConfigData
       data.participationState = null;
     } else {
       // pick up participation state manually
-      const collectedToAcceptPayment = new BN(
-        buffer.slice(offset + 1, offset + 9),
-        "le"
-      );
+      const collectedToAcceptPayment = new BN(buffer.slice(offset + 1, offset + 9), 'le');
       offset += 9;
       data.participationState = {
         collectedToAcceptPayment,
@@ -169,9 +170,5 @@ export class SafetyDepositConfig extends MetaplexProgram<SafetyDepositConfigData
     }
 
     return data;
-  }
-
-  static isSafetyDepositConfig(data: Buffer) {
-    return data[0] === MetaplexKey.SafetyDepositConfigV1;
   }
 }

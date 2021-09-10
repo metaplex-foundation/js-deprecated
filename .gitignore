@@ -1,26 +1,45 @@
-# IDE & OS specific
-.DS_Store
-.idea
-
-# Logs
-logs
-*.log
+# Package manager
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
 
 # Dependencies
-node_modules
+node_modules/
 
-# Coverage
-coverage
-.nyc_output
+# ESLint
+.eslintcache
 
-# Release
-lib
+# Build and test
+dist/
+build/
+coverage/
 
-# Generated docs
-doc
+# JetBrains
+.idea/
 
-# Tests
-test/dist
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
 
-# Ignored
-*.ignore.*
+# Local History for Visual Studio Code
+.history/
+
+# Misc
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Cache
+.cache/
+
+# Env
+*keypair.json

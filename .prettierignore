@@ -1,2 +1,2 @@
-lib/
-test/dist
+dist
+node_modules

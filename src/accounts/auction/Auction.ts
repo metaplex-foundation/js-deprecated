@@ -1,10 +1,12 @@
-import { borsh } from "../../utils";
-import { AnyPublicKey, StringPublicKey } from "../../types";
-import { AuctionProgram } from "./AuctionProgram";
-import { AccountInfo } from "@solana/web3.js";
-import BN from "bn.js";
-
-const struct = borsh.Struct.create;
+import { AccountInfo, Connection } from '@solana/web3.js';
+import BN from 'bn.js';
+import { ERROR_INVALID_OWNER } from '../../errors';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { Account } from '../Account';
+import Program from './AuctionProgram';
+import { BidderMetadata } from './BidderMetadata';
+import { BidderPot } from './BidderPot';
 
 export enum AuctionState {
   Created = 0,
@@ -28,9 +30,9 @@ export interface Bid {
   amount: BN;
 }
 
-const bidStruct = struct<Bid>([
-  ["key", "pubkeyAsString"],
-  ["amount", "u64"],
+const bidStruct = borsh.struct<Bid>([
+  ['key', 'pubkeyAsString'],
+  ['amount', 'u64'],
 ]);
 
 export interface BidState {
@@ -39,13 +41,13 @@ export interface BidState {
   max: BN;
 }
 
-const bidStateStruct = struct<BidState>(
+const bidStateStruct = borsh.struct<BidState>(
   [
-    ["type", "u8"],
-    ["bids", [bidStruct.type]],
-    ["max", "u64"],
+    ['type', 'u8'],
+    ['bids', [bidStruct.type]],
+    ['max', 'u64'],
   ],
-  [bidStruct]
+  [bidStruct],
 );
 
 export interface PriceFloor {
@@ -56,26 +58,23 @@ export interface PriceFloor {
   minPrice?: BN;
 }
 
-const priceFloorStruct = struct<PriceFloor>(
+const priceFloorStruct = borsh.struct<PriceFloor>(
   [
-    ["type", "u8"],
-    ["hash", [32]],
+    ['type', 'u8'],
+    ['hash', [32]],
   ],
   [],
   (data) => {
     if (!data.hash) data.hash = new Uint8Array(32);
     if (data.type === PriceFloorType.Minimum) {
       if (data.minPrice) {
-        data.hash.set(data.minPrice.toArrayLike(Buffer, "le", 8), 0);
+        data.hash.set(data.minPrice.toArrayLike(Buffer, 'le', 8), 0);
       } else {
-        data.minPrice = new BN(
-          (data.hash || new Uint8Array(0)).slice(0, 8),
-          "le"
-        );
+        data.minPrice = new BN((data.hash || new Uint8Array(0)).slice(0, 8), 'le');
       }
     }
     return data;
-  }
+  },
 );
 
 export interface AuctionData {
@@ -101,19 +100,19 @@ export interface AuctionData {
   bidRedemptionKey?: StringPublicKey;
 }
 
-const auctionDataStruct = struct<AuctionData>(
+const auctionDataStruct = borsh.struct<AuctionData>(
   [
-    ["authority", "pubkeyAsString"],
-    ["tokenMint", "pubkeyAsString"],
-    ["lastBid", { kind: "option", type: "u64" }],
-    ["endedAt", { kind: "option", type: "u64" }],
-    ["endAuctionAt", { kind: "option", type: "u64" }],
-    ["auctionGap", { kind: "option", type: "u64" }],
-    ["priceFloor", priceFloorStruct.type],
-    ["state", "u8"],
-    ["bidState", bidStateStruct.type],
+    ['authority', 'pubkeyAsString'],
+    ['tokenMint', 'pubkeyAsString'],
+    ['lastBid', { kind: 'option', type: 'u64' }],
+    ['endedAt', { kind: 'option', type: 'u64' }],
+    ['endAuctionAt', { kind: 'option', type: 'u64' }],
+    ['auctionGap', { kind: 'option', type: 'u64' }],
+    ['priceFloor', priceFloorStruct.type],
+    ['state', 'u8'],
+    ['bidState', bidStateStruct.type],
   ],
-  [priceFloorStruct, bidStateStruct]
+  [priceFloorStruct, bidStateStruct],
 );
 
 export interface AuctionDataExtended {
@@ -122,33 +121,78 @@ export interface AuctionDataExtended {
   gapTickSizePercentage: number | null;
 }
 
-const auctionDataExtendedStruct = struct<AuctionDataExtended>([
-  ["totalUncancelledBids", "u64"],
-  ["tickSize", { kind: "option", type: "u64" }],
-  ["gapTickSizePercentage", { kind: "option", type: "u8" }],
+const auctionDataExtendedStruct = borsh.struct<AuctionDataExtended>([
+  ['totalUncancelledBids', 'u64'],
+  ['tickSize', { kind: 'option', type: 'u64' }],
+  ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
 ]);
 
-export class Auction extends AuctionProgram<
-  AuctionData & Partial<AuctionDataExtended>
-> {
+export class Auction extends Account<AuctionData> {
   static readonly EXTENDED_DATA_SIZE = 8 + 9 + 2 + 200;
 
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner()) {
-      this.data = auctionDataStruct.deserialize(this.info.data);
-
-      if (Auction.isExtendedData(this.info.data)) {
-        Object.assign(
-          this.data,
-          auctionDataExtendedStruct.deserialize(this.info.data)
-        );
-      }
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    this.data = auctionDataStruct.deserialize(this.info.data);
+    // if (Auction.isExtended(this.info.data)) {
+    //   Object.assign(this.data, auctionDataExtendedStruct.deserialize(this.info.data));
+    // }
   }
 
-  static isExtendedData(data: Buffer) {
+  static isExtended(data: Buffer) {
     return data.length === Auction.EXTENDED_DATA_SIZE;
+  }
+
+  // static getExtendedPDA(vault: AnyPublicKey) {
+  //   return Program.findProgramAddress([
+  //     Buffer.from(AuctionProgram.PREFIX),
+  //     AuctionProgram.PUBKEY.toBuffer(),
+  //     new PublicKey(vault).toBuffer(),
+  //     Buffer.from(AuctionProgram.EXTENDED),
+  //   ]);
+  // }
+
+  async getBidderPots(connection: Connection) {
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for BidderPot by data size
+          {
+            dataSize: BidderPot.DATA_SIZE,
+          },
+          // Filter for assigned to this auction
+          {
+            memcmp: {
+              offset: 32 + 32,
+              bytes: this.pubkey.toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => BidderPot.from(account));
+  }
+
+  async getBidderMetadata(connection: Connection) {
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for BidderMetadata by data size
+          {
+            dataSize: BidderMetadata.DATA_SIZE,
+          },
+          // Filter for assigned to this auction
+          {
+            memcmp: {
+              offset: 32,
+              bytes: this.pubkey.toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => BidderMetadata.from(account));
   }
 }

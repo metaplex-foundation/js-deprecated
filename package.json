@@ -1,6 +1,7 @@
 {
   "name": "@metaplex/js",
   "version": "0.0.1",
+  "license": "MIT",
   "description": "Metaplex JavaScript API",
   "keywords": [
     "nft",
@@ -8,115 +9,46 @@
     "solana",
     "blockchain"
   ],
-  "license": "MIT",
   "author": "Metaplex Maintainers <contact@metaplex.com>",
   "homepage": "https://metaplex.com",
   "repository": {
-    "type": "git",
     "url": "https://github.com/metaplex/js.git"
   },
-  "bugs": {
-    "url": "https://github.com/metaplex/js.git/issues"
-  },
-  "browser": {
-    "./lib/index.cjs.js": "./lib/index.browser.esm.js",
-    "./lib/index.esm.js": "./lib/index.browser.esm.js"
-  },
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "types": "lib/index.d.ts",
-  "browserslist": [
-    "defaults",
-    "not IE 11",
-    "maintained node versions"
-  ],
-  "files": [
-    "/lib",
-    "/src"
-  ],
   "scripts": {
-    "build": "npm run clean; cross-env NODE_ENV=production rollup -c; npm run type:gen;",
-    "build:browser-test": "rollup -c test/rollup.config.js",
-    "build:fixtures": "set -ex; ./test/fixtures/noop-program/build.sh",
-    "clean": "rimraf ./coverage ./lib",
-    "codecov": "set -ex; npm run test:cover; cat ./coverage/lcov.info | codecov",
-    "dev": "cross-env NODE_ENV=development rollup -c -w",
-    "doc": "set -ex; typedoc",
-    "tsnode": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" ts-node",
-    "type:gen": "./scripts/typegen.sh",
-    "lint": "set -ex; npm run pretty",
-    "lint:fix": "npm run pretty:fix",
-    "ok": "run-s lint test doc",
-    "pretty": "prettier --check '{,{src,test}/**/}*.{j,t}s'",
-    "pretty:fix": "prettier --write '{,{src,test}/**/}*.{j,t}s'",
-    "re": "semantic-release --repository-url git@github.com:metaplex/js.git",
-    "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register './test/**/*.test.ts'",
-    "test:cover": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' nyc --reporter=lcov mocha -r ts-node/register './test/**/*.test.ts'",
-    "test:browser": "TEST_LIVE=1 npm run build:browser-test && mocha-headless-chrome -f http://localhost:8080/mocha.html --timeout 180000",
-    "test:browser-with-server": "start-server-and-test 'http-server -p 8080' 8080 test:browser",
-    "test:live": "TEST_LIVE=1 npm run test"
+    "build": "rimraf dist && tsc -p ./tsconfig.build.json",
+    "dev": "tsc --watch -p ./tsconfig.build.json",
+    "fix:prettier": "prettier --write \"{src,test}/**/*.ts\"",
+    "fix:eslint": "eslint . --format stylish --fix",
+    "fix": "yarn fix:eslint && fix:prettier",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@babel/runtime": "^7.12.5",
     "@project-serum/anchor": "^0.14.0",
     "@solana/spl-token-registry": "^0.2.231",
     "@solana/web3.js": "^1.24.1",
+    "@types/bs58": "^4.0.1",
     "bn.js": "^5.2.0",
     "borsh": "^0.4.0",
     "bs58": "^4.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.13",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-typescript": "^7.12.16",
-    "@babel/register": "^7.12.13",
-    "@commitlint/config-conventional": "^13.1.0",
-    "@commitlint/travis-cli": "^13.1.0",
-    "@rollup/plugin-alias": "^3.1.2",
-    "@rollup/plugin-babel": "^5.2.3",
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-multi-entry": "^4.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@rollup/plugin-replace": "^3.0.0",
-    "@rollup/plugin-run": "^2.1.0",
-    "@types/bn.js": "^5.1.0",
-    "@types/bs58": "^4.0.1",
-    "@types/chai": "^4.2.15",
-    "@types/chai-as-promised": "^7.1.3",
-    "@types/express-serve-static-core": "^4.17.21",
-    "@types/mocha": "^9.0.0",
-    "@types/mz": "^2.7.3",
-    "@types/node": "^16.0.0",
-    "@types/node-fetch": "^2.5.8",
-    "@types/secp256k1": "^4.0.1",
-    "@types/sinon": "^10.0.0",
-    "chai": "^4.3.0",
-    "chai-as-promised": "^7.1.1",
-    "codecov": "^3.0.4",
-    "cross-env": "7.0.3",
-    "esm": "^3.2.25",
-    "http-server": "^13.0.0",
-    "mocha": "^8.2.1",
-    "mocha-headless-chrome": "^3.1.0",
-    "mockttp": "^2.0.1",
-    "mz": "^2.7.0",
-    "npm-run-all": "^4.1.5",
-    "nyc": "^15.1.0",
-    "prettier": "^2.3.0",
-    "rimraf": "3.0.2",
-    "rollup": "2.56.2",
-    "rollup-plugin-dts": "^3.0.1",
-    "rollup-plugin-node-polyfills": "^0.2.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "semantic-release": "^17.0.2",
-    "sinon": "^11.0.0",
-    "start-server-and-test": "^1.12.0",
-    "ts-node": "^10.0.0",
-    "tslib": "^2.1.0",
-    "typedoc": "^0.21.0-beta.2",
-    "typescript": "^4.3.2"
+    "@types/jest": "^27.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.30.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.1.0",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }

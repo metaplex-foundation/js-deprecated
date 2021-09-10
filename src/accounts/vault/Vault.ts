@@ -1,10 +1,12 @@
-import { AnyPublicKey, StringPublicKey } from "../../types";
-import { borsh } from "../../utils";
-import { VaultProgram, VaultKey } from "./VaultProgram";
-import BN from "bn.js";
-import { AccountInfo, PublicKey } from "@solana/web3.js";
-
-const struct = borsh.Struct.create;
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import BN from 'bn.js';
+import bs58 from 'bs58';
+import { Account } from '../Account';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { SafetyDepositBox } from './SafetyDepositBox';
+import Program, { VaultKey, VaultProgram } from './VaultProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export enum VaultState {
   Inactive = 0,
@@ -44,48 +46,74 @@ export interface VaultData {
   lockedPricePerShare: BN;
 }
 
-const vaultStruct = struct<VaultData>(
+const vaultStruct = borsh.struct<VaultData>(
   [
-    ["key", "u8"],
-    ["tokenProgram", "pubkeyAsString"],
-    ["fractionMint", "pubkeyAsString"],
-    ["authority", "pubkeyAsString"],
-    ["fractionTreasury", "pubkeyAsString"],
-    ["redeemTreasury", "pubkeyAsString"],
-    ["allowFurtherShareCreation", "u8"],
-    ["pricingLookupAddress", "pubkeyAsString"],
-    ["tokenTypeCount", "u8"],
-    ["state", "u8"],
-    ["lockedPricePerShare", "u64"],
+    ['key', 'u8'],
+    ['tokenProgram', 'pubkeyAsString'],
+    ['fractionMint', 'pubkeyAsString'],
+    ['authority', 'pubkeyAsString'],
+    ['fractionTreasury', 'pubkeyAsString'],
+    ['redeemTreasury', 'pubkeyAsString'],
+    ['allowFurtherShareCreation', 'u8'],
+    ['pricingLookupAddress', 'pubkeyAsString'],
+    ['tokenTypeCount', 'u8'],
+    ['state', 'u8'],
+    ['lockedPricePerShare', 'u64'],
   ],
   [],
   (data) => {
     data.key = VaultKey.VaultV1;
     return data;
-  }
+  },
 );
 
-export class Vault extends VaultProgram<VaultData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class Vault extends Account<VaultData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner() && Vault.isVault(this.info.data)) {
-      this.data = vaultStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!Vault.isVault(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = vaultStruct.deserialize(this.info.data);
   }
 
-  async getPDA() {
-    return await Vault.findProgramAddress(
-      [
-        Buffer.from(VaultProgram.PREFIX),
-        VaultProgram.PUBKEY.toBuffer(),
-        this.pubkey.toBuffer(),
-      ],
-      VaultProgram.PUBKEY
-    );
+  static async getPDA(pubkey: AnyPublicKey) {
+    return Program.findProgramAddress([
+      Buffer.from(VaultProgram.PREFIX),
+      VaultProgram.PUBKEY.toBuffer(),
+      new PublicKey(pubkey).toBuffer(),
+    ]);
   }
 
   static isVault(data: Buffer) {
     return data[0] === VaultKey.VaultV1;
+  }
+
+  async getSafetyDepositBoxes(connection: Connection) {
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for SafetyDepositBoxV1 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([VaultKey.SafetyDepositBoxV1])),
+            },
+          },
+          // Filter for assigned to this vault
+          {
+            memcmp: {
+              offset: 1,
+              bytes: this.pubkey.toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => SafetyDepositBox.from(account));
   }
 }

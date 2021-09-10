@@ -1,9 +1,9 @@
-import { borsh } from "../../utils";
-import { AnyPublicKey, StringPublicKey } from "../../types";
-import { VaultProgram, VaultKey } from "./VaultProgram";
-import { AccountInfo, PublicKey } from "@solana/web3.js";
-
-const struct = borsh.Struct.create;
+import { AccountInfo, PublicKey } from '@solana/web3.js';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { Account } from '../Account';
+import Program, { VaultKey, VaultProgram } from './VaultProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface SafetyDepositBoxData {
   /// Each token type in a vault has it's own box that contains it's mint and a look-back
@@ -18,43 +18,42 @@ export interface SafetyDepositBoxData {
   order: number;
 }
 
-const safetyDepositStruct = struct<SafetyDepositBoxData>(
+const safetyDepositStruct = borsh.struct<SafetyDepositBoxData>(
   [
-    ["key", "u8"],
-    ["vault", "pubkeyAsString"],
-    ["tokenMint", "pubkeyAsString"],
-    ["store", "pubkeyAsString"],
-    ["order", "u8"],
+    ['key', 'u8'],
+    ['vault', 'pubkeyAsString'],
+    ['tokenMint', 'pubkeyAsString'],
+    ['store', 'pubkeyAsString'],
+    ['order', 'u8'],
   ],
   [],
   (data) => {
     data.key = VaultKey.SafetyDepositBoxV1;
     return data;
-  }
+  },
 );
 
-export class SafetyDepositBox extends VaultProgram<SafetyDepositBoxData> {
-  constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class SafetyDepositBox extends Account<SafetyDepositBoxData> {
+  constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (
-      this.info &&
-      this.isOwner() &&
-      SafetyDepositBox.isSafetyDepositBox(this.info.data)
-    ) {
-      this.data = safetyDepositStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!SafetyDepositBox.isSafetyDepositBox(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = safetyDepositStruct.deserialize(this.info.data);
   }
 
   static async getPDA(vault: AnyPublicKey, mint: AnyPublicKey) {
-    return await SafetyDepositBox.findProgramAddress(
-      [
-        Buffer.from(VaultProgram.PREFIX),
-        VaultProgram.toPublicKey(vault).toBuffer(),
-        VaultProgram.toPublicKey(mint).toBuffer(),
-      ],
-      VaultProgram.PUBKEY
-    );
+    return Program.findProgramAddress([
+      Buffer.from(VaultProgram.PREFIX),
+      new PublicKey(vault).toBuffer(),
+      new PublicKey(mint).toBuffer(),
+    ]);
   }
 
   static isSafetyDepositBox(data: Buffer) {

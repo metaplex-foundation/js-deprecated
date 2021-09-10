@@ -1,4 +1,5 @@
-export * as utils from "./utils";
-export * as types from "./types";
-export * from "./accounts";
-export * from "./Connection";
+export * as Utils from './utils';
+export * as Errors from './errors';
+export * from './types';
+export * from './accounts';
+export * from './Connection';

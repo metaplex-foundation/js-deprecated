@@ -1,10 +1,10 @@
-import { borsh } from "../../utils";
-import { AnyPublicKey, StringPublicKey } from "../../types";
-import { AuctionProgram } from "./AuctionProgram";
-import { AccountInfo } from "@solana/web3.js";
-import BN from "bn.js";
-
-const struct = borsh.Struct.create;
+import { AccountInfo } from '@solana/web3.js';
+import BN from 'bn.js';
+import { Account } from '../Account';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import Program from './AuctionProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface BidderMetadataData {
   // Relationship with the bidder who's metadata this covers.
@@ -20,27 +20,29 @@ export interface BidderMetadataData {
   cancelled: boolean;
 }
 
-const bidderMetadataStruct = struct<BidderMetadataData>([
-  ["bidderPubkey", "pubkeyAsString"],
-  ["auctionPubkey", "pubkeyAsString"],
-  ["lastBid", "u64"],
-  ["lastBidTimestamp", "u64"],
-  ["cancelled", "u8"],
+const bidderMetadataStruct = borsh.struct<BidderMetadataData>([
+  ['bidderPubkey', 'pubkeyAsString'],
+  ['auctionPubkey', 'pubkeyAsString'],
+  ['lastBid', 'u64'],
+  ['lastBidTimestamp', 'u64'],
+  ['cancelled', 'u8'],
 ]);
 
-export class BidderMetadata extends AuctionProgram<BidderMetadataData> {
+export class BidderMetadata extends Account<BidderMetadataData> {
   static readonly DATA_SIZE = 32 + 32 + 8 + 8 + 1;
 
-  constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
+  constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (
-      this.info &&
-      this.isOwner() &&
-      BidderMetadata.isBidderMetadata(this.info.data)
-    ) {
-      this.data = bidderMetadataStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!BidderMetadata.isBidderMetadata(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = bidderMetadataStruct.deserialize(this.info.data);
   }
 
   static isBidderMetadata(data: Buffer) {
