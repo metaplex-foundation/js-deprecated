@@ -1,7 +1,9 @@
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
-import { MetaplexProgram, MetaplexKey } from './MetaplexProgram';
+import Program, { MetaplexProgram, MetaplexKey } from './MetaplexProgram';
 import { AccountInfo, PublicKey } from '@solana/web3.js';
+import { Account } from '../Account';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface WhitelistedCreatorData {
   key: MetaplexKey;
@@ -22,13 +24,19 @@ const whitelistedCreatorStruct = borsh.struct<WhitelistedCreatorData>(
     }),
 );
 
-export class WhitelistedCreator extends MetaplexProgram<WhitelistedCreatorData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class WhitelistedCreator extends Account<WhitelistedCreatorData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner() && WhitelistedCreator.isWhitelistedCreator(this.info.data)) {
-      this.data = whitelistedCreatorStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!WhitelistedCreator.isWhitelistedCreator(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = whitelistedCreatorStruct.deserialize(this.info.data);
   }
 
   static isWhitelistedCreator(data: Buffer) {
@@ -36,14 +44,11 @@ export class WhitelistedCreator extends MetaplexProgram<WhitelistedCreatorData> 
   }
 
   static async getPDA(store: AnyPublicKey, creator: AnyPublicKey) {
-    return MetaplexProgram.findProgramAddress(
-      [
-        Buffer.from(MetaplexProgram.PREFIX),
-        MetaplexProgram.PUBKEY.toBuffer(),
-        new PublicKey(store).toBuffer(),
-        new PublicKey(creator).toBuffer(),
-      ],
-      MetaplexProgram.PUBKEY,
-    );
+    return Program.findProgramAddress([
+      Buffer.from(MetaplexProgram.PREFIX),
+      MetaplexProgram.PUBKEY.toBuffer(),
+      new PublicKey(store).toBuffer(),
+      new PublicKey(creator).toBuffer(),
+    ]);
   }
 }

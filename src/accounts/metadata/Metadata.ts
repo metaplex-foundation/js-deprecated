@@ -4,7 +4,8 @@ import { borsh } from '../../utils';
 import { Account } from '../Account';
 import { Edition } from './Edition';
 import { MasterEdition } from './MasterEdition';
-import { MetadataKey, MetadataProgram } from './MetadataProgram';
+import Program, { MetadataKey, MetadataProgram } from './MetadataProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface Creator {
   address: StringPublicKey;
@@ -70,13 +71,19 @@ const dataStruct = borsh.struct<MetadataData>(
   [dataDataStruct],
 );
 
-export class Metadata extends MetadataProgram<MetadataData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class Metadata extends Account<MetadataData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner() && Metadata.isMetadata(this.info.data)) {
-      this.data = dataStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!Metadata.isMetadata(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = dataStruct.deserialize(this.info.data);
   }
 
   static isMetadata(data: Buffer) {
@@ -84,14 +91,11 @@ export class Metadata extends MetadataProgram<MetadataData> {
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return Metadata.findProgramAddress(
-      [
-        Buffer.from(MetadataProgram.PREFIX),
-        MetadataProgram.PUBKEY.toBuffer(),
-        new PublicKey(mint).toBuffer(),
-      ],
-      MetadataProgram.PUBKEY,
-    );
+    return Program.findProgramAddress([
+      Buffer.from(MetadataProgram.PREFIX),
+      MetadataProgram.PUBKEY.toBuffer(),
+      new PublicKey(mint).toBuffer(),
+    ]);
   }
 
   async getEdition(connection: Connection) {

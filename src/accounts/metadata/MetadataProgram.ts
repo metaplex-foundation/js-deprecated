@@ -1,5 +1,5 @@
+import { PublicKey } from '@solana/web3.js';
 import { Program } from '../Program';
-import { Commitment, Connection, GetProgramAccountsConfig, PublicKey } from '@solana/web3.js';
 
 export enum MetadataKey {
   Uninitialized = 0,
@@ -10,18 +10,13 @@ export enum MetadataKey {
   EditionMarker = 7,
 }
 
-export class MetadataProgram<T> extends Program<T> {
+export class MetadataProgram extends Program<{}> {
   static readonly PREFIX = 'metadata';
   static readonly PUBKEY = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
 
-  isOwner() {
-    return this.info?.owner.equals(MetadataProgram.PUBKEY);
-  }
-
-  getProgramAccounts(
-    connection: Connection,
-    configOrCommitment?: GetProgramAccountsConfig | Commitment,
-  ) {
-    return connection.getProgramAccounts(MetadataProgram.PUBKEY, configOrCommitment);
+  constructor() {
+    super(MetadataProgram.PUBKEY);
   }
 }
+
+export default new MetadataProgram();

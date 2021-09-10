@@ -1,8 +1,10 @@
-import { AnyPublicKey, StringPublicKey } from '../../types';
-import { MetaplexProgram, MetaplexKey } from './MetaplexProgram';
 import { AccountInfo } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { Account } from '../Account';
+import Program, { MetaplexKey } from './MetaplexProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export enum WinningConfigType {
   /// You may be selling your one-of-a-kind NFT for the first time, but not it's accompanying Metadata,
@@ -89,13 +91,19 @@ export interface SafetyDepositConfigData {
   participationState: ParticipationStateV2 | null;
 }
 
-export class SafetyDepositConfig extends MetaplexProgram<SafetyDepositConfigData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class SafetyDepositConfig extends Account<SafetyDepositConfigData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner() && SafetyDepositConfig.isSafetyDepositConfig(this.info.data)) {
-      this.data = this.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!SafetyDepositConfig.isSafetyDepositConfig(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = this.deserialize(this.info.data);
   }
 
   static isSafetyDepositConfig(data: Buffer) {

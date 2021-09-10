@@ -1,10 +1,12 @@
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
+import { Account } from '../Account';
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
 import { Edition } from './Edition';
-import { MetadataKey, MetadataProgram } from './MetadataProgram';
+import Program, { MetadataKey, MetadataProgram } from './MetadataProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface MasterEditionData {
   key: MetadataKey;
@@ -54,31 +56,32 @@ const masterEditionV1Struct = borsh.struct<MasterEditionData>(
   },
 );
 
-export class MasterEdition extends MetadataProgram<MasterEditionData> {
+export class MasterEdition extends Account<MasterEditionData> {
   static readonly EDITION_PREFIX = 'edition';
 
-  constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
+  constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (this.info && this.isOwner()) {
-      if (MasterEdition.isMasterEditionV1(this.info.data)) {
-        this.data = masterEditionV1Struct.deserialize(this.info.data);
-      } else if (MasterEdition.isMasterEditionV2(this.info.data)) {
-        this.data = masterEditionV2Struct.deserialize(this.info.data);
-      }
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
+    }
+
+    if (MasterEdition.isMasterEditionV1(this.info.data)) {
+      this.data = masterEditionV1Struct.deserialize(this.info.data);
+    } else if (MasterEdition.isMasterEditionV2(this.info.data)) {
+      this.data = masterEditionV2Struct.deserialize(this.info.data);
+    } else {
+      throw ERROR_INVALID_ACCOUNT_DATA();
     }
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return MasterEdition.findProgramAddress(
-      [
-        Buffer.from(this.PREFIX),
-        this.PUBKEY.toBuffer(),
-        new PublicKey(mint).toBuffer(),
-        Buffer.from(MasterEdition.EDITION_PREFIX),
-      ],
-      this.PUBKEY,
-    );
+    return Program.findProgramAddress([
+      Buffer.from(MetadataProgram.PREFIX),
+      MetadataProgram.PUBKEY.toBuffer(),
+      new PublicKey(mint).toBuffer(),
+      Buffer.from(MasterEdition.EDITION_PREFIX),
+    ]);
   }
 
   static isMasterEdition(data: Buffer) {
@@ -94,23 +97,25 @@ export class MasterEdition extends MetadataProgram<MasterEditionData> {
   }
 
   async getEditions(connection: Connection) {
-    const accounts = await this.getProgramAccounts(connection, {
-      filters: [
-        {
-          memcmp: {
-            offset: 0,
-            bytes: bs58.encode(Buffer.from([MetadataKey.EditionV1])),
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for EditionV1 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([MetadataKey.EditionV1])),
+            },
           },
-        },
-        {
-          memcmp: {
-            offset: 1,
-            bytes: this.pubkey.toBase58(),
+          // Filter for assigned to this master edition
+          {
+            memcmp: {
+              offset: 1,
+              bytes: this.pubkey.toBase58(),
+            },
           },
-        },
-      ],
-    });
-
-    return accounts.map(({ pubkey, account }) => new Edition(pubkey, account));
+        ],
+      })
+    ).map((account) => Edition.from(account));
   }
 }

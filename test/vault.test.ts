@@ -8,6 +8,6 @@ describe('Vault', () => {
   });
 
   describe('Vault', () => {
-    test('get vault account', async () => {});
+    test('load', async () => {});
   });
 });

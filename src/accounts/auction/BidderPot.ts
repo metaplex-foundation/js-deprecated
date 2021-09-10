@@ -1,7 +1,9 @@
 import { borsh } from '../../utils';
 import { AnyPublicKey, StringPublicKey } from '../../types';
-import { AuctionProgram } from './AuctionProgram';
+import Program from './AuctionProgram';
 import { AccountInfo } from '@solana/web3.js';
+import { Account } from '../Account';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface BiddePotData {
   /// Points at actual pot that is a token account
@@ -18,15 +20,22 @@ const bidderPotStruct = borsh.struct<BiddePotData>([
   ['emptied', 'u8'],
 ]);
 
-export class BidderPot extends AuctionProgram<BiddePotData> {
+export class BidderPot extends Account<BiddePotData> {
   static readonly DATA_SIZE = 32 + 32 + 32 + 1;
+  readonly PROGRAM = Program;
 
-  constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
+  constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (this.info && this.isOwner() && BidderPot.isBidderPot(this.info.data)) {
-      this.data = bidderPotStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!BidderPot.isBidderPot(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = bidderPotStruct.deserialize(this.info.data);
   }
 
   static isBidderPot(data: Buffer) {

@@ -1,7 +1,9 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
-import { VaultKey, VaultProgram } from './VaultProgram';
+import { Account } from '../Account';
+import Program, { VaultKey, VaultProgram } from './VaultProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface SafetyDepositBoxData {
   /// Each token type in a vault has it's own box that contains it's mint and a look-back
@@ -31,24 +33,27 @@ const safetyDepositStruct = borsh.struct<SafetyDepositBoxData>(
   },
 );
 
-export class SafetyDepositBox extends VaultProgram<SafetyDepositBoxData> {
-  constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class SafetyDepositBox extends Account<SafetyDepositBoxData> {
+  constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (this.info && this.isOwner() && SafetyDepositBox.isSafetyDepositBox(this.info.data)) {
-      this.data = safetyDepositStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!SafetyDepositBox.isSafetyDepositBox(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = safetyDepositStruct.deserialize(this.info.data);
   }
 
   static async getPDA(vault: AnyPublicKey, mint: AnyPublicKey) {
-    return SafetyDepositBox.findProgramAddress(
-      [
-        Buffer.from(VaultProgram.PREFIX),
-        new PublicKey(vault).toBuffer(),
-        new PublicKey(mint).toBuffer(),
-      ],
-      VaultProgram.PUBKEY,
-    );
+    return Program.findProgramAddress([
+      Buffer.from(VaultProgram.PREFIX),
+      new PublicKey(vault).toBuffer(),
+      new PublicKey(mint).toBuffer(),
+    ]);
   }
 
   static isSafetyDepositBox(data: Buffer) {

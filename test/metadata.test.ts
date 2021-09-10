@@ -12,7 +12,7 @@ describe('Metadata', () => {
   });
 
   describe('Metadata', () => {
-    test('get metadata account', async () => {
+    test('load', async () => {
       const metadata = await Metadata.load(connection, METADATA_PUBKEY);
 
       expect(metadata.pubkey).toEqual(METADATA_PUBKEY);
@@ -21,7 +21,7 @@ describe('Metadata', () => {
   });
 
   describe('Master edition', () => {
-    test('get editions', async () => {
+    test('getEditions', async () => {
       const masterEdition = await MasterEdition.load(connection, MASTER_EDITION_PUBKEY);
       const editions = await masterEdition.getEditions(connection);
 

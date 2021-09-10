@@ -1,10 +1,12 @@
-import { borsh } from '../../utils';
-import { AnyPublicKey, StringPublicKey } from '../../types';
-import { AuctionProgram } from './AuctionProgram';
 import { AccountInfo, Connection } from '@solana/web3.js';
 import BN from 'bn.js';
-import { BidderPot } from './BidderPot';
+import { ERROR_INVALID_OWNER } from '../../errors';
+import { AnyPublicKey, StringPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { Account } from '../Account';
+import Program from './AuctionProgram';
 import { BidderMetadata } from './BidderMetadata';
+import { BidderPot } from './BidderPot';
 
 export enum AuctionState {
   Created = 0,
@@ -125,58 +127,72 @@ const auctionDataExtendedStruct = borsh.struct<AuctionDataExtended>([
   ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
 ]);
 
-export class Auction extends AuctionProgram<AuctionData & Partial<AuctionDataExtended>> {
+export class Auction extends Account<AuctionData> {
   static readonly EXTENDED_DATA_SIZE = 8 + 9 + 2 + 200;
 
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner()) {
-      this.data = auctionDataStruct.deserialize(this.info.data);
-
-      if (Auction.isExtendedData(this.info.data)) {
-        Object.assign(this.data, auctionDataExtendedStruct.deserialize(this.info.data));
-      }
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    this.data = auctionDataStruct.deserialize(this.info.data);
+    // if (Auction.isExtended(this.info.data)) {
+    //   Object.assign(this.data, auctionDataExtendedStruct.deserialize(this.info.data));
+    // }
   }
 
-  static isExtendedData(data: Buffer) {
+  static isExtended(data: Buffer) {
     return data.length === Auction.EXTENDED_DATA_SIZE;
   }
 
-  async getBidderPots(connection: Connection) {
-    const accounts = await this.getProgramAccounts(connection, {
-      filters: [
-        {
-          dataSize: BidderPot.DATA_SIZE,
-        },
-        {
-          memcmp: {
-            offset: 32 + 32,
-            bytes: this.pubkey.toBase58(),
-          },
-        },
-      ],
-    });
+  // static getExtendedPDA(vault: AnyPublicKey) {
+  //   return Program.findProgramAddress([
+  //     Buffer.from(AuctionProgram.PREFIX),
+  //     AuctionProgram.PUBKEY.toBuffer(),
+  //     new PublicKey(vault).toBuffer(),
+  //     Buffer.from(AuctionProgram.EXTENDED),
+  //   ]);
+  // }
 
-    return accounts.map(({ pubkey, account }) => new BidderPot(pubkey, account));
+  async getBidderPots(connection: Connection) {
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for BidderPot by data size
+          {
+            dataSize: BidderPot.DATA_SIZE,
+          },
+          // Filter for assigned to this auction
+          {
+            memcmp: {
+              offset: 32 + 32,
+              bytes: this.pubkey.toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => BidderPot.from(account));
   }
 
   async getBidderMetadata(connection: Connection) {
-    const accounts = await this.getProgramAccounts(connection, {
-      filters: [
-        {
-          dataSize: BidderMetadata.DATA_SIZE,
-        },
-        {
-          memcmp: {
-            offset: 32,
-            bytes: this.pubkey.toBase58(),
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for BidderMetadata by data size
+          {
+            dataSize: BidderMetadata.DATA_SIZE,
           },
-        },
-      ],
-    });
-
-    return accounts.map(({ pubkey, account }) => new BidderMetadata(pubkey, account));
+          // Filter for assigned to this auction
+          {
+            memcmp: {
+              offset: 32,
+              bytes: this.pubkey.toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => BidderMetadata.from(account));
   }
 }

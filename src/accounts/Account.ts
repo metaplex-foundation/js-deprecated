@@ -2,28 +2,21 @@ import { AccountInfo, Commitment, PublicKey, Connection } from '@solana/web3.js'
 import { AnyPublicKey } from '../types';
 
 export type AccountConstructor<T> = {
-  new (pubkey: AnyPublicKey, info?: AccountInfo<Buffer>): T;
+  new (pubkey: AnyPublicKey, info: AccountInfo<Buffer>): T;
 };
 
-export class Account<T> {
+export class Account<T = unknown> {
   readonly pubkey: PublicKey;
-  readonly info?: AccountInfo<Buffer>;
-  data?: T;
+  readonly info: AccountInfo<Buffer>;
+  data: T;
 
   constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
     this.pubkey = new PublicKey(pubkey);
-    if (info) {
-      this.info = {
-        executable: !!info.executable,
-        owner: new PublicKey(info.owner),
-        lamports: info.lamports,
-        data: Buffer.from(info.data),
-      };
-    }
+    this.info = info;
   }
 
-  static from<T>(this: AccountConstructor<T>, pubkey: AnyPublicKey, info: AccountInfo<Buffer>): T {
-    return new this(pubkey, info);
+  static from<T>(this: AccountConstructor<T>, account: Account<unknown>) {
+    return new this(account.pubkey, account.info);
   }
 
   static async load<T>(
@@ -38,7 +31,9 @@ export class Account<T> {
 
   static async getInfo(connection: Connection, pubkey: AnyPublicKey) {
     const info = await connection.getAccountInfo(new PublicKey(pubkey));
-    if (!info) throw `Unable to find account: ${pubkey}`;
+    if (!info) {
+      throw new Error(`Unable to find account: ${pubkey}`);
+    }
 
     return { ...info, data: Buffer.from(info?.data) };
   }
@@ -87,6 +82,10 @@ export class Account<T> {
       acc.set(pubkeys[index], info);
       return acc;
     }, new Map<AnyPublicKey, AccountInfo<Buffer>>());
+  }
+
+  assertOwner(pubkey: AnyPublicKey) {
+    return this.info?.owner.equals(new PublicKey(pubkey));
   }
 
   toJSON() {

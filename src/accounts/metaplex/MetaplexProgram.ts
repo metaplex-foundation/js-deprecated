@@ -1,5 +1,5 @@
+import { PublicKey } from '@solana/web3.js';
 import { Program } from '../Program';
-import { Commitment, Connection, GetProgramAccountsConfig, PublicKey } from '@solana/web3.js';
 
 export enum MetaplexKey {
   Uninitialized = 0,
@@ -17,18 +17,13 @@ export enum MetaplexKey {
   AuctionWinnerTokenTypeTrackerV1 = 12,
 }
 
-export class MetaplexProgram<T> extends Program<T> {
+export class MetaplexProgram extends Program<{}> {
   static readonly PREFIX = 'metaplex';
   static readonly PUBKEY = new PublicKey('p1exdMJcjVao65QdewkaZRUnU6VPSXhus9n2GzWfh98');
 
-  isOwner() {
-    return this.info?.owner.equals(MetaplexProgram.PUBKEY);
-  }
-
-  getProgramAccounts(
-    connection: Connection,
-    configOrCommitment?: GetProgramAccountsConfig | Commitment,
-  ) {
-    return connection.getProgramAccounts(MetaplexProgram.PUBKEY, configOrCommitment);
+  constructor() {
+    super(MetaplexProgram.PUBKEY);
   }
 }
+
+export default new MetaplexProgram();

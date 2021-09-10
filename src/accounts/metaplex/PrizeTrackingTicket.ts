@@ -1,8 +1,10 @@
-import { AnyPublicKey } from '../../types';
-import { borsh } from '../../utils';
-import { MetaplexProgram, MetaplexKey } from './MetaplexProgram';
 import { AccountInfo } from '@solana/web3.js';
 import BN from 'bn.js';
+import { AnyPublicKey } from '../../types';
+import { borsh } from '../../utils';
+import { Account } from '../Account';
+import Program, { MetaplexKey } from './MetaplexProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface PrizeTrackingTicketData {
   key: MetaplexKey;
@@ -27,13 +29,19 @@ const prizeTrackingTicketStruct = borsh.struct<PrizeTrackingTicketData>(
   },
 );
 
-export class PrizeTrackingTicket extends MetaplexProgram<PrizeTrackingTicketData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class PrizeTrackingTicket extends Account<PrizeTrackingTicketData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner() && PrizeTrackingTicket.isPrizeTrackingTicket(this.info.data)) {
-      this.data = prizeTrackingTicketStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!PrizeTrackingTicket.isPrizeTrackingTicket(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = prizeTrackingTicketStruct.deserialize(this.info.data);
   }
 
   static isPrizeTrackingTicket(data: Buffer) {

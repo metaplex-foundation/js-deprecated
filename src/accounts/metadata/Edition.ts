@@ -1,8 +1,10 @@
 import { borsh } from '../../utils';
 import { AnyPublicKey, StringPublicKey } from '../../types';
-import { MetadataProgram, MetadataKey } from './MetadataProgram';
+import Program, { MetadataProgram, MetadataKey } from './MetadataProgram';
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
+import { Account } from '../Account';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface EditionData {
   key: MetadataKey;
@@ -23,27 +25,30 @@ const editionStruct = borsh.struct<EditionData>(
   },
 );
 
-export class Edition extends MetadataProgram<EditionData> {
+export class Edition extends Account<EditionData> {
   static readonly EDITION_PREFIX = 'edition';
 
-  constructor(key: AnyPublicKey, info?: AccountInfo<Buffer>) {
+  constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (this.info && this.isOwner() && Edition.isEdition(this.info.data)) {
-      this.data = editionStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!Edition.isEdition(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = editionStruct.deserialize(this.info.data);
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return Edition.findProgramAddress(
-      [
-        Buffer.from(this.PREFIX),
-        this.PUBKEY.toBuffer(),
-        new PublicKey(mint).toBuffer(),
-        Buffer.from(Edition.EDITION_PREFIX),
-      ],
-      this.PUBKEY,
-    );
+    return Program.findProgramAddress([
+      Buffer.from(MetadataProgram.PREFIX),
+      MetadataProgram.PUBKEY.toBuffer(),
+      new PublicKey(mint).toBuffer(),
+      Buffer.from(Edition.EDITION_PREFIX),
+    ]);
   }
 
   static isEdition(data: Buffer) {

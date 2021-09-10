@@ -1,10 +1,12 @@
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
+import { Account } from '../Account';
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
 import { SafetyDepositBox } from './SafetyDepositBox';
-import { VaultKey, VaultProgram } from './VaultProgram';
+import Program, { VaultKey, VaultProgram } from './VaultProgram';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export enum VaultState {
   Inactive = 0,
@@ -65,24 +67,27 @@ const vaultStruct = borsh.struct<VaultData>(
   },
 );
 
-export class Vault extends VaultProgram<VaultData> {
-  constructor(pubkey: AnyPublicKey, info?: AccountInfo<Buffer>) {
+export class Vault extends Account<VaultData> {
+  constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (this.info && this.isOwner() && Vault.isVault(this.info.data)) {
-      this.data = vaultStruct.deserialize(this.info.data);
+    if (!this.assertOwner(Program.pubkey)) {
+      throw ERROR_INVALID_OWNER();
     }
+
+    if (!Vault.isVault(this.info.data)) {
+      throw ERROR_INVALID_ACCOUNT_DATA();
+    }
+
+    this.data = vaultStruct.deserialize(this.info.data);
   }
 
   static async getPDA(pubkey: AnyPublicKey) {
-    return await Vault.findProgramAddress(
-      [
-        Buffer.from(VaultProgram.PREFIX),
-        VaultProgram.PUBKEY.toBuffer(),
-        new PublicKey(pubkey).toBuffer(),
-      ],
-      VaultProgram.PUBKEY,
-    );
+    return Program.findProgramAddress([
+      Buffer.from(VaultProgram.PREFIX),
+      VaultProgram.PUBKEY.toBuffer(),
+      new PublicKey(pubkey).toBuffer(),
+    ]);
   }
 
   static isVault(data: Buffer) {
@@ -90,23 +95,25 @@ export class Vault extends VaultProgram<VaultData> {
   }
 
   async getSafetyDepositBoxes(connection: Connection) {
-    const accounts = await this.getProgramAccounts(connection, {
-      filters: [
-        {
-          memcmp: {
-            offset: 0,
-            bytes: bs58.encode(Buffer.from([VaultKey.SafetyDepositBoxV1])),
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for SafetyDepositBoxV1 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([VaultKey.SafetyDepositBoxV1])),
+            },
           },
-        },
-        {
-          memcmp: {
-            offset: 1,
-            bytes: this.pubkey.toBase58(),
+          // Filter for assigned to this vault
+          {
+            memcmp: {
+              offset: 1,
+              bytes: this.pubkey.toBase58(),
+            },
           },
-        },
-      ],
-    });
-
-    return accounts.map(({ pubkey, account }) => new SafetyDepositBox(pubkey, account));
+        ],
+      })
+    ).map((account) => SafetyDepositBox.from(account));
   }
 }
