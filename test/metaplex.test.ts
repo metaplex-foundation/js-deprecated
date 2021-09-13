@@ -1,9 +1,11 @@
-import { PublicKey } from '@solana/web3.js';
-import { AuctionManager, Connection, MetaplexKey, PayoutTicket, Store } from '../src';
-
-const STORE_OWNER_PUBKEY = new PublicKey('7hKMAoCYJuBnBLmVTjswu7m6jcwyE8MYAP5hPijUT6nd');
-const STORE_PUBKEY = new PublicKey('DNQzo4Aggw8PneX7BGY7niEkB8wfNJwx6DpV9BLBUUFF');
-const AUCTION_MANAGER_PUBKEY = new PublicKey('Gjd1Mo8KLEgywxMKaDRhaoD2Fu8bzoVLZ8H7v761XXkf');
+import { Auction, AuctionManager, Connection, MetaplexKey, PayoutTicket, Store } from '../src';
+import {
+  AUCTION_MANAGER_PUBKEY,
+  AUCTION_PUBKEY,
+  STORE_OWNER_PUBKEY,
+  STORE_PUBKEY,
+  VAULT_PUBKEY,
+} from './utils';
 
 describe('Metaplex', () => {
   let connection: Connection;
@@ -34,10 +36,25 @@ describe('Metaplex', () => {
   });
 
   describe('Auction Manager', () => {
+    test('getPDA', async () => {
+      const auctionPDA = await Auction.getPDA(VAULT_PUBKEY);
+      const auctionManagerPDA = await AuctionManager.getPDA(auctionPDA);
+
+      expect(auctionPDA).toEqual(AUCTION_PUBKEY);
+      expect(auctionManagerPDA).toEqual(AUCTION_MANAGER_PUBKEY);
+    });
+
     test('load', async () => {
       const auctionManager = await AuctionManager.load(connection, AUCTION_MANAGER_PUBKEY);
 
       expect(auctionManager.data.key).toEqual(MetaplexKey.AuctionManagerV2);
+    });
+
+    test('getAuction', async () => {
+      const auctionManager = await AuctionManager.load(connection, AUCTION_MANAGER_PUBKEY);
+      const auction = await auctionManager.getAuction(connection);
+
+      expect(auction.pubkey).toEqual(AUCTION_PUBKEY);
     });
 
     test('getBidRedemptionTickets', async () => {

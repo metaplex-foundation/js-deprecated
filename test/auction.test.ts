@@ -1,7 +1,5 @@
-import { PublicKey } from '@solana/web3.js';
-import { Auction, AuctionState, Connection } from '../src';
-
-const AUCTION_PUBKEY = new PublicKey('BTE7AqJn4aG2MKZnaSTEgbQ4aCgPTDmphs5uxDnuDqvQ');
+import { Auction, AuctionExtended, AuctionState, Connection } from '../src';
+import { AUCTION_EXTENDED_PUBKEY, AUCTION_PUBKEY, VAULT_PUBKEY } from './utils';
 
 describe('Auction', () => {
   let connection: Connection;
@@ -30,6 +28,21 @@ describe('Auction', () => {
       const bidderMetadata = await auction.getBidderMetadata(connection);
 
       expect(bidderMetadata[0].data.auctionPubkey).toEqual(AUCTION_PUBKEY.toString());
+    });
+  });
+
+  describe('Auction Extended', () => {
+    test('getPDA', async () => {
+      const auctionExtendedPDA = await AuctionExtended.getPDA(VAULT_PUBKEY);
+
+      expect(auctionExtendedPDA).toEqual(AUCTION_EXTENDED_PUBKEY);
+    });
+
+    test('load', async () => {
+      const auctionExtended = await AuctionExtended.load(connection, AUCTION_EXTENDED_PUBKEY);
+
+      expect(auctionExtended.pubkey).toEqual(AUCTION_EXTENDED_PUBKEY);
+      expect(auctionExtended.data.totalUncancelledBids).toBeDefined();
     });
   });
 });

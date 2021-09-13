@@ -1,10 +1,10 @@
-import { AccountInfo, Connection } from '@solana/web3.js';
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { ERROR_INVALID_OWNER } from '../../errors';
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
 import { Account } from '../Account';
-import Program from './AuctionProgram';
+import Program, { AuctionProgram } from './AuctionProgram';
 import { BidderMetadata } from './BidderMetadata';
 import { BidderPot } from './BidderPot';
 
@@ -115,18 +115,6 @@ const auctionDataStruct = borsh.struct<AuctionData>(
   [priceFloorStruct, bidStateStruct],
 );
 
-export interface AuctionDataExtended {
-  totalUncancelledBids: BN;
-  tickSize: BN | null;
-  gapTickSizePercentage: number | null;
-}
-
-const auctionDataExtendedStruct = borsh.struct<AuctionDataExtended>([
-  ['totalUncancelledBids', 'u64'],
-  ['tickSize', { kind: 'option', type: 'u64' }],
-  ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
-]);
-
 export class Auction extends Account<AuctionData> {
   static readonly EXTENDED_DATA_SIZE = 8 + 9 + 2 + 200;
 
@@ -138,23 +126,15 @@ export class Auction extends Account<AuctionData> {
     }
 
     this.data = auctionDataStruct.deserialize(this.info.data);
-    // if (Auction.isExtended(this.info.data)) {
-    //   Object.assign(this.data, auctionDataExtendedStruct.deserialize(this.info.data));
-    // }
   }
 
-  static isExtended(data: Buffer) {
-    return data.length === Auction.EXTENDED_DATA_SIZE;
+  static getPDA(vault: AnyPublicKey) {
+    return Program.findProgramAddress([
+      Buffer.from(AuctionProgram.PREFIX),
+      AuctionProgram.PUBKEY.toBuffer(),
+      new PublicKey(vault).toBuffer(),
+    ]);
   }
-
-  // static getExtendedPDA(vault: AnyPublicKey) {
-  //   return Program.findProgramAddress([
-  //     Buffer.from(AuctionProgram.PREFIX),
-  //     AuctionProgram.PUBKEY.toBuffer(),
-  //     new PublicKey(vault).toBuffer(),
-  //     Buffer.from(AuctionProgram.EXTENDED),
-  //   ]);
-  // }
 
   async getBidderPots(connection: Connection) {
     return (

@@ -4,7 +4,7 @@ export enum ErrorCode {
   ERROR_DEPRECATED_ACCOUNT_DATA,
 }
 
-export class SDKError extends Error {
+export class MetaplexError extends Error {
   errorCode: ErrorCode;
 
   constructor(errorCode: ErrorCode, message: string) {
@@ -13,14 +13,14 @@ export class SDKError extends Error {
   }
 }
 
-export const ERROR_INVALID_OWNER: () => SDKError = () => {
-  return new SDKError(ErrorCode.ERROR_INVALID_OWNER, 'Invalid owner');
+export const ERROR_INVALID_OWNER: () => MetaplexError = () => {
+  return new MetaplexError(ErrorCode.ERROR_INVALID_OWNER, 'Invalid owner');
 };
 
-export const ERROR_INVALID_ACCOUNT_DATA: () => SDKError = () => {
-  return new SDKError(ErrorCode.ERROR_INVALID_ACCOUNT_DATA, 'Invalid data');
+export const ERROR_INVALID_ACCOUNT_DATA: () => MetaplexError = () => {
+  return new MetaplexError(ErrorCode.ERROR_INVALID_ACCOUNT_DATA, 'Invalid data');
 };
 
-export const ERROR_DEPRECATED_ACCOUNT_DATA: () => SDKError = () => {
-  return new SDKError(ErrorCode.ERROR_DEPRECATED_ACCOUNT_DATA, 'Account data is deprecated');
+export const ERROR_DEPRECATED_ACCOUNT_DATA: () => MetaplexError = () => {
+  return new MetaplexError(ErrorCode.ERROR_DEPRECATED_ACCOUNT_DATA, 'Account data is deprecated');
 };

@@ -1,9 +1,10 @@
-import { AccountInfo } from '@solana/web3.js';
+import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
 import { AnyPublicKey, StringPublicKey } from '../../types';
+import { getBNFromData, TupleNumericType } from '../../utils';
 import { Account } from '../Account';
-import Program, { MetaplexKey } from './MetaplexProgram';
+import Program, { MetaplexKey, MetaplexProgram } from './MetaplexProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export enum WinningConfigType {
@@ -44,26 +45,6 @@ export enum NonWinningConstraint {
   GivenForBidPrice = 2,
 }
 
-export enum TupleNumericType {
-  U8 = 1,
-  U16 = 2,
-  U32 = 4,
-  U64 = 8,
-}
-
-const getBNFromData = (data: Uint8Array, offset: number, dataType: TupleNumericType): BN => {
-  switch (dataType) {
-    case TupleNumericType.U8:
-      return new BN(data[offset], 'le');
-    case TupleNumericType.U16:
-      return new BN(data.slice(offset, offset + 2), 'le');
-    case TupleNumericType.U32:
-      return new BN(data.slice(offset, offset + 4), 'le');
-    case TupleNumericType.U64:
-      return new BN(data.slice(offset, offset + 8), 'le');
-  }
-};
-
 export interface AmountRange {
   amount: BN;
   length: BN;
@@ -103,72 +84,81 @@ export class SafetyDepositConfig extends Account<SafetyDepositConfigData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = this.deserialize(this.info.data);
+    this.data = deserialize(this.info.data);
   }
 
   static isSafetyDepositConfig(data: Buffer) {
     return data[0] === MetaplexKey.SafetyDepositConfigV1;
   }
 
-  private deserialize(buffer: Buffer) {
-    const data: SafetyDepositConfigData = {
-      key: MetaplexKey.SafetyDepositConfigV1,
-      auctionManager: bs58.encode(buffer.slice(1, 33)),
-      order: new BN(buffer.slice(33, 41), 'le'),
-      winningConfigType: buffer[41],
-      amountType: buffer[42],
-      lengthType: buffer[43],
-      amountRanges: [],
-      participationConfig: null,
-      participationState: null,
-    };
-
-    const lengthOfArray = new BN(buffer.slice(44, 48), 'le');
-    let offset = 48;
-
-    for (let i = 0; i < lengthOfArray.toNumber(); i++) {
-      const amount = getBNFromData(buffer, offset, data.amountType);
-      offset += data.amountType;
-      const length = getBNFromData(buffer, offset, data.lengthType);
-      offset += data.lengthType;
-      data.amountRanges.push({ amount, length });
-    }
-
-    if (buffer[offset] == 0) {
-      offset += 1;
-      data.participationConfig = null;
-    } else {
-      // pick up participation config manually
-      const winnerConstraint = buffer[offset + 1];
-      const nonWinningConstraint = buffer[offset + 2];
-      let fixedPrice: BN | null = null;
-      offset += 3;
-
-      if (buffer[offset] == 1) {
-        fixedPrice = new BN(buffer.slice(offset + 1, offset + 9), 'le');
-        offset += 9;
-      } else {
-        offset += 1;
-      }
-      data.participationConfig = {
-        winnerConstraint,
-        nonWinningConstraint,
-        fixedPrice,
-      };
-    }
-
-    if (buffer[offset] == 0) {
-      offset += 1;
-      data.participationState = null;
-    } else {
-      // pick up participation state manually
-      const collectedToAcceptPayment = new BN(buffer.slice(offset + 1, offset + 9), 'le');
-      offset += 9;
-      data.participationState = {
-        collectedToAcceptPayment,
-      };
-    }
-
-    return data;
+  static async getPDA(auctionManager: AnyPublicKey, safetyDeposit: AnyPublicKey) {
+    return Program.findProgramAddress([
+      Buffer.from(MetaplexProgram.PREFIX),
+      MetaplexProgram.PUBKEY.toBuffer(),
+      new PublicKey(auctionManager).toBuffer(),
+      new PublicKey(safetyDeposit).toBuffer(),
+    ]);
   }
 }
+
+const deserialize = (buffer: Buffer) => {
+  const data: SafetyDepositConfigData = {
+    key: MetaplexKey.SafetyDepositConfigV1,
+    auctionManager: bs58.encode(buffer.slice(1, 33)),
+    order: new BN(buffer.slice(33, 41), 'le'),
+    winningConfigType: buffer[41],
+    amountType: buffer[42],
+    lengthType: buffer[43],
+    amountRanges: [],
+    participationConfig: null,
+    participationState: null,
+  };
+
+  const lengthOfArray = new BN(buffer.slice(44, 48), 'le');
+  let offset = 48;
+
+  for (let i = 0; i < lengthOfArray.toNumber(); i++) {
+    const amount = getBNFromData(buffer, offset, data.amountType);
+    offset += data.amountType;
+    const length = getBNFromData(buffer, offset, data.lengthType);
+    offset += data.lengthType;
+    data.amountRanges.push({ amount, length });
+  }
+
+  if (buffer[offset] == 0) {
+    offset += 1;
+    data.participationConfig = null;
+  } else {
+    // pick up participation config manually
+    const winnerConstraint = buffer[offset + 1];
+    const nonWinningConstraint = buffer[offset + 2];
+    let fixedPrice: BN | null = null;
+    offset += 3;
+
+    if (buffer[offset] == 1) {
+      fixedPrice = new BN(buffer.slice(offset + 1, offset + 9), 'le');
+      offset += 9;
+    } else {
+      offset += 1;
+    }
+    data.participationConfig = {
+      winnerConstraint,
+      nonWinningConstraint,
+      fixedPrice,
+    };
+  }
+
+  if (buffer[offset] == 0) {
+    offset += 1;
+    data.participationState = null;
+  } else {
+    // pick up participation state manually
+    const collectedToAcceptPayment = new BN(buffer.slice(offset + 1, offset + 9), 'le');
+    offset += 9;
+    data.participationState = {
+      collectedToAcceptPayment,
+    };
+  }
+
+  return data;
+};
