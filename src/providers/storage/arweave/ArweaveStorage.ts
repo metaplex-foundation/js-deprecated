@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch';
 import { Storage } from '../Storage';
-import { ConversionRateProvider, Currency } from '../../providers/conversion';
+import { ConversionRateProvider, Currency } from '../../conversion';
 
 const ARWEAVE_URL = 'https://arweave.net';
 const LAMPORT_MULTIPLIER = 10 ** 9;

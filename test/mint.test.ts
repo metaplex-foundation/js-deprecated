@@ -1,9 +1,8 @@
 import { Connection } from '../src';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
 import { PayForFiles } from '../src/transactions';
-import { Coingecko, Currency } from '../src/providers';
+import { Coingecko, Currency, ArweaveStorage } from '../src/providers';
 import { getFileHash } from '../src/utils/mint';
-import { ArweaveStorage } from '../src/storage';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Transaction, CreateMint, CreateAssociatedTokenAccount } from '../src/transactions';
 
@@ -46,11 +45,7 @@ describe('Mint NFT', () => {
 
   test('mint', async () => {
     // we can get the rates from any other provider that implements the ConversionRateProvider abstract class
-    // const rates = await Coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
-    const rates = [
-      { base: 'ar', quote: 'usd', rate: 55.46 },
-      { base: 'sol', quote: 'usd', rate: 159.8 },
-    ];
+    const rates = await Coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
     const lamports = await ArweaveStorage.getAssetCostToStore(
       [artwork],
       rates[0].rate,
@@ -102,10 +97,12 @@ describe('Mint NFT', () => {
       },
     );
 
-    const CombinedTransaction = Transaction.fromCombined([
+    const combinedTransaction = Transaction.fromCombined([
       payForFilesTx,
       createMintTx,
       createAssociatedTokenAccountTx,
     ]);
+
+    sendAndConfirmTransaction(connection, combinedTransaction, []);
   });
 });
