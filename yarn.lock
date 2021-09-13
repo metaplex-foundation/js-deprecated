@@ -722,6 +722,7 @@ __metadata:
     bn.js: ^5.2.0
     borsh: ^0.4.0
     bs58: ^4.0.1
+    cross-fetch: ^3.1.4
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^4.0.0
