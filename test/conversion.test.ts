@@ -4,10 +4,6 @@ import { Coingecko, Currency } from '../src/providers/conversion';
 describe('Conversion', () => {
   let connection: Connection;
 
-  beforeAll(() => {
-    // connection = new Connection('devnet');
-  });
-
   describe('Coingecko', () => {
     test('getRate single currency', async () => {
       const result = await Coingecko.getRate(Currency.AR, Currency.USD);

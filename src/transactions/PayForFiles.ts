@@ -1,28 +1,45 @@
 import { Transaction } from './Transaction';
-import { Keypair, PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
-import { MemoProgram } from './programs/MemoProgram';
+import {
+  PublicKey,
+  SystemProgram,
+  TransactionCtorFields,
+  TransactionInstruction,
+} from '@solana/web3.js';
+import { MemoProgram } from './programs';
+
+interface PayForFilesCtorFields extends TransactionCtorFields {
+  params: {
+    lamports: number;
+    fileHashes: Buffer[];
+    arweaveWallet?: PublicKey;
+  };
+}
 
 export class PayForFiles extends Transaction {
-  constructor(
-    feePayer: PublicKey,
-    lamports: number,
-    filesHash: Buffer,
-    arweaveWallet = new PublicKey('HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'),
-  ) {
-    super(
-      [
-        SystemProgram.transfer({
-          fromPubkey: feePayer,
-          toPubkey: arweaveWallet,
-          lamports,
-        }),
+  constructor(options: PayForFilesCtorFields) {
+    const {
+      feePayer,
+      params: { lamports, fileHashes, arweaveWallet },
+    } = options;
+
+    super(options);
+
+    this.add(
+      SystemProgram.transfer({
+        fromPubkey: feePayer,
+        toPubkey: arweaveWallet ?? new PublicKey('HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'),
+        lamports,
+      }),
+    );
+
+    fileHashes.forEach((data) => {
+      this.add(
         new TransactionInstruction({
           keys: [],
           programId: MemoProgram.PUBKEY,
-          data: filesHash,
+          data,
         }),
-      ],
-      [],
-    );
+      );
+    });
   }
 }

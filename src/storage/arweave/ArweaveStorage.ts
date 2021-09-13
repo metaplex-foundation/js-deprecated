@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch';
 import { Storage } from '../Storage';
 import { ConversionRateProvider, Currency } from '../../providers/conversion';
 
@@ -12,8 +13,8 @@ export class ArweaveStorage implements Storage {
     this.conversionRateProvider = conversionRateProvider;
   }
 
-  static async getAssetCostToStore(files: File[], arweaveRate: number, solanaRate: number) {
-    const totalBytes = files.reduce((sum, f) => (sum += f.size), 0);
+  static async getAssetCostToStore(files: Uint8Array[], arweaveRate: number, solanaRate: number) {
+    const totalBytes = files.reduce((sum, f) => (sum += f.length), 0);
     const txnFeeInWinstons = parseInt(await (await fetch(`${ARWEAVE_URL}/price/0`)).text());
     const byteCostInWinstons = parseInt(
       await (await fetch(`${ARWEAVE_URL}/price/${totalBytes.toString()}`)).text(),

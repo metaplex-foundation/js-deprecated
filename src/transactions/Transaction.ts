@@ -1,11 +1,7 @@
-import { Keypair, TransactionInstruction } from '@solana/web3.js';
+import { Transaction as SolanaTransaction, TransactionCtorFields } from '@solana/web3.js';
 
-export class Transaction {
-  protected instructions: TransactionInstruction[] = [];
-  protected signers: Keypair[] = [];
-
-  constructor(instructions: TransactionInstruction[], signers: Keypair[]) {
-    this.instructions = instructions;
-    this.signers = signers;
+export class Transaction extends SolanaTransaction {
+  constructor(options: TransactionCtorFields) {
+    super(options);
   }
 }
