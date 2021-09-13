@@ -2,7 +2,6 @@ import { PublicKey } from '@solana/web3.js';
 import { Program } from '../../accounts';
 
 export class MemoProgram extends Program<{}> {
-  static readonly PREFIX = 'memo';
   static readonly PUBKEY = new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
 
   constructor() {

@@ -1,11 +1,11 @@
 import { Connection } from '../src';
-import { Keypair } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { PayForFiles } from '../src/transactions';
 import { Coingecko, Currency } from '../src/providers';
 import { getFileHash } from '../src/utils/mint';
 import { ArweaveStorage } from '../src/storage';
-import { CreateMint } from '../src/transactions/CreateMint';
-import { MintLayout } from '@solana/spl-token';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { Transaction, CreateMint, CreateAssociatedTokenAccount } from '../src/transactions';
 
 describe('Mint NFT', () => {
   let connection: Connection;
@@ -82,5 +82,30 @@ describe('Mint NFT', () => {
         lamports: mintRent,
       },
     );
+
+    const recipientKey = await PublicKey.findProgramAddress(
+      [
+        creator.publicKey.toBuffer(),
+        TOKEN_PROGRAM_ID.toBuffer(),
+        newMintAccount.publicKey.toBuffer(),
+      ],
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+    );
+
+    const createAssociatedTokenAccountTx = new CreateAssociatedTokenAccount(
+      {
+        feePayer: creator.publicKey,
+      },
+      {
+        associatedTokenAddress: recipientKey[0],
+        splTokenMintAddress: newMintAccount.publicKey,
+      },
+    );
+
+    const CombinedTransaction = Transaction.fromCombined([
+      payForFilesTx,
+      createMintTx,
+      createAssociatedTokenAccountTx,
+    ]);
   });
 });
