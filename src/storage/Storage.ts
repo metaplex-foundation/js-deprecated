@@ -1,6 +1,7 @@
-import { ConversionRateProvider } from '../providers/conversion';
-
-export interface Storage {
-  conversionRateProvider: ConversionRateProvider;
-  getAssetCostToStore: (files: File[]) => Promise<number>;
+export abstract class Storage {
+  static getAssetCostToStore: (
+    files: File[],
+    arweaveRate: number,
+    solanaRate: number,
+  ) => Promise<number>;
 }
