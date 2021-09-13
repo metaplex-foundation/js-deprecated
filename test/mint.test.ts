@@ -1,19 +1,30 @@
 import { Connection } from '../src';
-import { Keypair, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
-import { PayForFiles } from '../src/transactions';
-import { Coingecko, Currency, ArweaveStorage } from '../src/providers';
-import { getFileHash } from '../src/utils/mint';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Transaction, CreateMint, CreateAssociatedTokenAccount } from '../src/transactions';
+import {
+  Coingecko,
+  Currency,
+  Utils,
+  ArweaveStorage,
+  Transaction,
+  PayForFiles,
+  CreateMint,
+  CreateAssociatedTokenAccount,
+} from '../src';
 
 describe('Mint NFT', () => {
   let connection: Connection;
   let creator: Keypair;
   let artwork: Uint8Array;
-
-  beforeAll(() => {
+  // set 30s timeout because the devnet RPC can be notoriously slow and we don't want tests
+  // constantly failing due to timeouts...
+  jest.setTimeout(30000);
+  beforeAll(async () => {
     connection = new Connection('devnet');
     creator = Keypair.generate();
+    // we need to airdrop some SOL on our creator account so we can test transactions
+    const signature = await connection.requestAirdrop(creator.publicKey, LAMPORTS_PER_SOL);
+    await connection.confirmTransaction(signature, 'finalized');
     // a 16x16 metaplex logo blob :)
     artwork = Uint8Array.from([
       0x75, 0xab, 0x5a, 0x8a, 0x66, 0xa0, 0x7b, 0xf8, 0xe9, 0x7a, 0x06, 0xda, 0xb1, 0xee, 0xb8,
@@ -45,13 +56,17 @@ describe('Mint NFT', () => {
 
   test('mint', async () => {
     // we can get the rates from any other provider that implements the ConversionRateProvider abstract class
-    const rates = await Coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
+    // const rates = await Coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
+    const rates = [
+      { base: 'ar', quote: 'usd', rate: 55.46 },
+      { base: 'sol', quote: 'usd', rate: 159.8 },
+    ];
     const lamports = await ArweaveStorage.getAssetCostToStore(
       [artwork],
       rates[0].rate,
       rates[1].rate,
     );
-    const fileHashes = [await getFileHash(artwork)];
+    const fileHashes = [await Utils.mint.getFileHash(artwork)];
     const payForFilesTx = new PayForFiles(
       {
         feePayer: creator.publicKey,
@@ -103,6 +118,8 @@ describe('Mint NFT', () => {
       createAssociatedTokenAccountTx,
     ]);
 
-    sendAndConfirmTransaction(connection, combinedTransaction, []);
+    await sendAndConfirmTransaction(connection, combinedTransaction, [creator, newMintAccount], {
+      commitment: 'confirmed',
+    });
   });
 });
