@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "commonjs",
+    "module": "es6",
     "target": "es6",
     "declaration": true,
     "removeComments": true,

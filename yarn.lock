@@ -724,9 +724,12 @@ __metadata:
     borsh: ^0.4.0
     bs58: ^4.0.1
     cross-fetch: ^3.1.4
+    crypto-js: ^4.1.1
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^4.0.0
+    fetch-blob: ^3.1.2
+    formdata-polyfill: ^4.0.7
     jest: ^27.1.0
     prettier: ^2.3.2
     rimraf: ^3.0.2
@@ -2028,6 +2031,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crypto-js@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "crypto-js@npm:4.1.1"
+  checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
+  languageName: node
+  linkType: hard
+
 "cssom@npm:^0.4.4":
   version: 0.4.4
   resolution: "cssom@npm:0.4.4"
@@ -2617,6 +2627,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fetch-blob@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "fetch-blob@npm:3.1.2"
+  dependencies:
+    web-streams-polyfill: ^3.0.3
+  checksum: 3e3717cf30da9f204aee83dded63f1a9f9c8bda7a0dc59648f89eeb1e88ee592231f4d922e1f119e1390383520768594dd3a1fe5e844f2f2f014d17ce04213a5
+  languageName: node
+  linkType: hard
+
 "file-entry-cache@npm:^6.0.1":
   version: 6.0.1
   resolution: "file-entry-cache@npm:6.0.1"
@@ -2679,6 +2698,15 @@ __metadata:
     combined-stream: ^1.0.8
     mime-types: ^2.1.12
   checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
+  languageName: node
+  linkType: hard
+
+"formdata-polyfill@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "formdata-polyfill@npm:4.0.7"
+  dependencies:
+    fetch-blob: ^3.1.2
+  checksum: c890107380d358272fd8cb5353168ce4001bc634f2f93836760fdf48de813d38bd6c6173589178d74781bcf629abf0e9649ee7f4c7f7ad7c5568fd444c805c90
   languageName: node
   linkType: hard
 
@@ -5522,6 +5550,13 @@ typescript@^4.4.2:
   dependencies:
     makeerror: 1.0.x
   checksum: 4038fcf92f6ab0288267ad05008aec9e089a759f1bd32e1ea45cc2eb498eb12095ec43cf8ca2bf23a465f4580a0d33b25b89f450ba521dd27083cbc695ee6bf5
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^3.0.3":
+  version: 3.1.1
+  resolution: "web-streams-polyfill@npm:3.1.1"
+  checksum: dac85f0a990fb1ddcd15e2eda8ce4696bc9bc567e34cfdaeb9e740e26417d8649a6f466468907f50fd6e09967c25e0cf1f296c30aef9650ab7b118d5f69fb176
   languageName: node
   linkType: hard
 

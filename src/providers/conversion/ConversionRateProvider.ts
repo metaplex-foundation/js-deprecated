@@ -14,7 +14,7 @@ export type ConversionRatePair = {
 };
 
 export abstract class ConversionRateProvider {
-  static getRate: (
+  getRate: (
     from: Currency | Currency[],
     to: Currency | Currency[],
   ) => Promise<ConversionRatePair[]>;

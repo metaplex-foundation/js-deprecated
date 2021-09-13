@@ -1,7 +1,14 @@
-import crypto from 'crypto';
+import File from 'fetch-blob/file.js';
+import sha256 from 'crypto-js/sha256';
 
-export async function getFileHash(file: Uint8Array) {
-  const hashSum = crypto.createHash('sha256');
-  hashSum.update(new TextDecoder('utf-8').decode(file));
-  return Buffer.from(hashSum.digest('hex'));
+// This is only necessary until this is resolved: https://github.com/node-fetch/fetch-blob/pull/119
+async function text(file: File) {
+  // More optimized than using this.arrayBuffer()
+  // that requires twice as much ram
+  const decoder = new TextDecoder('utf-8', { fatal: false });
+  return decoder.decode(await file.arrayBuffer());
+}
+
+export async function getFileHash(file: File) {
+  return Buffer.from(sha256(await text(file)).toString());
 }

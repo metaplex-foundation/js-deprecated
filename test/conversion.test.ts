@@ -1,19 +1,26 @@
-import { Connection } from '../src';
 import { Coingecko, Currency } from '../src/providers/conversion';
 
 describe('Conversion', () => {
-  let connection: Connection;
+  let coingecko: Coingecko;
+
+  beforeAll(() => {
+    // why not just do a static method? well, even though our current Coingecko implementation
+    // for ConversionRateProvider is fully public API. Someone else might want to create a
+    // class that has API keys or secrets, and would need instantiation. We don't want to create
+    // an inflexible interface/
+    coingecko = new Coingecko();
+  });
 
   describe('Coingecko', () => {
     test('getRate single currency', async () => {
-      const result = await Coingecko.getRate(Currency.AR, Currency.USD);
+      const result = await coingecko.getRate(Currency.AR, Currency.USD);
       expect(result[0].base).toEqual(Currency.AR);
       expect(result[0].quote).toEqual(Currency.USD);
       expect(result[0].rate).toEqual(expect.any(Number));
     });
 
     test('getRate multiple to single currency', async () => {
-      const result = await Coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
+      const result = await coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
       expect(result[0].base).toEqual(Currency.AR);
       expect(result[0].quote).toEqual(Currency.USD);
       expect(result[0].rate).toEqual(expect.any(Number));
@@ -24,7 +31,7 @@ describe('Conversion', () => {
     });
 
     test('getRate single to multiple currencies', async () => {
-      const result = await Coingecko.getRate(Currency.AR, [Currency.USD, Currency.EUR]);
+      const result = await coingecko.getRate(Currency.AR, [Currency.USD, Currency.EUR]);
       expect(result[0].base).toEqual(Currency.AR);
       expect(result[0].quote).toEqual(Currency.USD);
       expect(result[0].rate).toEqual(expect.any(Number));
@@ -35,7 +42,7 @@ describe('Conversion', () => {
     });
 
     test('getRate multiple to multiple currencies', async () => {
-      const result = await Coingecko.getRate(
+      const result = await coingecko.getRate(
         [Currency.AR, Currency.SOL],
         [Currency.USD, Currency.EUR],
       );

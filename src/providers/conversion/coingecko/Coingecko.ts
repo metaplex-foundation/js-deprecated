@@ -2,7 +2,25 @@ import fetch from 'cross-fetch';
 import { ConversionRateProvider, Currency } from '../ConversionRateProvider';
 
 export class Coingecko implements ConversionRateProvider {
-  static async getRate(from: Currency | Currency[], to: Currency | Currency[]) {
+  constructor() {}
+
+  // this method translates currency strings to the format that coingecko requires
+  private static translateCurrency(currency: Currency): string {
+    switch (currency) {
+      case Currency.AR:
+        return 'arweave';
+      case Currency.SOL:
+        return 'solana';
+      case Currency.USD:
+        return 'usd';
+      case Currency.EUR:
+        return 'eur';
+      default:
+        throw new Error('Invalid currency supplied to Coingecko conversion rate provider');
+    }
+  }
+
+  async getRate(from: Currency | Currency[], to: Currency | Currency[]) {
     const fromArray = typeof from === 'string' ? [from] : from;
     const toArray = typeof to === 'string' ? [to] : to;
     const fromIds = fromArray.map((currency) => Coingecko.translateCurrency(currency)).join(',');
@@ -22,21 +40,5 @@ export class Coingecko implements ConversionRateProvider {
         })),
       ];
     }, []);
-  }
-
-  // this method translates currency strings to the format that coingecko requires
-  private static translateCurrency(currency: Currency): string {
-    switch (currency) {
-      case Currency.AR:
-        return 'arweave';
-      case Currency.SOL:
-        return 'solana';
-      case Currency.USD:
-        return 'usd';
-      case Currency.EUR:
-        return 'eur';
-      default:
-        throw new Error('Invalid currency supplied to Coingecko conversion rate provider');
-    }
   }
 }
