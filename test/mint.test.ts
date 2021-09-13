@@ -46,20 +46,26 @@ describe('Mint NFT', () => {
 
   test('mint', async () => {
     // we can get the rates from any other provider that implements the ConversionRateProvider abstract class
-    const rates = await Coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
+    // const rates = await Coingecko.getRate([Currency.AR, Currency.SOL], Currency.USD);
+    const rates = [
+      { base: 'ar', quote: 'usd', rate: 55.46 },
+      { base: 'sol', quote: 'usd', rate: 159.8 },
+    ];
     const lamports = await ArweaveStorage.getAssetCostToStore(
       [artwork],
       rates[0].rate,
       rates[1].rate,
     );
     const fileHashes = [await getFileHash(artwork)];
-    const payForFilesTx = new PayForFiles({
-      feePayer: creator.publicKey,
-      params: {
+    const payForFilesTx = new PayForFiles(
+      {
+        feePayer: creator.publicKey,
+      },
+      {
         lamports,
         fileHashes,
       },
-    });
+    );
 
     const newMintAccount = Keypair.generate();
     const mintRent = await connection.getMinimumBalanceForRentExemption(MintLayout.span);
@@ -67,12 +73,14 @@ describe('Mint NFT', () => {
     // This owner is a temporary signer and owner of metadata we use to circumvent requesting signing
     // twice post Arweave. We store in an account (payer) and use it post-Arweave to update MD with new link
     // then give control back to the user.
-    const createMintTx = new CreateMint({
-      feePayer: creator.publicKey,
-      params: {
+    const createMintTx = new CreateMint(
+      {
+        feePayer: creator.publicKey,
+      },
+      {
         newAccountPubkey: newMintAccount.publicKey,
         lamports: mintRent,
       },
-    });
+    );
   });
 });

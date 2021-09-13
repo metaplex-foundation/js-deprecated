@@ -7,20 +7,16 @@ import {
 } from '@solana/web3.js';
 import { MemoProgram } from './programs';
 
-interface PayForFilesCtorFields extends TransactionCtorFields {
-  params: {
-    lamports: number;
-    fileHashes: Buffer[];
-    arweaveWallet?: PublicKey;
-  };
-}
+type PayForFilesParams = {
+  lamports: number;
+  fileHashes: Buffer[];
+  arweaveWallet?: PublicKey;
+};
 
 export class PayForFiles extends Transaction {
-  constructor(options: PayForFilesCtorFields) {
-    const {
-      feePayer,
-      params: { lamports, fileHashes, arweaveWallet },
-    } = options;
+  constructor(options: TransactionCtorFields, params: PayForFilesParams) {
+    const { feePayer } = options;
+    const { lamports, fileHashes, arweaveWallet } = params;
 
     super(options);
 
