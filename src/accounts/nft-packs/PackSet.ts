@@ -77,7 +77,7 @@ export class PackSet extends Account<PackSetData> {
     return (
       await Program.getProgramAccounts(connection, {
         filters: [
-          // Filter for EditionV1 by key
+          // Filter for PackCard by key
           {
             memcmp: {
               offset: 0,
