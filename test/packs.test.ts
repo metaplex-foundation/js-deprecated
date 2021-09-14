@@ -1,5 +1,18 @@
-import { Connection, PackSet, PackSetState, PackCard, DistributionType, PackVoucher } from '../src';
-import { PACKSET_PUBKEY, PACKCARD_PUBKEY, PACKVOUCHER_PUBKEY } from './utils';
+import {
+  Connection,
+  PackSet,
+  PackSetState,
+  PackCard,
+  DistributionType,
+  PackVoucher,
+  ProvingProcess,
+} from '../src';
+import {
+  PACKSET_PUBKEY,
+  PACKCARD_PUBKEY,
+  PACKVOUCHER_PUBKEY,
+  PROVING_PROCESS_PUBKEY,
+} from './utils';
 
 describe('Packs', () => {
   let connection: Connection;
@@ -13,7 +26,7 @@ describe('Packs', () => {
       const packSet = await PackSet.load(connection, PACKSET_PUBKEY);
 
       expect(packSet.pubkey).toEqual(PACKSET_PUBKEY);
-      expect(packSet.data.state).toEqual(PackSetState.NotActivated);
+      expect(packSet.data.state).toEqual(PackSetState.Activated);
     });
 
     test('getCards', async () => {
@@ -42,6 +55,10 @@ describe('Packs', () => {
   });
 
   describe('Proving Process', () => {
-    test('load', async () => {});
+    test('load', async () => {
+      const provingProcess = await ProvingProcess.load(connection, PROVING_PROCESS_PUBKEY);
+
+      expect(provingProcess.pubkey).toEqual(PROVING_PROCESS_PUBKEY);
+    });
   });
 });
