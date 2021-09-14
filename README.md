@@ -2,7 +2,7 @@
 
 Metaplex JavaScript SDK
 
-> **In Development**
+> **In Development** - All interfaces are very likely to change very frequently. Please be aware.
 
 ## Roadmap
 
@@ -56,4 +56,48 @@ const prizeTrackingTicket = await PrizeTrackingTicket.load(conn, "<pubkey>");
 const safetyDepositConfig = await SafetyDepositConfig.load(conn, "<pubkey>");
 const store = await Store.load(conn, "<pubkey>");
 const whitelistedCreator = await WhitelistedCreator.load(conn, "<pubkey>");
+```
+
+## Send transactions
+
+The Metaplex SDK currently has low level transaction convenience classes for all the necessary operations.
+
+For example, a transaction to pay for file storage can be created easily with a convenience class:
+```ts
+// ...
+const files: File[] = [artwork, metadata];
+const fileHashes = await Promise.all(files.map((file) => Utils.crypto.getFileHash(file)));
+const lamports = await storage.getAssetCostToStore(files, rates[0].rate, rates[1].rate);
+
+const payForFilesTx = new PayForFiles(
+  {
+    feePayer: creator.publicKey,
+  },
+  {
+    lamports,
+    fileHashes,
+  },
+);
+```
+
+The transactions are currently standard Solana transactions and can be signed, sent and verified after creation.
+
+Multiple transactions can also be combined into one larger transaction:
+```ts
+const combinedTransaction = Transaction.fromCombined([
+  payForFilesTx,
+  createMintTx,
+  createAssociatedTokenAccountTx,
+]);
+```
+
+You can see examples of full transaction processes in the tests:
+- `test/mint.test.ts` - Contains a full NFT minting process example.
+
+## Providers
+
+### Coingecko - for exchange rates
+```ts
+import { Coingecko, Currency } from "@metaplex/js";
+const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currency.USD);
 ```
