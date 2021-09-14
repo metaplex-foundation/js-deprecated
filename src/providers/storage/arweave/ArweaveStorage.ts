@@ -12,10 +12,8 @@
 // ourselves, and submit a PR.
 //
 // TODO: Make this isomorphic
-import fetch from 'node-fetch';
 import { Storage, UploadResult } from '../Storage';
-import File from 'fetch-blob/file.js';
-import { FormData, formDataToBlob } from 'formdata-polyfill/esm.min.js';
+import { fetch, File, FormData } from '../../../isomorphic';
 
 const ARWEAVE_URL = 'https://arweave.net';
 const LAMPORT_MULTIPLIER = 10 ** 9;
@@ -58,7 +56,8 @@ export class ArweaveStorage implements Storage {
 
     const response = await fetch(this.endpoint, {
       method: 'POST',
-      body: formDataToBlob(data),
+      // @ts-ignore
+      body: data,
     });
 
     return response.json();

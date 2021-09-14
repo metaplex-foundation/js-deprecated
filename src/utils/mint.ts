@@ -1,4 +1,4 @@
-import File from 'fetch-blob/file.js';
+import { File } from '../isomorphic';
 import sha256 from 'crypto-js/sha256';
 
 // This is only necessary until this is resolved: https://github.com/node-fetch/fetch-blob/pull/119

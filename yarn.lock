@@ -713,6 +713,7 @@ __metadata:
   resolution: "@metaplex/js@workspace:."
   dependencies:
     "@project-serum/anchor": ^0.14.0
+    "@rollup/plugin-alias": ^3.1.5
     "@rollup/plugin-commonjs": ^20.0.0
     "@rollup/plugin-node-resolve": ^13.0.4
     "@solana/spl-token": ^0.1.8
@@ -823,6 +824,17 @@ __metadata:
   peerDependencies:
     "@solana/web3.js": ^1.2.0
   checksum: f6ffd5f21cad0cb8a84901dcf21342af73a4b48e2121ba9fd3e1f84b400e66eacb3a7e80ae350a0592f728dea99604c50084ab1455ddf4f3a9d28c8a38bbc188
+  languageName: node
+  linkType: hard
+
+"@rollup/plugin-alias@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "@rollup/plugin-alias@npm:3.1.5"
+  dependencies:
+    slash: ^3.0.0
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0
+  checksum: cb443691ef2480de3c3aa99ab6ce591854ee54d1736e6c71f6e6061b418f183cf571cbe889e52efe997ffe20bac5e4bf5fbbf39f1086987febeb35fb08277419
   languageName: node
   linkType: hard
 

@@ -1,4 +1,4 @@
-import File from 'fetch-blob/file.js';
+import { File } from '../src/isomorphic';
 import { ArweaveStorage, ConversionRatePair, Currency } from '../src';
 
 describe('Storage', () => {

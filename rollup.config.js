@@ -2,6 +2,7 @@ import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
+import alias from '@rollup/plugin-alias';
 import pkg from './package.json';
 
 const input = 'src/index.ts';
@@ -23,10 +24,14 @@ const plugins = [
   commonjs({
     include: /node_modules/,
   }),
-  terser(),
 ];
 
 const pluginsBrowser = [
+  alias({
+    entries: [
+      { find:/isomorphic$/, replacement: 'isomorphic/index.browser' }
+    ]
+  }),
   resolve({
     browser: true,
     preferBuiltins: false,
