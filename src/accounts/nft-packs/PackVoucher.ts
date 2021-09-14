@@ -1,27 +1,16 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
-import BN from 'bn.js';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
 import { Account } from '../Account';
 import Program, { NFTPacksAccountType } from './NFTPacksProgram';
 
-export enum DistributionType {
-  FixedNumber = 0,
-  ProbabilityBased = 1,
+export enum ActionOnProve {
+  Burn = 0,
+  Redeem = 1,
 }
 
-export interface Distribution {
-  type: DistributionType;
-  value: BN;
-}
-
-const distributionStruct = borsh.struct<Distribution>([
-  ['type', 'u8'],
-  ['value', 'u64'],
-]);
-
-export interface PackCardData {
+export interface PackVoucherData {
   accountType: NFTPacksAccountType;
   /// Pack set
   packSet: StringPublicKey;
@@ -31,15 +20,17 @@ export interface PackCardData {
   metadata: StringPublicKey;
   /// Program token account which holds MasterEdition token
   tokenAccount: StringPublicKey;
-  /// How many instances of this card exists in all packs
+  /// How many instances of this voucher exists in all packs
   maxSupply?: number;
-  /// Fixed number / probability-based
-  distributionType: DistributionType;
-  /// How many cards already minted
+  /// How many vouchers already minted
   currentSupply: number;
+  /// How many vouchers of this type is required to open a pack
+  numberToOpen: number;
+  /// Burn / redeem
+  actionOnProve: ActionOnProve;
 }
 
-const packCardStruct = borsh.struct<PackCardData>(
+const packVoucherStruct = borsh.struct<PackVoucherData>(
   [
     ['accountType', 'u8'],
     ['packSet', 'pubkeyAsString'],
@@ -47,18 +38,19 @@ const packCardStruct = borsh.struct<PackCardData>(
     ['metadata', 'pubkeyAsString'],
     ['tokenAccount', 'pubkeyAsString'],
     ['maxSupply', { kind: 'option', type: 'u32' }],
-    ['distributionType', distributionStruct.type],
     ['currentSupply', 'u32'],
+    ['numberToOpen', 'u32'],
+    ['actionOnProve', 'u8'],
   ],
-  [distributionStruct],
+  [],
   (data) => {
-    data.accountType = NFTPacksAccountType.PackCard;
+    data.accountType = NFTPacksAccountType.PackVoucher;
     return data;
   },
 );
 
-export class PackCard extends Account<PackCardData> {
-  static readonly PREFIX = 'card';
+export class PackVoucher extends Account<PackVoucherData> {
+  static readonly PREFIX = 'voucher';
 
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
@@ -67,20 +59,20 @@ export class PackCard extends Account<PackCardData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!PackCard.isPackCard(this.info.data)) {
+    if (!PackVoucher.isPackVoucher(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = packCardStruct.deserialize(this.info.data);
+    this.data = packVoucherStruct.deserialize(this.info.data);
   }
 
-  static isPackCard(data: Buffer) {
-    return data[0] === NFTPacksAccountType.PackCard;
+  static isPackVoucher(data: Buffer) {
+    return data[0] === NFTPacksAccountType.PackVoucher;
   }
 
   static getPDA(packSet: AnyPublicKey, index: number) {
     return Program.findProgramAddress([
-      Buffer.from(PackCard.PREFIX),
+      Buffer.from(PackVoucher.PREFIX),
       new PublicKey(packSet).toBuffer(),
       Buffer.from(index.toString()),
     ]);

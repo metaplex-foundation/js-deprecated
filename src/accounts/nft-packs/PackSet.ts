@@ -1,4 +1,6 @@
-import { AccountInfo } from '@solana/web3.js';
+import { AccountInfo, Connection } from '@solana/web3.js';
+import bs58 from 'bs58';
+import { PackCard } from './PackCard';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
@@ -69,5 +71,28 @@ export class PackSet extends Account<PackSetData> {
 
   static isPackSet(data: Buffer) {
     return data[0] === NFTPacksAccountType.PackSet;
+  }
+
+  async getCards(connection: Connection) {
+    return (
+      await Program.getProgramAccounts(connection, {
+        filters: [
+          // Filter for EditionV1 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([NFTPacksAccountType.PackCard])),
+            },
+          },
+          // Filter for assigned to this pack set
+          {
+            memcmp: {
+              offset: 1,
+              bytes: this.pubkey.toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => PackCard.from(account));
   }
 }
