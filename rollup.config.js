@@ -60,7 +60,7 @@ const OUTPUT_DATA = [
     plugins,
   },
   {
-    file: pkg.browser['dist/index.mjs'],
+    file: pkg.browser,
     format: 'es',
     plugins: pluginsBrowser,
   },

@@ -1,13 +1,11 @@
 {
   "name": "@metaplex/js",
   "type": "module",
-  "main": "dist/index.mjs",
-  "module": "dist/index.mjs",
-  "jsnext:main": "dist/index.mjs",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "jsnext:main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "browser": {
-    "dist/index.mjs": "dist/index.browser.mjs"
-  },
+  "browser": "dist/index.browser.js",
   "version": "0.0.1",
   "license": "MIT",
   "description": "Metaplex JavaScript API",

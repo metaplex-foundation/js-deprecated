@@ -1,11 +1,11 @@
 import { jest } from '@jest/globals';
-import { Connection, MetadataJson } from '../src';
 import { File } from '../src/isomorphic';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import * as fs from 'fs';
-
 import {
+  Connection,
+  MetadataJson,
   Coingecko,
   Currency,
   Utils,
