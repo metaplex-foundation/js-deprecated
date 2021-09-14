@@ -1,9 +1,9 @@
-import { AccountInfo } from '@solana/web3.js';
+import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { AnyPublicKey } from '../../types';
 import { borsh } from '../../utils';
 import { Account } from '../Account';
-import Program, { MetaplexKey } from './MetaplexProgram';
+import Program, { MetaplexKey, MetaplexProgram } from './MetaplexProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../errors';
 
 export interface PrizeTrackingTicketData {
@@ -46,5 +46,14 @@ export class PrizeTrackingTicket extends Account<PrizeTrackingTicketData> {
 
   static isPrizeTrackingTicket(data: Buffer) {
     return data[0] === MetaplexKey.PrizeTrackingTicketV1;
+  }
+
+  static async getPDA(auctionManager: AnyPublicKey, mint: AnyPublicKey) {
+    return Program.findProgramAddress([
+      Buffer.from(MetaplexProgram.PREFIX),
+      MetaplexProgram.PUBKEY.toBuffer(),
+      new PublicKey(auctionManager).toBuffer(),
+      new PublicKey(mint).toBuffer(),
+    ]);
   }
 }

@@ -49,11 +49,11 @@ export class Store extends Account<StoreData> {
     return data[0] === MetaplexKey.StoreV1;
   }
 
-  static async getPDA(ownerAddress: AnyPublicKey) {
+  static async getPDA(owner: AnyPublicKey) {
     return Program.findProgramAddress([
       Buffer.from(MetaplexProgram.PREFIX),
       MetaplexProgram.PUBKEY.toBuffer(),
-      new PublicKey(ownerAddress).toBuffer(),
+      new PublicKey(owner).toBuffer(),
     ]);
   }
 

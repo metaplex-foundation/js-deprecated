@@ -1,16 +1,17 @@
-import { AccountInfo, Connection } from '@solana/web3.js';
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
 import { AnyPublicKey, StringPublicKey } from '../../types';
 import { borsh } from '../../utils';
 import { Account } from '../Account';
 import { BidRedemptionTicket, WINNER_INDEX_OFFSETS } from './BidRedemptionTicket';
-import Program, { MetaplexKey } from './MetaplexProgram';
+import Program, { MetaplexKey, MetaplexProgram } from './MetaplexProgram';
 import {
   ERROR_DEPRECATED_ACCOUNT_DATA,
   ERROR_INVALID_ACCOUNT_DATA,
   ERROR_INVALID_OWNER,
 } from '../../errors';
+import { Auction } from '../auction';
 
 export enum AuctionManagerStatus {
   Initialized,
@@ -101,6 +102,17 @@ export class AuctionManager extends Account<AuctionManagerV2Data> {
 
   static isAuctionManagerV2(data: Buffer) {
     return data[0] === MetaplexKey.AuctionManagerV2;
+  }
+
+  static getPDA(auction: AnyPublicKey) {
+    return Program.findProgramAddress([
+      Buffer.from(MetaplexProgram.PREFIX),
+      new PublicKey(auction).toBuffer(),
+    ]);
+  }
+
+  async getAuction(connection: Connection) {
+    return Auction.load(connection, this.data.auction);
   }
 
   async getBidRedemptionTickets(connection: Connection, haveWinnerIndex = true) {

@@ -1,4 +1,5 @@
-import { Connection } from '../src';
+import { Connection, Vault, VaultKey } from '../src';
+import { VAULT_PUBKEY } from './utils';
 
 describe('Vault', () => {
   let connection: Connection;
@@ -8,6 +9,10 @@ describe('Vault', () => {
   });
 
   describe('Vault', () => {
-    test('load', async () => {});
+    test('load', async () => {
+      const vault = await Vault.load(connection, VAULT_PUBKEY);
+
+      expect(vault.data.key).toEqual(VaultKey.VaultV1);
+    });
   });
 });

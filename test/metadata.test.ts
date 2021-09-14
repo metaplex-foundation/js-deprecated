@@ -1,8 +1,5 @@
-import { PublicKey } from '@solana/web3.js';
 import { Connection, MasterEdition, Metadata, MetadataKey } from '../src';
-
-const METADATA_PUBKEY = new PublicKey('CZkFeERacU42qjApPyjamS13fNtz7y1wYLu5jyLpN1WL');
-const MASTER_EDITION_PUBKEY = new PublicKey('EZ5xB174dcz982WXV2aNr4zSW5ywAH3gP5Lbj8CuRMw4');
+import { MASTER_EDITION_PUBKEY, METADATA_PUBKEY } from './utils';
 
 describe('Metadata', () => {
   let connection: Connection;
