@@ -18,9 +18,11 @@ describe('Mint NFT', () => {
   let connection: Connection;
   let creator: Keypair;
   let artwork: File;
+
   // set 80s timeout because the devnet RPC can be notoriously slow and we don't want tests
   // constantly failing due to timeouts...
   jest.setTimeout(80000);
+
   beforeAll(async () => {
     connection = new Connection('devnet');
     creator = Keypair.generate();
@@ -159,7 +161,7 @@ describe('Mint NFT', () => {
     );
     const result = await storage.upload(files, newMintAccount.publicKey.toBase58(), txid);
 
-    expect(typeof result).toBe("object")
+    expect(typeof result).toBe('object');
     expect(result.messages).toBeInstanceOf(Array);
     expect(result.messages[0].status).toEqual('success');
     expect(result.messages[0].filename).toEqual('metaplex.jpg');

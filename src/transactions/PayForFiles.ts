@@ -5,7 +5,7 @@ import {
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
-import { MemoProgram } from './programs';
+import { config } from '../config';
 
 type PayForFilesParams = {
   lamports: number;
@@ -23,7 +23,7 @@ export class PayForFiles extends Transaction {
     this.add(
       SystemProgram.transfer({
         fromPubkey: feePayer,
-        toPubkey: arweaveWallet ?? new PublicKey('HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'),
+        toPubkey: arweaveWallet ?? new PublicKey(config.arweaveWallet),
         lamports,
       }),
     );
@@ -32,7 +32,7 @@ export class PayForFiles extends Transaction {
       this.add(
         new TransactionInstruction({
           keys: [],
-          programId: MemoProgram.PUBKEY,
+          programId: new PublicKey(config.programs.memo),
           data,
         }),
       );

@@ -6,9 +6,9 @@
   "jsnext:main": "dist/index.es.js",
   "style": "dist/style.css",
   "typings": "dist/index.d.ts",
-  "browser":{
-    "dist/index.js": "dist/index.browser.js",
-    "dist/index.es.js": "dist/index.browser.es.js"
+  "browser": {
+    "dist/index.es.js": "dist/index.browser.es.js",
+    "dist/index.js": "dist/index.browser.js"
   },
   "version": "0.0.1",
   "license": "MIT",

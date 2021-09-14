@@ -18,7 +18,7 @@
     "rootDir": "./src",
   },
   "include": [
-    "./src", "src/accounts/metaplex/.ts",
+    "./src",
   ],
   "exclude": ["node_modules", "dist", "build"]
 }

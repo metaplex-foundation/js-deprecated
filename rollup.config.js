@@ -1,12 +1,11 @@
-import typescript from "rollup-plugin-typescript2";
-import commonjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve";
-import { terser } from "rollup-plugin-terser";
+import typescript from 'rollup-plugin-typescript2';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
+import pkg from './package.json';
 
-import pkg from "./package.json";
-
-const input = "src/index.ts";
-const name = "Metaplex";
+const input = 'src/index.ts';
+const name = 'Metaplex';
 
 const external = [
   ...Object.keys(pkg.dependencies || {}),
@@ -19,7 +18,7 @@ const plugins = [
   }),
   typescript({
     rollupCommonJSResolveHack: true,
-    exclude: ["**/__tests__/**"],
+    exclude: ['**/__tests__/**'],
   }),
   commonjs({
     include: /node_modules/,
@@ -31,11 +30,11 @@ const pluginsBrowser = [
   resolve({
     browser: true,
     preferBuiltins: false,
-    mainFields: ['browser']
+    mainFields: ['browser'],
   }),
   typescript({
     rollupCommonJSResolveHack: true,
-    exclude: ["**/__tests__/**"],
+    exclude: ['**/__tests__/**'],
   }),
   commonjs({
     include: /node_modules/,
@@ -46,22 +45,22 @@ const pluginsBrowser = [
 const OUTPUT_DATA = [
   {
     file: pkg.main,
-    format: "cjs",
+    format: 'cjs',
     plugins,
   },
   {
     file: pkg.module,
-    format: "es",
+    format: 'es',
     plugins,
   },
   {
     file: pkg.browser['dist/index.js'],
-    format: "cjs",
+    format: 'cjs',
     plugins: pluginsBrowser,
   },
   {
     file: pkg.browser['dist/index.es.js'],
-    format: "es",
+    format: 'es',
     plugins: pluginsBrowser,
   },
 ];
@@ -71,7 +70,7 @@ const config = OUTPUT_DATA.map(({ file, format, plugins }) => ({
   output: {
     file,
     format,
-    exports: "named",
+    exports: 'named',
     sourcemap: true,
     name,
   },
