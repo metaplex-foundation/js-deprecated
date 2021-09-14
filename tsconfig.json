@@ -15,7 +15,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
-    "rootDir": "./src",
+    "rootDirs": ["src","test"],
   },
   "include": [
     "./src",
