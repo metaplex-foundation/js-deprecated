@@ -52,6 +52,7 @@ describe('Mint NFT', () => {
       image: 'metaplex.jpg',
       animation_url: null,
       external_url: null,
+      attributes: [],
       properties: {
         files: [
           {
@@ -133,7 +134,7 @@ describe('Mint NFT', () => {
       },
     );
     const result = await storage.upload(files, newMintAccount.publicKey.toBase58(), txid);
-    console.log('result', result);
+
     expect(typeof result).toBe('object');
     expect(result.messages).toBeInstanceOf(Array);
     expect(result.messages[0].status).toEqual('success');
