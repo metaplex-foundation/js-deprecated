@@ -7,13 +7,16 @@ const WINSTON_MULTIPLIER = 10 ** 12;
 
 export interface ArweaveStorageCtorFields {
   endpoint: string;
+  env: 'mainnet-beta' | 'testnet' | 'devnet';
 }
 
 export class ArweaveStorage implements Storage {
   readonly endpoint: string;
+  readonly env: string;
 
-  constructor({ endpoint }: ArweaveStorageCtorFields) {
+  constructor({ endpoint, env }: ArweaveStorageCtorFields) {
     this.endpoint = endpoint;
+    this.env = env;
   }
 
   async getAssetCostToStore(files: File[], arweaveRate: number, solanaRate: number) {
@@ -38,6 +41,7 @@ export class ArweaveStorage implements Storage {
 
     data.append('tags', JSON.stringify(tags));
     data.append('transaction', txid);
+    data.append('env', this.env);
     files.map((f) => {
       data.append('file[]', f);
     });

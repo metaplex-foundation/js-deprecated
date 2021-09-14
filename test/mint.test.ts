@@ -39,7 +39,8 @@ describe('Mint NFT', () => {
     // we can get the rates from any other provider that implements the ConversionRateProvider abstract class
     const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currency.USD);
     const storage = await new ArweaveStorage({
-      endpoint: 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile2',
+      endpoint: 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4',
+      env: 'devnet',
     });
     // this is a bit of undocumented behavior right here. the arweave upload endpoint seems to be taking those
     // relative URLs and converting them to absolute URLs. In the future it might be better to decouple this.
@@ -132,7 +133,7 @@ describe('Mint NFT', () => {
       },
     );
     const result = await storage.upload(files, newMintAccount.publicKey.toBase58(), txid);
-
+    console.log('result', result);
     expect(typeof result).toBe('object');
     expect(result.messages).toBeInstanceOf(Array);
     expect(result.messages[0].status).toEqual('success');

@@ -17,7 +17,8 @@ describe('Storage', () => {
       ];
 
       const storage = await new ArweaveStorage({
-        endpoint: 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile2',
+        endpoint: 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4',
+        env: 'devnet',
       });
 
       const lamports = await storage.getAssetCostToStore([artwork], rates[0].rate, rates[1].rate);
