@@ -1,5 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { Program } from '../Program';
+import { config } from '../../config';
 
 export enum MetaplexKey {
   Uninitialized = 0,
@@ -19,7 +20,7 @@ export enum MetaplexKey {
 
 export class MetaplexProgram extends Program<{}> {
   static readonly PREFIX = 'metaplex';
-  static readonly PUBKEY = new PublicKey('p1exdMJcjVao65QdewkaZRUnU6VPSXhus9n2GzWfh98');
+  static readonly PUBKEY = new PublicKey(config.programs.metaplex);
 
   constructor() {
     super(MetaplexProgram.PUBKEY);

@@ -1,18 +1,24 @@
 {
+  "ts-node": {
+    "moduleTypes": {
+      "jest.config.ts": "cjs"
+    }
+  },
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "target": "esnext",
     "declaration": true,
+    "declarationDir": "dist",
     "removeComments": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "rootDir": ".",
+    "baseUrl": "./src",
+    "rootDirs": ["src","test"],
   },
   "include": [
-    "./src",
+    "./src/global.d.ts"
   ],
   "exclude": ["node_modules", "dist", "build"]
 }

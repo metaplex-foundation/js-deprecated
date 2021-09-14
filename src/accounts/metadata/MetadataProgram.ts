@@ -1,5 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { Program } from '../Program';
+import { config } from '../../config';
 
 export enum MetadataKey {
   Uninitialized = 0,
@@ -12,7 +13,7 @@ export enum MetadataKey {
 
 export class MetadataProgram extends Program<{}> {
   static readonly PREFIX = 'metadata';
-  static readonly PUBKEY = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
+  static readonly PUBKEY = new PublicKey(config.programs.metadata);
 
   constructor() {
     super(MetadataProgram.PUBKEY);

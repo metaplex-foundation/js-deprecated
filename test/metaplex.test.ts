@@ -60,7 +60,6 @@ describe('Metaplex', () => {
     test('getBidRedemptionTickets', async () => {
       const auctionManager = await AuctionManager.load(connection, AUCTION_MANAGER_PUBKEY);
       const bidRedemptionTickets = await auctionManager.getBidRedemptionTickets(connection);
-      console.log(bidRedemptionTickets);
     });
   });
 
@@ -72,7 +71,6 @@ describe('Metaplex', () => {
         connection,
         STORE_OWNER_PUBKEY,
       );
-      console.log(payoutTickets);
     });
   });
 });
