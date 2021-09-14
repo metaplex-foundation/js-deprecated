@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { Connection, MetadataData, MetadataJson } from '../src';
+import { Connection, MetadataJson } from '../src';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import File from 'fetch-blob/file.js';
@@ -18,9 +18,9 @@ describe('Mint NFT', () => {
   let connection: Connection;
   let creator: Keypair;
   let artwork: File;
-  // set 30s timeout because the devnet RPC can be notoriously slow and we don't want tests
+  // set 80s timeout because the devnet RPC can be notoriously slow and we don't want tests
   // constantly failing due to timeouts...
-  jest.setTimeout(30000);
+  jest.setTimeout(80000);
   beforeAll(async () => {
     connection = new Connection('devnet');
     creator = Keypair.generate();
@@ -31,7 +31,6 @@ describe('Mint NFT', () => {
     artwork = new File(
       [
         Uint8Array.from([
-          0x75, 0xab, 0x5a, 0x8a, 0x66, 0xa0, 0x7b, 0xf8, 0xe9, 0x7a, 0x06, 0xda, 0xb1, 0xee, 0xb8,
           0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00,
           0x01, 0x00, 0x01, 0x00, 0x00, 0xff, 0xdb, 0x00, 0x43, 0x00, 0x02, 0x01, 0x01, 0x01, 0x01,
           0x01, 0x02, 0x01, 0x01, 0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x04, 0x03, 0x02, 0x02, 0x02,
@@ -68,8 +67,6 @@ describe('Mint NFT', () => {
     const storage = await new ArweaveStorage({
       endpoint: 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile2',
     });
-    const lamports = await storage.getAssetCostToStore([artwork], rates[0].rate, rates[1].rate);
-
     // this is a bit of undocumented behavior right here. the arweave upload endpoint seems to be taking those
     // relative URLs and converting them to absolute URLs. In the future it might be better to decouple this.
     const metadataContent: MetadataJson = {
@@ -77,16 +74,17 @@ describe('Mint NFT', () => {
       symbol: '',
       description: 'An NFT that is minted in the test suite',
       seller_fee_basis_points: 300,
-      external_url: '',
       image: 'metaplex.jpg',
+      animation_url: null,
+      external_url: null,
       properties: {
-        category: 'image',
         files: [
           {
             uri: 'metaplex.jpg',
             type: 'image/jpeg',
           },
         ],
+        category: 'image',
         creators: [
           {
             address: creator.publicKey.toBase58(),
@@ -98,6 +96,8 @@ describe('Mint NFT', () => {
     };
     const files: File[] = [artwork, new File([JSON.stringify(metadataContent)], 'metadata.json')];
     const fileHashes = await Promise.all(files.map((file) => Utils.mint.getFileHash(file)));
+    const lamports = await storage.getAssetCostToStore(files, rates[0].rate, rates[1].rate);
+
     const payForFilesTx = new PayForFiles(
       {
         feePayer: creator.publicKey,
@@ -157,7 +157,17 @@ describe('Mint NFT', () => {
         commitment: 'confirmed',
       },
     );
+    const result = await storage.upload(files, newMintAccount.publicKey.toBase58(), txid);
 
-    const result = await storage.upload(files, txid, newMintAccount.publicKey.toBase58());
+    expect(typeof result).toBe("object")
+    expect(result.messages).toBeInstanceOf(Array);
+    expect(result.messages[0].status).toEqual('success');
+    expect(result.messages[0].filename).toEqual('metaplex.jpg');
+    expect(result.messages[1].status).toEqual('success');
+    expect(result.messages[1].filename).toEqual('metadata.json');
+    expect(result.messages[2].status).toEqual('success');
+    expect(result.messages[2].filename).toEqual('manifest.json');
+
+    // TODO: Create the Master Edition and change mint owner account
   });
 });

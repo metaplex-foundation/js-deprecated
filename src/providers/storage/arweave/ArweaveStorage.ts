@@ -1,7 +1,21 @@
-import fetch from 'cross-fetch';
+// let me tell you a little story anon, sit down, get comfortable, grab a cup of tea. Once upon a
+// time, a developer just wanted to use fetch API isomorphically, not pollute the global namespace
+// (since this is a library), have a nice polyfill for FormData, and upload files. Easy peasy thing
+// to expect in 2021, right?.. WRONG!
+// Enter dependency hell. `cross-fetch` is the perfect library for isomorphic use of fetch and it
+// has a ponyfill (ESM non polluting import), but it's not yet updated to latest `node-fetch`:
+// https://github.com/lquixada/cross-fetch/issues/115
+// The version of `node-fetch` that `cross-fetch` references is a 2.x that doesn't work with the
+// good, standards compliant polyfill, and instead wants to use the `form-data` package, which is
+// deprecated in 3.x and doesn't work at all in any permutation (and isn't isomorphic). Long story
+// short, either that issue will be addressed quickly or we should just fork it and update it
+// ourselves, and submit a PR.
+//
+// TODO: Make this isomorphic
+import fetch from 'node-fetch';
 import { Storage, UploadResult } from '../Storage';
 import File from 'fetch-blob/file.js';
-import { FormData } from 'formdata-polyfill/esm.min.js';
+import { FormData, formDataToBlob } from 'formdata-polyfill/esm.min.js';
 
 const ARWEAVE_URL = 'https://arweave.net';
 const LAMPORT_MULTIPLIER = 10 ** 9;
@@ -37,13 +51,16 @@ export class ArweaveStorage implements Storage {
       acc[f.name] = [{ name: 'mint', value: mintKey }];
       return acc;
     }, {});
-    data.append('tags', JSON.stringify(tags));
-    data.append('transaction', txid);
+
+    data.set('tags', JSON.stringify(tags));
+    data.set('transaction', txid);
     files.map((f) => data.append('file[]', f));
+
     const response = await fetch(this.endpoint, {
       method: 'POST',
-      body: data,
+      body: formDataToBlob(data),
     });
+
     return response.json();
   }
 }

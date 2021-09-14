@@ -42,6 +42,6 @@ export type MetadataJson = {
   animation_url?: string;
   external_url?: string;
   attributes?: MetadataJsonAttribute[];
-  properties: MetadataJsonProperties;
   collection?: MetadataJsonCollection;
+  properties: MetadataJsonProperties;
 };
