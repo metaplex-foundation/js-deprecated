@@ -12,3 +12,6 @@ export * as metaplex from './metaplex';
 
 export * from './vault';
 export * as vault from './vault';
+
+export * from './nft-packs';
+export * as packs from './nft-packs';

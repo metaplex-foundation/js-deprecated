@@ -18,8 +18,7 @@
     "rootDirs": ["src","test"],
   },
   "include": [
-    "./src",
-    "./src/global.d.ts",
+    "./src/global.d.ts"
   ],
   "exclude": ["node_modules", "dist", "build"]
 }

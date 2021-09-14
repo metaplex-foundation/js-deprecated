@@ -10,3 +10,7 @@ export const AUCTION_EXTENDED_PUBKEY = new PublicKey(
 export const VAULT_PUBKEY = new PublicKey('BE43QppYzwWVVSobScMbPgqKogPHsHQoogXgLH3ZTFtW');
 export const METADATA_PUBKEY = new PublicKey('CZkFeERacU42qjApPyjamS13fNtz7y1wYLu5jyLpN1WL');
 export const MASTER_EDITION_PUBKEY = new PublicKey('EZ5xB174dcz982WXV2aNr4zSW5ywAH3gP5Lbj8CuRMw4');
+export const PACKSET_PUBKEY = new PublicKey('AN1bTGLCLSoSTJMeBPa7KGRDF5BpbfvD7oA42ZMq27Ru');
+export const PACKCARD_PUBKEY = new PublicKey('BVrBhek71ZDDPQ8tYucBiEKxYmmtQLioF3eJJnhH6md4');
+export const PACKVOUCHER_PUBKEY = new PublicKey('Ah6ngnNfhzKFfMPtiK5BeQ4mF5Nzwv1bwtbAEgMYH6Dp');
+export const PROVING_PROCESS_PUBKEY = new PublicKey('HCzXvi3L1xdkFp5jafadFGzbirua9U4r4ePiXvcqH81R');
