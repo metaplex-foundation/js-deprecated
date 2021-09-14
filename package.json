@@ -1,13 +1,12 @@
 {
   "name": "@metaplex/js",
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
-  "style": "dist/style.css",
+  "type": "module",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "jsnext:main": "dist/index.mjs",
   "typings": "dist/index.d.ts",
   "browser": {
-    "dist/index.es.js": "dist/index.browser.es.js",
-    "dist/index.js": "dist/index.browser.js"
+    "dist/index.mjs": "dist/index.browser.mjs"
   },
   "version": "0.0.1",
   "license": "MIT",
@@ -29,8 +28,8 @@
     "fix:prettier": "prettier --write \"{src,test}/**/*.ts\"",
     "fix:eslint": "eslint . --format stylish --fix",
     "fix": "yarn fix:eslint && fix:prettier",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "preinstall": "npx only-allow yarn"
   },
   "dependencies": {
@@ -51,6 +50,7 @@
     "@rollup/plugin-alias": "^3.1.5",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-replace": "^3.0.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.9.1",
     "@typescript-eslint/eslint-plugin": "^4.30.0",

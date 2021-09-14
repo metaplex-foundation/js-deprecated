@@ -8,8 +8,8 @@ export enum Currency {
 }
 
 export type ConversionRatePair = {
-  base: Currency;
-  quote: Currency;
+  from: Currency;
+  to: Currency;
   rate: number;
 };
 

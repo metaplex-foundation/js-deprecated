@@ -1,17 +1,3 @@
-// let me tell you a little story anon, sit down, get comfortable, grab a cup of tea. Once upon a
-// time, a developer just wanted to use fetch API isomorphically, not pollute the global namespace
-// (since this is a library), have a nice polyfill for FormData, and upload files. Easy peasy thing
-// to expect in 2021, right?.. WRONG!
-// Enter dependency hell. `cross-fetch` is the perfect library for isomorphic use of fetch and it
-// has a ponyfill (ESM non polluting import), but it's not yet updated to latest `node-fetch`:
-// https://github.com/lquixada/cross-fetch/issues/115
-// The version of `node-fetch` that `cross-fetch` references is a 2.x that doesn't work with the
-// good, standards compliant polyfill, and instead wants to use the `form-data` package, which is
-// deprecated in 3.x and doesn't work at all in any permutation (and isn't isomorphic). Long story
-// short, either that issue will be addressed quickly or we should just fork it and update it
-// ourselves, and submit a PR.
-//
-// TODO: Make this isomorphic
 import { Storage, UploadResult } from '../Storage';
 import { fetch, File, FormData } from '../../../isomorphic';
 
@@ -50,12 +36,18 @@ export class ArweaveStorage implements Storage {
       return acc;
     }, {});
 
-    data.set('tags', JSON.stringify(tags));
-    data.set('transaction', txid);
-    files.map((f) => data.append('file[]', f));
+    data.append('tags', JSON.stringify(tags));
+    data.append('transaction', txid);
+    files.map((f) => {
+      data.append('file[]', f);
+    });
 
     const response = await fetch(this.endpoint, {
       method: 'POST',
+      // TODO: I hate to do this, but it seems to be like an upstream problem:
+      // https://github.com/jimmywarting/FormData/issues/133
+      // I'll make sure to track it. - Danny
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       body: data,
     });

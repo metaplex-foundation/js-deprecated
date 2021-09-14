@@ -1,2 +1,2 @@
 export * from './ConversionRateProvider';
-export * from './coingecko/Coingecko';
+export * from './Coingecko';

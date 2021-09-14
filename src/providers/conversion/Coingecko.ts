@@ -1,5 +1,5 @@
-import fetch from 'cross-fetch';
-import { ConversionRateProvider, Currency } from '../ConversionRateProvider';
+import { fetch } from '../../isomorphic';
+import { ConversionRateProvider, Currency } from './ConversionRateProvider';
 
 export class Coingecko implements ConversionRateProvider {
   constructor() {}
@@ -32,8 +32,8 @@ export class Coingecko implements ConversionRateProvider {
       return [
         ...previousPairs,
         ...toArray.map((toCurrency) => ({
-          base: fromCurrency,
-          quote: toCurrency,
+          from: fromCurrency,
+          to: toCurrency,
           rate: json[Coingecko.translateCurrency(fromCurrency)][
             Coingecko.translateCurrency(toCurrency)
           ],

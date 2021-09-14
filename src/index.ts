@@ -5,3 +5,4 @@ export * from './accounts';
 export * from './providers';
 export * from './transactions';
 export * from './Connection';
+export * from './isomorphic';

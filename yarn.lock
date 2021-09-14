@@ -716,6 +716,7 @@ __metadata:
     "@rollup/plugin-alias": ^3.1.5
     "@rollup/plugin-commonjs": ^20.0.0
     "@rollup/plugin-node-resolve": ^13.0.4
+    "@rollup/plugin-replace": ^3.0.0
     "@solana/spl-token": ^0.1.8
     "@solana/spl-token-registry": ^0.2.231
     "@solana/web3.js": ^1.24.1
@@ -868,6 +869,18 @@ __metadata:
   peerDependencies:
     rollup: ^2.42.0
   checksum: 9013d3b2c2e5a31be12e74fdf1ade209d3ce8c52cc47c2bb724ba67727efec7275a4e987874c5b6d6a3f9f25c5364df95bfba5b2f8b874a9dbb33c3fcb927731
+  languageName: node
+  linkType: hard
+
+"@rollup/plugin-replace@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@rollup/plugin-replace@npm:3.0.0"
+  dependencies:
+    "@rollup/pluginutils": ^3.1.0
+    magic-string: ^0.25.7
+  peerDependencies:
+    rollup: ^1.20.0 || ^2.0.0
+  checksum: 5a7c29e9ae3ff713b0f7ab56536a33c6482eb50158c3a422deeed796f3a25d31b7b3a7bbc65e2ef4dc60c9c42f65612b3b2a49a62119f4becbfd194cd523c230
   languageName: node
   linkType: hard
 

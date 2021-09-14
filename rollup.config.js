@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import alias from '@rollup/plugin-alias';
+import replace from '@rollup/plugin-replace';
 import pkg from './package.json';
 
 const input = 'src/index.ts';
@@ -14,13 +15,19 @@ const external = [
 ];
 
 const plugins = [
+  alias({
+    // This addresses this issue and can be removed when it is resolved:
+    // https://github.com/node-fetch/fetch-blob/issues/117
+    entries: [{ find: 'stream/web', replacement: 'web-streams-polyfill/dist/ponyfill.es2018.js' }],
+  }),
   resolve({
     preferBuiltins: true,
   }),
   typescript({
     rollupCommonJSResolveHack: true,
-    exclude: ['**/__tests__/**'],
+    exclude: ['**/*.test.ts'],
   }),
+  replace({ 'process.browser': !!process.env.BROWSER, preventAssignment: true }),
   commonjs({
     include: /node_modules/,
   }),
@@ -28,9 +35,7 @@ const plugins = [
 
 const pluginsBrowser = [
   alias({
-    entries: [
-      { find:/isomorphic$/, replacement: 'isomorphic/index.browser' }
-    ]
+    entries: [{ find: /isomorphic$/, replacement: 'isomorphic/index.browser' }],
   }),
   resolve({
     browser: true,
@@ -39,8 +44,9 @@ const pluginsBrowser = [
   }),
   typescript({
     rollupCommonJSResolveHack: true,
-    exclude: ['**/__tests__/**'],
+    exclude: ['**/*.test.ts'],
   }),
+  replace({ 'process.browser': !!process.env.BROWSER, preventAssignment: true }),
   commonjs({
     include: /node_modules/,
   }),
@@ -49,22 +55,12 @@ const pluginsBrowser = [
 
 const OUTPUT_DATA = [
   {
-    file: pkg.main,
-    format: 'cjs',
-    plugins,
-  },
-  {
     file: pkg.module,
     format: 'es',
     plugins,
   },
   {
-    file: pkg.browser['dist/index.js'],
-    format: 'cjs',
-    plugins: pluginsBrowser,
-  },
-  {
-    file: pkg.browser['dist/index.es.js'],
+    file: pkg.browser['dist/index.mjs'],
     format: 'es',
     plugins: pluginsBrowser,
   },

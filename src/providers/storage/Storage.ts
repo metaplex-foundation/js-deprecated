@@ -11,6 +11,6 @@ export interface UploadResult {
 }
 
 export abstract class Storage {
-  getAssetCostToStore: (files: File[], arweaveRate: number, solanaRate: number) => Promise<number>;
-  upload: (files: File[], mintKey: string, txid: string) => Promise<UploadResult>;
+  getAssetCostToStore: (files: Blob[], arweaveRate: number, solanaRate: number) => Promise<number>;
+  upload: (files: Blob[], mintKey: string, txid: string) => Promise<UploadResult>;
 }

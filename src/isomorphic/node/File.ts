@@ -1,2 +1,2 @@
-export { File } from 'fetch-blob/file.js'
-
+import File from 'fetch-blob/file.js';
+export { File };
