@@ -34,7 +34,7 @@ export interface PackCardData {
   /// How many instances of this card exists in all packs
   maxSupply?: number;
   /// Fixed number / probability-based
-  distributionType: DistributionType;
+  distribution: Distribution;
   /// How many cards already minted
   currentSupply: number;
 }
@@ -47,7 +47,7 @@ const packCardStruct = borsh.struct<PackCardData>(
     ['metadata', 'pubkeyAsString'],
     ['tokenAccount', 'pubkeyAsString'],
     ['maxSupply', { kind: 'option', type: 'u32' }],
-    ['distributionType', distributionStruct.type],
+    ['distribution', distributionStruct.type],
     ['currentSupply', 'u32'],
   ],
   [distributionStruct],

@@ -11,7 +11,7 @@ export enum NFTPacksAccountType {
 
 export class NFTPacksProgram extends Program<{}> {
   static readonly PREFIX = 'packs';
-  static readonly PUBKEY = new PublicKey('Co1TG1QQyD9UyFxHWiUaEsPdWwH9adbYECwkuXKtQi5y');
+  static readonly PUBKEY = new PublicKey('BNRmGgciUJuyznkYHnmitA9an1BcDDiU9JmjEQwvBYVR');
 
   constructor() {
     super(NFTPacksProgram.PUBKEY);

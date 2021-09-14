@@ -48,7 +48,8 @@ const packSetStruct = borsh.struct<PackSetData>(
   [],
   (data) => {
     data.accountType = NFTPacksAccountType.PackSet;
-    data.name = String.fromCharCode.apply(null, data.name);
+    // Fixed Uint8Array to utf-8 string
+    data.name = String.fromCharCode.apply(null, data.name).replace(/\0.*$/g, '');
     data.state = data.state as PackSetState;
     return data;
   },
