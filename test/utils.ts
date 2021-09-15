@@ -1,4 +1,13 @@
-import { PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
+
+export const FEE_PAYER = Keypair.fromSecretKey(
+  new Uint8Array([
+    225, 60, 117, 68, 123, 252, 1, 200, 41, 251, 54, 121, 6, 167, 204, 18, 140, 168, 206, 74, 254,
+    156, 230, 10, 212, 124, 162, 85, 120, 78, 122, 106, 187, 209, 148, 182, 34, 149, 175, 173, 192,
+    85, 175, 252, 231, 130, 76, 40, 175, 177, 44, 111, 250, 168, 3, 236, 149, 34, 236, 19, 46, 9,
+    66, 138,
+  ]),
+);
 
 export const STORE_OWNER_PUBKEY = new PublicKey('7hKMAoCYJuBnBLmVTjswu7m6jcwyE8MYAP5hPijUT6nd');
 export const STORE_PUBKEY = new PublicKey('DNQzo4Aggw8PneX7BGY7niEkB8wfNJwx6DpV9BLBUUFF');

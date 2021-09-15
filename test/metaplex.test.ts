@@ -1,7 +1,17 @@
-import { Auction, AuctionManager, Connection, MetaplexKey, PayoutTicket, Store } from '../src';
+import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
+import {
+  Auction,
+  AuctionManager,
+  Connection,
+  MetaplexKey,
+  PayoutTicket,
+  SetStore,
+  Store,
+} from '../src';
 import {
   AUCTION_MANAGER_PUBKEY,
   AUCTION_PUBKEY,
+  FEE_PAYER,
   STORE_OWNER_PUBKEY,
   STORE_PUBKEY,
   VAULT_PUBKEY,
@@ -9,9 +19,11 @@ import {
 
 describe('Metaplex', () => {
   let connection: Connection;
+  let owner: Keypair;
 
   beforeAll(() => {
     connection = new Connection('devnet');
+    owner = Keypair.generate();
   });
 
   describe('Store', () => {
@@ -32,6 +44,27 @@ describe('Metaplex', () => {
       const auctionManagers = await store.getAuctionManagers(connection);
 
       expect(auctionManagers[0].data.store).toEqual(STORE_PUBKEY.toString());
+    });
+
+    test('setStore', async () => {
+      const storeId = await Store.getPDA(owner.publicKey);
+
+      const setStoreTx = new SetStore(
+        {
+          feePayer: FEE_PAYER.publicKey,
+        },
+        {
+          admin: owner.publicKey,
+          store: storeId,
+          isPublic: true,
+        },
+      );
+
+      const txid = await sendAndConfirmTransaction(connection, setStoreTx, [FEE_PAYER, owner], {
+        commitment: 'confirmed',
+      });
+
+      console.log(txid);
     });
   });
 
