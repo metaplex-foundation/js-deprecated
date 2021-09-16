@@ -69,7 +69,7 @@ export class Struct<T> {
   }
 
   serialize(struct: T) {
-    return Buffer.from(serialize(this.schema, struct));
+    return Buffer.from(serialize(this.schema, new this.type(struct)));
   }
 
   deserialize(buffer: Buffer) {

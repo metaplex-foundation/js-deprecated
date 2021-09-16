@@ -32,9 +32,7 @@ export class SetStore extends Transaction {
     const { feePayer } = options;
     const { admin, store, isPublic } = params;
 
-    const data = setStoreStruct.serialize(
-      new setStoreStruct.type({ instruction: 8, public: isPublic }),
-    );
+    const data = setStoreStruct.serialize({ instruction: 8, public: isPublic });
 
     this.add(
       new TransactionInstruction({
