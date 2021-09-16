@@ -15,13 +15,10 @@ export interface SetStoreArgs {
   public: boolean;
 }
 
-const setStoreStruct = borsh.struct<SetStoreArgs>(
-  [
-    ['instruction', 'u8'],
-    ['public', 'u8'],
-  ],
-  [],
-);
+const setStoreStruct = borsh.struct<SetStoreArgs>([
+  ['instruction', 'u8'],
+  ['public', 'u8'],
+]);
 
 type SetStoreParams = {
   store: PublicKey;
@@ -35,7 +32,9 @@ export class SetStore extends Transaction {
     const { feePayer } = options;
     const { admin, store, isPublic } = params;
 
-    const data = setStoreStruct.serialize({ instruction: 8, public: isPublic });
+    const data = setStoreStruct.serialize(
+      new setStoreStruct.type({ instruction: 8, public: isPublic }),
+    );
 
     this.add(
       new TransactionInstruction({

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
 import {
   Auction,
@@ -20,6 +21,8 @@ import {
 describe('Metaplex', () => {
   let connection: Connection;
   let owner: Keypair;
+
+  jest.setTimeout(80000);
 
   beforeAll(() => {
     connection = new Connection('devnet');
@@ -64,7 +67,7 @@ describe('Metaplex', () => {
         commitment: 'confirmed',
       });
 
-      console.log(txid);
+      // console.log(txid);
     });
   });
 

@@ -30,18 +30,25 @@ extendBorsh();
 export class Struct<T> {
   readonly fields;
   readonly dependencies: Struct<any>[] = [];
-  readonly type: (args: T) => T;
+  readonly type: any; //(args: T) => T;
   readonly schema: Map<any, any>;
 
   constructor(fields: any[][], dependencies: Struct<any>[] = [], parse?: (args: T) => T) {
     this.fields = fields;
     this.dependencies = dependencies;
-    this.type = function (args: T = {} as T) {
-      // Ensure all args exist as undefined.
-      for (const [name] of fields) {
-        if (!(name in args)) (args as any)[name] = undefined;
+
+    this.type = class Type {
+      constructor(args: T = {} as T) {
+        for (const [name] of fields) {
+          if (!(name in args)) {
+            (args as any)[name] = undefined;
+          }
+        }
+        parse && parse(args);
+        for (const key of Object.keys(args)) {
+          this[key] = args[key];
+        }
       }
-      return parse ? parse(args) : args;
     };
 
     const entries = [
