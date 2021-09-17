@@ -44,3 +44,6 @@ coverage/
 
 # Env
 *keypair.json
+
+# Docs
+**/docs/api

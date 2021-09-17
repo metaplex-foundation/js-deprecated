@@ -26,6 +26,7 @@
     "url": "https://github.com/metaplex/js.git"
   },
   "scripts": {
+    "build:docs": "typedoc",
     "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
     "build": "rimraf lib && rollup -c && yarn build:types",
     "dev": "rollup -c --watch",
@@ -61,6 +62,7 @@
     "rollup-plugin-visualizer": "^5.5.2",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
+    "typedoc": "^0.22.3",
     "typescript": "^4.4.3"
   },
   "browserslist": [
