@@ -1,0 +1,71 @@
+{
+  "name": "@metaplex/js",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "types": "lib/index.d.ts",
+  "browser": {
+    "./lib/index.cjs.js": "./lib/index.browser.esm.js",
+    "./lib/index.esm.js": "./lib/index.browser.esm.js"
+  },
+  "files": [
+    "/lib",
+    "/src"
+  ],
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "Metaplex JavaScript API",
+  "keywords": [
+    "nft",
+    "metaplex",
+    "solana",
+    "blockchain"
+  ],
+  "author": "Metaplex Maintainers <contact@metaplex.com>",
+  "homepage": "https://metaplex.com",
+  "repository": {
+    "url": "https://github.com/metaplex/js.git"
+  },
+  "scripts": {
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build": "rimraf lib && rollup -c && yarn build:types",
+    "dev": "rollup -c --watch",
+    "fix:prettier": "prettier --write \"{src,test}/**/*.ts\"",
+    "fix:eslint": "eslint . --format stylish --fix",
+    "fix": "yarn fix:eslint && fix:prettier",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@solana/spl-token": "^0.1.8",
+    "@solana/web3.js": "^1.24.1",
+    "@types/bs58": "^4.0.1",
+    "axios": "^0.21.4",
+    "bn.js": "^5.2.0",
+    "borsh": "^0.4.0",
+    "bs58": "^4.0.1",
+    "buffer": "^6.0.3",
+    "crypto-hash": "^1.3.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-replace": "^3.0.0",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.9.2",
+    "jest": "^27.1.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.56.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-visualizer": "^5.5.2",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ]
+}

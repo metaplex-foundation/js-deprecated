@@ -1,14 +1,19 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "esnext",
+    "outDir": "./lib",
+    "target": "es6",
     "declaration": true,
     "removeComments": true,
     "moduleResolution": "node",
     "sourceMap": true,
+    "downlevelIteration": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "skipLibCheck": true,
   },
-  "exclude": ["node_modules", "dist", "build", "lib"]
+  "include": [
+    "./src"
+  ],
 }
