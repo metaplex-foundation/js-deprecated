@@ -1,8 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "module": "commonjs",
+    "outDir": "./lib",
     "target": "es6",
     "declaration": true,
     "removeComments": true,
@@ -12,7 +11,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": [
     "./src"

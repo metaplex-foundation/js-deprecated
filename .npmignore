@@ -5,3 +5,4 @@ node_modules/
 .yarn
 test/
 src/
+stats.html

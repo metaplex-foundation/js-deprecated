@@ -1,6 +1,4 @@
-import sha256 from 'crypto-js/sha256';
+import { sha256 } from 'crypto-hash';
 import { Buffer } from 'buffer';
 
-export async function getFileHash(file: Buffer) {
-  return Buffer.from(sha256(file.toString()).toString());
-}
+export const getFileHash = async (file: Buffer) => Buffer.from(await sha256(file.toString()));

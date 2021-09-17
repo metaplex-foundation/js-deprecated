@@ -9,6 +9,11 @@
   ],
   "scripts": {
     "dev": "yarn workspace @metaplex/js run dev",
+    "build": "yarn workspace @metaplex/js run build",
+    "example:web": "yarn workspace example-web run start",
+    "example:iife": "yarn workspace example-iife run start",
+    "example:node": "yarn workspace example-node run start",
+    "clean": "yarn cache clean && rm -rf node_modules",
     "preinstall": "npx only-allow yarn"
   },
   "devDependencies": {

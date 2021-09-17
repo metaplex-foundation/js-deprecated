@@ -1,7 +1,16 @@
 {
   "name": "@metaplex/js",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "types": "lib/index.d.ts",
+  "browser": {
+    "./lib/index.cjs.js": "./lib/index.browser.esm.js",
+    "./lib/index.esm.js": "./lib/index.browser.esm.js"
+  },
+  "files": [
+    "/lib",
+    "/src"
+  ],
   "version": "0.0.1",
   "license": "MIT",
   "description": "Metaplex JavaScript API",
@@ -17,9 +26,9 @@
     "url": "https://github.com/metaplex/js.git"
   },
   "scripts": {
-    "build:dist": "rimraf dist && tsc -p tsconfig.build.json",
-    "build:bundle": "rimraf build && rollup -c rollup.config.js",
-    "dev": "tsc -p tsconfig.build.json --watch",
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build": "rimraf lib && rollup -c && yarn build:types",
+    "dev": "rollup -c --watch",
     "fix:prettier": "prettier --write \"{src,test}/**/*.ts\"",
     "fix:eslint": "eslint . --format stylish --fix",
     "fix": "yarn fix:eslint && fix:prettier",
@@ -35,8 +44,7 @@
     "borsh": "^0.4.0",
     "bs58": "^4.0.1",
     "buffer": "^6.0.3",
-    "crypto-js": "^4.1.1",
-    "uuid": "^8.3.2"
+    "crypto-hash": "^1.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",
@@ -50,8 +58,14 @@
     "rollup": "^2.56.3",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-visualizer": "^5.5.2",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
-  }
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ]
 }
