@@ -12,6 +12,15 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "skipLibCheck": true,
+    "paths": {
+      "@metaplex/utils": ["./src/utils"],
+      "@metaplex/types": ["./src/types"],
+      "@metaplex/errors": ["./src/errors"],
+    },
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
   },
   "include": [
     "./src"

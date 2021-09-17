@@ -1,9 +1,9 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
-import { AnyPublicKey, StringPublicKey } from '../../../types';
-import { borsh } from '../../../utils';
+import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
+import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import Program, { VaultKey, VaultProgram } from '../VaultProgram';
-import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../../errors';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
 export interface SafetyDepositBoxData {

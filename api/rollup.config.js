@@ -5,6 +5,8 @@ import json from '@rollup/plugin-json';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { terser } from 'rollup-plugin-terser';
 
+const input = 'src/index.ts';
+
 const plugins = ({ browser }) => [
   typescript({
     tsconfig: 'tsconfig.build.json',
@@ -25,7 +27,6 @@ const plugins = ({ browser }) => [
 ];
 
 const config = ({ browser, format } = { browser: false }) => {
-  const input = 'src/index.ts';
   const config = {
     input,
     plugins: plugins({ browser }),
@@ -98,7 +99,9 @@ const config = ({ browser, format } = { browser: false }) => {
 };
 
 export default [
-  config(), // Node
+  // Node
+  config(),
+  // Browser
   config({ browser: true, format: 'esm' }),
   config({ browser: true, format: 'iife' }),
 ];

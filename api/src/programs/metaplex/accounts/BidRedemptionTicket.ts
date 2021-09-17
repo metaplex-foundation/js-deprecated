@@ -1,14 +1,14 @@
 import { AccountInfo } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
-import { AnyPublicKey, StringPublicKey } from '../../../types';
+import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { Account } from '../../../Account';
 import Program, { MetaplexKey } from '../MetaplexProgram';
 import {
   ERROR_DEPRECATED_ACCOUNT_DATA,
   ERROR_INVALID_ACCOUNT_DATA,
   ERROR_INVALID_OWNER,
-} from '../../../errors';
+} from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
 export interface BidRedemptionTicketV2Data {

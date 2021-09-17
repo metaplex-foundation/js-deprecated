@@ -1,8 +1,8 @@
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
-import { ERROR_INVALID_OWNER } from '../../../errors';
-import { AnyPublicKey, StringPublicKey } from '../../../types';
-import { borsh } from '../../../utils';
+import { ERROR_INVALID_OWNER } from '@metaplex/errors';
+import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
+import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import Program, { AuctionProgram } from '../AuctionProgram';
 import { BidderMetadata } from './BidderMetadata';

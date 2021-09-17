@@ -6,7 +6,7 @@ import {
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
-import { borsh } from '../../../utils';
+import { borsh } from '@metaplex/utils';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../../vault';
 import { MetadataProgram } from '../../metadata';

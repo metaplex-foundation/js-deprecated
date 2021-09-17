@@ -1,10 +1,10 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
-import { AnyPublicKey } from '../../../types';
-import { borsh } from '../../../utils';
+import { AnyPublicKey } from '@metaplex/types';
+import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import Program, { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
-import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../../errors';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
 export interface PrizeTrackingTicketData {

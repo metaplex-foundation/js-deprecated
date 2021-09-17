@@ -1,11 +1,11 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
-import { AnyPublicKey, StringPublicKey } from '../../../types';
-import { getBNFromData, TupleNumericType } from '../../../utils';
+import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
+import { getBNFromData, TupleNumericType } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import Program, { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
-import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '../../../errors';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
 export enum WinningConfigType {

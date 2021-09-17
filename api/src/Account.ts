@@ -1,5 +1,5 @@
 import { AccountInfo, Commitment, PublicKey, Connection } from '@solana/web3.js';
-import { AnyPublicKey } from './types';
+import { AnyPublicKey } from '@metaplex/types';
 import { Buffer } from 'buffer';
 
 export type AccountConstructor<T> = {
