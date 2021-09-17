@@ -34,7 +34,7 @@ const bundle = {
     sourcemap: true,
     globals: {
       '@solana/web3.js': 'solanaWeb3',
-      '@solana/spl-token': 'crypto',
+      '@solana/spl-token': 'splToken',
       crypto: 'crypto',
     },
   },
