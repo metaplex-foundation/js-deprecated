@@ -60,14 +60,14 @@ export class PackVoucher extends Account<PackVoucherData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!PackVoucher.isPackVoucher(this.info.data)) {
+    if (!PackVoucher.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = packVoucherStruct.deserialize(this.info.data);
   }
 
-  static isPackVoucher(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === NFTPacksAccountType.PackVoucher;
   }
 

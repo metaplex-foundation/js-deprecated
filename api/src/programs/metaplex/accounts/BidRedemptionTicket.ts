@@ -47,7 +47,7 @@ export class BidRedemptionTicket extends Account<BidRedemptionTicketV2Data> {
     }
   }
 
-  static isBidRedemptionTicket(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return (
       BidRedemptionTicket.isBidRedemptionTicketV1(data) ||
       BidRedemptionTicket.isBidRedemptionTicketV2(data)

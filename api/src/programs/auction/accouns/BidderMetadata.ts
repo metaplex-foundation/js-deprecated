@@ -39,14 +39,14 @@ export class BidderMetadata extends Account<BidderMetadataData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!BidderMetadata.isBidderMetadata(this.info.data)) {
+    if (!BidderMetadata.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = bidderMetadataStruct.deserialize(this.info.data);
   }
 
-  static isBidderMetadata(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data.length === BidderMetadata.DATA_SIZE;
   }
 }

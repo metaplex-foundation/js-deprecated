@@ -68,14 +68,14 @@ export class PackCard extends Account<PackCardData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!PackCard.isPackCard(this.info.data)) {
+    if (!PackCard.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = packCardStruct.deserialize(this.info.data);
   }
 
-  static isPackCard(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === NFTPacksAccountType.PackCard;
   }
 

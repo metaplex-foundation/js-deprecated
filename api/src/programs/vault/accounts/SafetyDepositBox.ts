@@ -42,7 +42,7 @@ export class SafetyDepositBox extends Account<SafetyDepositBoxData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!SafetyDepositBox.isSafetyDepositBox(this.info.data)) {
+    if (!SafetyDepositBox.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
@@ -57,7 +57,7 @@ export class SafetyDepositBox extends Account<SafetyDepositBoxData> {
     ]);
   }
 
-  static isSafetyDepositBox(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === VaultKey.SafetyDepositBoxV1;
   }
 }

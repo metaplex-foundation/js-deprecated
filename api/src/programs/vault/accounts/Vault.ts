@@ -76,7 +76,7 @@ export class Vault extends Account<VaultData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!Vault.isVault(this.info.data)) {
+    if (!Vault.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
@@ -91,7 +91,7 @@ export class Vault extends Account<VaultData> {
     ]);
   }
 
-  static isVault(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === VaultKey.VaultV1;
   }
 

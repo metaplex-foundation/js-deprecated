@@ -38,14 +38,14 @@ export class PrizeTrackingTicket extends Account<PrizeTrackingTicketData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!PrizeTrackingTicket.isPrizeTrackingTicket(this.info.data)) {
+    if (!PrizeTrackingTicket.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = prizeTrackingTicketStruct.deserialize(this.info.data);
   }
 
-  static isPrizeTrackingTicket(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetaplexKey.PrizeTrackingTicketV1;
   }
 

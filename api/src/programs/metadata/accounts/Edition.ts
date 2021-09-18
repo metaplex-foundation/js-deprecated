@@ -36,7 +36,7 @@ export class Edition extends Account<EditionData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!Edition.isEdition(this.info.data)) {
+    if (!Edition.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
@@ -52,7 +52,7 @@ export class Edition extends Account<EditionData> {
     ]);
   }
 
-  static isEdition(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetadataKey.EditionV1;
   }
 }

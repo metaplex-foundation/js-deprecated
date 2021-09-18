@@ -33,7 +33,7 @@ export class EditionMarker extends Account<EditionMarkerData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!EditionMarker.isEditionMarker(this.info.data)) {
+    if (!EditionMarker.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
@@ -52,7 +52,7 @@ export class EditionMarker extends Account<EditionMarkerData> {
     ]);
   }
 
-  static isEditionMarker(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetadataKey.EditionMarker;
   }
 }

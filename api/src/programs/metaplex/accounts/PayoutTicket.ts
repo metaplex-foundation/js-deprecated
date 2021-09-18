@@ -35,14 +35,14 @@ export class PayoutTicket extends Account<PayoutTicketData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!PayoutTicket.isPayoutTicket(this.info.data)) {
+    if (!PayoutTicket.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = payoutTicketStruct.deserialize(this.info.data);
   }
 
-  static isPayoutTicket(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetaplexKey.PayoutTicketV1;
   }
 

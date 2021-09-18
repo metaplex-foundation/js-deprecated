@@ -81,14 +81,14 @@ export class SafetyDepositConfig extends Account<SafetyDepositConfigData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!SafetyDepositConfig.isSafetyDepositConfig(this.info.data)) {
+    if (!SafetyDepositConfig.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = deserialize(this.info.data);
   }
 
-  static isSafetyDepositConfig(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetaplexKey.SafetyDepositConfigV1;
   }
 

@@ -93,7 +93,7 @@ export class AuctionManager extends Account<AuctionManagerV2Data> {
     }
   }
 
-  static isAuctionManager(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return AuctionManager.isAuctionManagerV1(data) || AuctionManager.isAuctionManagerV2(data);
   }
 

@@ -39,14 +39,14 @@ export class Store extends Account<StoreData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!Store.isStore(this.info.data)) {
+    if (!Store.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = storeStruct.deserialize(this.info.data);
   }
 
-  static isStore(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetaplexKey.StoreV1;
   }
 

@@ -32,14 +32,14 @@ export class BidderPot extends Account<BiddePotData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!BidderPot.isBidderPot(this.info.data)) {
+    if (!BidderPot.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = bidderPotStruct.deserialize(this.info.data);
   }
 
-  static isBidderPot(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data.length === BidderPot.DATA_SIZE;
   }
 }
