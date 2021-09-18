@@ -4,7 +4,7 @@ import bs58 from 'bs58';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { getBNFromData, TupleNumericType } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
+import { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -77,7 +77,7 @@ export class SafetyDepositConfig extends Account<SafetyDepositConfigData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetaplexProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -93,7 +93,7 @@ export class SafetyDepositConfig extends Account<SafetyDepositConfigData> {
   }
 
   static async getPDA(auctionManager: AnyPublicKey, safetyDeposit: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return MetaplexProgram.findProgramAddress([
       Buffer.from(MetaplexProgram.PREFIX),
       MetaplexProgram.PUBKEY.toBuffer(),
       new PublicKey(auctionManager).toBuffer(),

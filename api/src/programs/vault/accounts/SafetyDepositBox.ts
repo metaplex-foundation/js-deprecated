@@ -2,7 +2,7 @@ import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { VaultKey, VaultProgram } from '../VaultProgram';
+import { VaultKey, VaultProgram } from '../VaultProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -38,7 +38,7 @@ export class SafetyDepositBox extends Account<SafetyDepositBoxData> {
   constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(VaultProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -50,7 +50,7 @@ export class SafetyDepositBox extends Account<SafetyDepositBoxData> {
   }
 
   static async getPDA(vault: AnyPublicKey, mint: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return VaultProgram.findProgramAddress([
       Buffer.from(VaultProgram.PREFIX),
       new PublicKey(vault).toBuffer(),
       new PublicKey(mint).toBuffer(),

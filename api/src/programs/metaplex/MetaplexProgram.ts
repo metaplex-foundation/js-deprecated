@@ -18,13 +18,7 @@ export enum MetaplexKey {
   AuctionWinnerTokenTypeTrackerV1 = 12,
 }
 
-export class MetaplexProgram extends Program<{}> {
+export class MetaplexProgram extends Program {
   static readonly PREFIX = 'metaplex';
   static readonly PUBKEY = new PublicKey(config.programs.metaplex);
-
-  constructor() {
-    super(MetaplexProgram.PUBKEY);
-  }
 }
-
-export default new MetaplexProgram();

@@ -11,13 +11,7 @@ export enum MetadataKey {
   EditionMarker = 7,
 }
 
-export class MetadataProgram extends Program<{}> {
+export class MetadataProgram extends Program {
   static readonly PREFIX = 'metadata';
   static readonly PUBKEY = new PublicKey(config.programs.metadata);
-
-  constructor() {
-    super(MetadataProgram.PUBKEY);
-  }
 }
-
-export default new MetadataProgram();

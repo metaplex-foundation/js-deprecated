@@ -5,7 +5,7 @@ import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/error
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { NFTPacksAccountType } from '../NFTPacksProgram';
+import { NFTPacksAccountType, NFTPacksProgram } from '../NFTPacksProgram';
 import { Buffer } from 'buffer';
 
 export enum PackSetState {
@@ -60,7 +60,7 @@ export class PackSet extends Account<PackSetData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(NFTPacksProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -77,7 +77,7 @@ export class PackSet extends Account<PackSetData> {
 
   async getCards(connection: Connection) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await NFTPacksProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for PackCard by key
           {

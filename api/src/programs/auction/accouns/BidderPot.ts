@@ -1,6 +1,6 @@
 import { borsh } from '@metaplex/utils';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import Program from '../AuctionProgram';
+import { AuctionProgram } from '../AuctionProgram';
 import { AccountInfo } from '@solana/web3.js';
 import { Account } from '../../../Account';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
@@ -23,12 +23,11 @@ const bidderPotStruct = borsh.struct<BiddePotData>([
 
 export class BidderPot extends Account<BiddePotData> {
   static readonly DATA_SIZE = 32 + 32 + 32 + 1;
-  readonly PROGRAM = Program;
 
   constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(AuctionProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 

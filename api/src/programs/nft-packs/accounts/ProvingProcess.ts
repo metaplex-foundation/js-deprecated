@@ -3,7 +3,7 @@ import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/error
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { NFTPacksAccountType } from '../NFTPacksProgram';
+import { NFTPacksAccountType, NFTPacksProgram } from '../NFTPacksProgram';
 import { Buffer } from 'buffer';
 
 export interface ProvingProcessData {
@@ -45,7 +45,7 @@ export class ProvingProcess extends Account<ProvingProcessData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(NFTPacksProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -61,7 +61,7 @@ export class ProvingProcess extends Account<ProvingProcessData> {
   }
 
   static getPDA(packSet: AnyPublicKey, userWallet: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return NFTPacksProgram.findProgramAddress([
       Buffer.from(ProvingProcess.PREFIX),
       new PublicKey(packSet).toBuffer(),
       new PublicKey(userWallet).toBuffer(),

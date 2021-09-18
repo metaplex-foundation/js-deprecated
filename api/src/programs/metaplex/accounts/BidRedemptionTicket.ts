@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import bs58 from 'bs58';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { Account } from '../../../Account';
-import Program, { MetaplexKey } from '../MetaplexProgram';
+import { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
 import {
   ERROR_DEPRECATED_ACCOUNT_DATA,
   ERROR_INVALID_ACCOUNT_DATA,
@@ -24,7 +24,7 @@ export class BidRedemptionTicket extends Account<BidRedemptionTicketV2Data> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetaplexProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 

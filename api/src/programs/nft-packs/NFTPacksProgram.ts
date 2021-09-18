@@ -9,13 +9,7 @@ export enum NFTPacksAccountType {
   ProvingProcess = 4,
 }
 
-export class NFTPacksProgram extends Program<{}> {
+export class NFTPacksProgram extends Program {
   static readonly PREFIX = 'packs';
   static readonly PUBKEY = new PublicKey('BNRmGgciUJuyznkYHnmitA9an1BcDDiU9JmjEQwvBYVR');
-
-  constructor() {
-    super(NFTPacksProgram.PUBKEY);
-  }
 }
-
-export default new NFTPacksProgram();

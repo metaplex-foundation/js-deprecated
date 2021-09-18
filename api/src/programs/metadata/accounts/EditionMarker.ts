@@ -5,7 +5,7 @@ import { AnyPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { Edition } from './Edition';
-import Program, { MetadataKey, MetadataProgram } from '../MetadataProgram';
+import { MetadataKey, MetadataProgram } from '../MetadataProgram';
 import { Buffer } from 'buffer';
 
 export interface EditionMarkerData {
@@ -29,7 +29,7 @@ export class EditionMarker extends Account<EditionMarkerData> {
   constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetadataProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -43,7 +43,7 @@ export class EditionMarker extends Account<EditionMarkerData> {
   static async getPDA(mint: AnyPublicKey, edition: BN) {
     const editionNumber = Math.floor(edition.toNumber() / 248);
 
-    return Program.findProgramAddress([
+    return MetadataProgram.findProgramAddress([
       Buffer.from(MetadataProgram.PREFIX),
       MetadataProgram.PUBKEY.toBuffer(),
       new PublicKey(mint).toBuffer(),

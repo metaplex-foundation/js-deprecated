@@ -4,7 +4,7 @@ import { ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { AuctionProgram } from '../AuctionProgram';
+import { AuctionProgram } from '../AuctionProgram';
 import { BidderMetadata } from './BidderMetadata';
 import { BidderPot } from './BidderPot';
 import { Buffer } from 'buffer';
@@ -122,7 +122,7 @@ export class Auction extends Account<AuctionData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(AuctionProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -130,7 +130,7 @@ export class Auction extends Account<AuctionData> {
   }
 
   static getPDA(vault: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return AuctionProgram.findProgramAddress([
       Buffer.from(AuctionProgram.PREFIX),
       AuctionProgram.PUBKEY.toBuffer(),
       new PublicKey(vault).toBuffer(),
@@ -139,7 +139,7 @@ export class Auction extends Account<AuctionData> {
 
   async getBidderPots(connection: Connection) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await AuctionProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for BidderPot by data size
           {
@@ -159,7 +159,7 @@ export class Auction extends Account<AuctionData> {
 
   async getBidderMetadata(connection: Connection) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await AuctionProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for BidderMetadata by data size
           {

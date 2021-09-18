@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import { Account } from '../../../Account';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
-import Program from '../AuctionProgram';
+import { AuctionProgram } from '../AuctionProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -35,7 +35,7 @@ export class BidderMetadata extends Account<BidderMetadataData> {
   constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(AuctionProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 

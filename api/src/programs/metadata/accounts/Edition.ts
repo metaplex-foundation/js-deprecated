@@ -1,6 +1,6 @@
 import { borsh } from '@metaplex/utils';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import Program, { MetadataProgram, MetadataKey } from '../MetadataProgram';
+import { MetadataProgram, MetadataKey } from '../MetadataProgram';
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { Account } from '../../../Account';
@@ -32,7 +32,7 @@ export class Edition extends Account<EditionData> {
   constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetadataProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -44,7 +44,7 @@ export class Edition extends Account<EditionData> {
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return MetadataProgram.findProgramAddress([
       Buffer.from(MetadataProgram.PREFIX),
       MetadataProgram.PUBKEY.toBuffer(),
       new PublicKey(mint).toBuffer(),
