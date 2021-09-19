@@ -85,7 +85,7 @@ export class MasterEdition extends Account<MasterEditionData> {
     ]);
   }
 
-  static isMasterEdition(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return MasterEdition.isMasterEditionV1(data) || MasterEdition.isMasterEditionV2(data);
   }
 

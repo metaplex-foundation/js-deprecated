@@ -64,14 +64,14 @@ export class PackSet extends Account<PackSetData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!PackSet.isPackSet(this.info.data)) {
+    if (!PackSet.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = packSetStruct.deserialize(this.info.data);
   }
 
-  static isPackSet(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === NFTPacksAccountType.PackSet;
   }
 

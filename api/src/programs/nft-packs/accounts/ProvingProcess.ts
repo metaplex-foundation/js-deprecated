@@ -49,14 +49,14 @@ export class ProvingProcess extends Account<ProvingProcessData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!ProvingProcess.isProvingProcess(this.info.data)) {
+    if (!ProvingProcess.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = provingProcessStruct.deserialize(this.info.data);
   }
 
-  static isProvingProcess(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === NFTPacksAccountType.ProvingProcess;
   }
 

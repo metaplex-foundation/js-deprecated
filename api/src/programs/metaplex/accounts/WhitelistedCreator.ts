@@ -33,14 +33,14 @@ export class WhitelistedCreator extends Account<WhitelistedCreatorData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!WhitelistedCreator.isWhitelistedCreator(this.info.data)) {
+    if (!WhitelistedCreator.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = whitelistedCreatorStruct.deserialize(this.info.data);
   }
 
-  static isWhitelistedCreator(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetaplexKey.WhitelistedCreatorV1;
   }
 

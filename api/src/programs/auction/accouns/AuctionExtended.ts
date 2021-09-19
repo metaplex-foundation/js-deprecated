@@ -29,14 +29,14 @@ export class AuctionExtended extends Account<AuctionDataExtended> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!AuctionExtended.isAuctionExtended(this.info.data)) {
+    if (!AuctionExtended.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = auctionDataExtendedStruct.deserialize(this.info.data);
   }
 
-  static isAuctionExtended(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data.length === AuctionExtended.DATA_SIZE;
   }
 

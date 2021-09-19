@@ -30,6 +30,11 @@ export class Account<T = unknown> {
     return new this(pubkey, info);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static isCompatible(data: Buffer): boolean {
+    throw new Error(`method 'isCompatible' is not implemented`);
+  }
+
   static async getInfo(connection: Connection, pubkey: AnyPublicKey) {
     const info = await connection.getAccountInfo(new PublicKey(pubkey));
     if (!info) {

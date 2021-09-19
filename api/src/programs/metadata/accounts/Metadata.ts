@@ -80,14 +80,14 @@ export class Metadata extends Account<MetadataData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    if (!Metadata.isMetadata(this.info.data)) {
+    if (!Metadata.isCompatible(this.info.data)) {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
     this.data = dataStruct.deserialize(this.info.data);
   }
 
-  static isMetadata(data: Buffer) {
+  static isCompatible(data: Buffer) {
     return data[0] === MetadataKey.MetadataV1;
   }
 
