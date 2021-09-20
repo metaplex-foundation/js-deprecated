@@ -5,7 +5,7 @@ import { Account } from '../../../Account';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Edition } from './Edition';
-import Program, { MetadataKey, MetadataProgram } from '../MetadataProgram';
+import { MetadataKey, MetadataProgram } from '../MetadataProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -63,7 +63,7 @@ export class MasterEdition extends Account<MasterEditionData> {
   constructor(key: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(key, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetadataProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -77,7 +77,7 @@ export class MasterEdition extends Account<MasterEditionData> {
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return MetadataProgram.findProgramAddress([
       Buffer.from(MetadataProgram.PREFIX),
       MetadataProgram.PUBKEY.toBuffer(),
       new PublicKey(mint).toBuffer(),
@@ -99,7 +99,7 @@ export class MasterEdition extends Account<MasterEditionData> {
 
   async getEditions(connection: Connection) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await MetadataProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for EditionV1 by key
           {

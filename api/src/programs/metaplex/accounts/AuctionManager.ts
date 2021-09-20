@@ -5,7 +5,7 @@ import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { BidRedemptionTicket, WINNER_INDEX_OFFSETS } from './BidRedemptionTicket';
-import Program, { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
+import { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
 import {
   ERROR_DEPRECATED_ACCOUNT_DATA,
   ERROR_INVALID_ACCOUNT_DATA,
@@ -80,7 +80,7 @@ export class AuctionManager extends Account<AuctionManagerV2Data> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetaplexProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -106,7 +106,7 @@ export class AuctionManager extends Account<AuctionManagerV2Data> {
   }
 
   static getPDA(auction: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return MetaplexProgram.findProgramAddress([
       Buffer.from(MetaplexProgram.PREFIX),
       new PublicKey(auction).toBuffer(),
     ]);
@@ -118,7 +118,7 @@ export class AuctionManager extends Account<AuctionManagerV2Data> {
 
   async getBidRedemptionTickets(connection: Connection, haveWinnerIndex = true) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await MetaplexProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for BidRedemptionTicketV2 by key
           {

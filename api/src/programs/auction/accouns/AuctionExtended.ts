@@ -4,7 +4,7 @@ import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/error
 import { AnyPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { AuctionProgram } from '../AuctionProgram';
+import { AuctionProgram } from '../AuctionProgram';
 import { Buffer } from 'buffer';
 
 export interface AuctionDataExtended {
@@ -25,7 +25,7 @@ export class AuctionExtended extends Account<AuctionDataExtended> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(AuctionProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -41,7 +41,7 @@ export class AuctionExtended extends Account<AuctionDataExtended> {
   }
 
   static getPDA(vault: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return AuctionProgram.findProgramAddress([
       Buffer.from(AuctionProgram.PREFIX),
       AuctionProgram.PUBKEY.toBuffer(),
       new PublicKey(vault).toBuffer(),

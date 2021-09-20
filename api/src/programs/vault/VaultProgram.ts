@@ -9,13 +9,7 @@ export enum VaultKey {
   ExternalPriceAccountV1 = 2,
 }
 
-export class VaultProgram extends Program<{}> {
+export class VaultProgram extends Program {
   static readonly PREFIX = 'vault';
   static readonly PUBKEY = new PublicKey(config.programs.vault);
-
-  constructor() {
-    super(VaultProgram.PUBKEY);
-  }
 }
-
-export default new VaultProgram();

@@ -4,7 +4,7 @@ import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { Edition } from './Edition';
 import { MasterEdition } from './MasterEdition';
-import Program, { MetadataKey, MetadataProgram } from '../MetadataProgram';
+import { MetadataKey, MetadataProgram } from '../MetadataProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -76,7 +76,7 @@ export class Metadata extends Account<MetadataData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetadataProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -92,7 +92,7 @@ export class Metadata extends Account<MetadataData> {
   }
 
   static async getPDA(mint: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return MetadataProgram.findProgramAddress([
       Buffer.from(MetadataProgram.PREFIX),
       MetadataProgram.PUBKEY.toBuffer(),
       new PublicKey(mint).toBuffer(),

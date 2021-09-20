@@ -5,7 +5,7 @@ import { Account } from '../../../Account';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { SafetyDepositBox } from './SafetyDepositBox';
-import Program, { VaultKey, VaultProgram } from '../VaultProgram';
+import { VaultKey, VaultProgram } from '../VaultProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -72,7 +72,7 @@ export class Vault extends Account<VaultData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(VaultProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -84,7 +84,7 @@ export class Vault extends Account<VaultData> {
   }
 
   static async getPDA(pubkey: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return VaultProgram.findProgramAddress([
       Buffer.from(VaultProgram.PREFIX),
       VaultProgram.PUBKEY.toBuffer(),
       new PublicKey(pubkey).toBuffer(),
@@ -97,7 +97,7 @@ export class Vault extends Account<VaultData> {
 
   async getSafetyDepositBoxes(connection: Connection) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await VaultProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for SafetyDepositBoxV1 by key
           {

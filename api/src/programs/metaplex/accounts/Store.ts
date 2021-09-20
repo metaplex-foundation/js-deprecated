@@ -1,6 +1,6 @@
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
-import Program, { MetaplexProgram, MetaplexKey } from '../MetaplexProgram';
+import { MetaplexProgram, MetaplexKey } from '../MetaplexProgram';
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import bs58 from 'bs58';
 import { WhitelistedCreator } from './WhitelistedCreator';
@@ -35,7 +35,7 @@ export class Store extends Account<StoreData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetaplexProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -51,7 +51,7 @@ export class Store extends Account<StoreData> {
   }
 
   static async getPDA(owner: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return MetaplexProgram.findProgramAddress([
       Buffer.from(MetaplexProgram.PREFIX),
       MetaplexProgram.PUBKEY.toBuffer(),
       new PublicKey(owner).toBuffer(),
@@ -61,7 +61,7 @@ export class Store extends Account<StoreData> {
   // TODO: we need some filter for current store
   async getWhitelistedCreators(connection: Connection) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await MetaplexProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for WhitelistedCreatorV1 keys
           {
@@ -77,7 +77,7 @@ export class Store extends Account<StoreData> {
 
   async getAuctionManagers(connection: Connection) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await MetaplexProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for AuctionManagerV2 by key
           {

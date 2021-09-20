@@ -4,7 +4,7 @@ import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/error
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { NFTPacksAccountType } from '../NFTPacksProgram';
+import { NFTPacksAccountType, NFTPacksProgram } from '../NFTPacksProgram';
 import { Buffer } from 'buffer';
 
 export enum DistributionType {
@@ -64,7 +64,7 @@ export class PackCard extends Account<PackCardData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(NFTPacksProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -80,7 +80,7 @@ export class PackCard extends Account<PackCardData> {
   }
 
   static getPDA(packSet: AnyPublicKey, index: number) {
-    return Program.findProgramAddress([
+    return NFTPacksProgram.findProgramAddress([
       Buffer.from(PackCard.PREFIX),
       new PublicKey(packSet).toBuffer(),
       Buffer.from(index.toString()),

@@ -2,16 +2,18 @@ import { PublicKey, Connection, GetProgramAccountsConfig, Commitment } from '@so
 import { Account } from './Account';
 import { Buffer } from 'buffer';
 
-export abstract class Program<T> extends Account<T> {
-  async findProgramAddress(seeds: (Buffer | Uint8Array)[]) {
-    return (await PublicKey.findProgramAddress(seeds, this.pubkey))[0];
+export abstract class Program {
+  static readonly PUBKEY: PublicKey;
+
+  static async findProgramAddress(seeds: (Buffer | Uint8Array)[]) {
+    return (await PublicKey.findProgramAddress(seeds, this.PUBKEY))[0];
   }
 
-  async getProgramAccounts(
+  static async getProgramAccounts(
     connection: Connection,
     configOrCommitment?: GetProgramAccountsConfig | Commitment,
   ) {
-    return (await connection.getProgramAccounts(this.pubkey, configOrCommitment)).map(
+    return (await connection.getProgramAccounts(this.PUBKEY, configOrCommitment)).map(
       ({ pubkey, account }) => new Account(pubkey, account),
     );
   }

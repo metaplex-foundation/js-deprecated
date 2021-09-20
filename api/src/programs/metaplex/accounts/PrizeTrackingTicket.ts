@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import { AnyPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
+import { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -34,7 +34,7 @@ export class PrizeTrackingTicket extends Account<PrizeTrackingTicketData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetaplexProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -50,7 +50,7 @@ export class PrizeTrackingTicket extends Account<PrizeTrackingTicketData> {
   }
 
   static async getPDA(auctionManager: AnyPublicKey, mint: AnyPublicKey) {
-    return Program.findProgramAddress([
+    return MetaplexProgram.findProgramAddress([
       Buffer.from(MetaplexProgram.PREFIX),
       MetaplexProgram.PUBKEY.toBuffer(),
       new PublicKey(auctionManager).toBuffer(),

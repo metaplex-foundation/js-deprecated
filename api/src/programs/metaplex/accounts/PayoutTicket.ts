@@ -4,7 +4,7 @@ import bs58 from 'bs58';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
-import Program, { MetaplexKey } from '../MetaplexProgram';
+import { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
@@ -31,7 +31,7 @@ export class PayoutTicket extends Account<PayoutTicketData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
-    if (!this.assertOwner(Program.pubkey)) {
+    if (!this.assertOwner(MetaplexProgram.PUBKEY)) {
       throw ERROR_INVALID_OWNER();
     }
 
@@ -48,7 +48,7 @@ export class PayoutTicket extends Account<PayoutTicketData> {
 
   static async getPayoutTicketsByRecipient(connection: Connection, recipient: AnyPublicKey) {
     return (
-      await Program.getProgramAccounts(connection, {
+      await MetaplexProgram.getProgramAccounts(connection, {
         filters: [
           // Filter for PayoutTicketV1 by key
           {
