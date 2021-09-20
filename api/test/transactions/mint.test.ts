@@ -13,7 +13,7 @@ import {
   PayForFiles,
   CreateMint,
   CreateAssociatedTokenAccount,
-} from '../src';
+} from '../../src';
 
 describe.skip('Mint NFT', () => {
   let connection: Connection;

@@ -49,7 +49,7 @@ describe('Metaplex', () => {
       expect(auctionManagers[0].data.store).toEqual(STORE_PUBKEY.toString());
     });
 
-    test('setStore', async () => {
+    test.skip('setStore', async () => {
       const storeId = await Store.getPDA(owner.publicKey);
 
       const setStoreTx = new SetStore(

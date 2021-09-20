@@ -1,4 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
+import { config } from '../../config';
 import { Program } from '../../Program';
 
 export enum NFTPacksAccountType {
@@ -11,5 +12,5 @@ export enum NFTPacksAccountType {
 
 export class NFTPacksProgram extends Program {
   static readonly PREFIX = 'packs';
-  static readonly PUBKEY = new PublicKey('BNRmGgciUJuyznkYHnmitA9an1BcDDiU9JmjEQwvBYVR');
+  static readonly PUBKEY = new PublicKey(config.programs.packs);
 }

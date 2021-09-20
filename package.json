@@ -11,6 +11,7 @@
     "dev": "yarn workspace @metaplex/js run dev",
     "build:docs": "yarn workspace @metaplex/js run build:docs",
     "build": "yarn workspace @metaplex/js run build",
+    "test": "yarn workspace @metaplex/js run test",
     "example:web": "yarn workspace example-web run start",
     "example:iife": "yarn workspace example-iife run start",
     "example:node": "yarn workspace example-node run start",
