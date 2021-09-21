@@ -66,7 +66,7 @@ For example, a transaction to pay for file storage can be created easily with a 
 ```ts
 // ...
 const files: File[] = [artwork, metadata];
-const fileHashes = await Promise.all(files.map((file) => Utils.crypto.getFileHash(file)));
+const fileHashes = await Promise.all(files.map((file) => Utils.Crypto.getFileHash(file)));
 const lamports = await storage.getAssetCostToStore(files, rates[0].rate, rates[1].rate);
 
 const payForFilesTx = new PayForFiles(

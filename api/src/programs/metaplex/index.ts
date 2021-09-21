@@ -5,5 +5,6 @@ export * from './accounts/PrizeTrackingTicket';
 export * from './accounts/SafetyDepositConfig';
 export * from './accounts/Store';
 export * from './accounts/WhitelistedCreator';
+export * from './accounts/AuctionWinnerTokenTypeTracker';
 export * from './MetaplexProgram';
 export * from './transactions';

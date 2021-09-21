@@ -1,6 +1,6 @@
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { Edition } from './Edition';
 import { MasterEdition } from './MasterEdition';
@@ -8,45 +8,75 @@ import { MetadataKey, MetadataProgram } from '../MetadataProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
-export interface Creator {
+type CreatorArgs = { address: StringPublicKey; verified: boolean; share: number };
+export class Creator extends Borsh.Data<CreatorArgs> {
+  static readonly SCHEMA = this.struct([
+    ['address', 'pubkeyAsString'],
+    ['verified', 'u8'],
+    ['share', 'u8'],
+  ]);
+
   address: StringPublicKey;
   verified: boolean;
   share: number;
 }
 
-const creatorStruct = borsh.struct<Creator>([
-  ['address', 'pubkeyAsString'],
-  ['verified', 'u8'],
-  ['share', 'u8'],
-]);
-
-export interface MetadataDataData {
+type DataArgs = {
   name: string;
   symbol: string;
   uri: string;
   sellerFeeBasisPoints: number;
   creators: Creator[] | null;
+};
+export class MetadataDataData extends Borsh.Data<DataArgs> {
+  static readonly SCHEMA = new Map([
+    ...Creator.SCHEMA,
+    ...this.struct([
+      ['name', 'string'],
+      ['symbol', 'string'],
+      ['uri', 'string'],
+      ['sellerFeeBasisPoints', 'u16'],
+      ['creators', { kind: 'option', type: Creator }],
+    ]),
+  ]);
+
+  name: string;
+  symbol: string;
+  uri: string;
+  sellerFeeBasisPoints: number;
+  creators: Creator[] | null;
+
+  constructor(args: DataArgs) {
+    super(args);
+
+    const METADATA_REPLACE = new RegExp('\u0000', 'g');
+    this.name = args.name.replace(METADATA_REPLACE, '');
+    this.uri = args.uri.replace(METADATA_REPLACE, '');
+    this.symbol = args.symbol.replace(METADATA_REPLACE, '');
+  }
 }
 
-const dataDataStruct = borsh.struct<MetadataDataData>(
-  [
-    ['name', 'string'],
-    ['symbol', 'string'],
-    ['uri', 'string'],
-    ['sellerFeeBasisPoints', 'u16'],
-    ['creators', { kind: 'option', type: [creatorStruct.type] }],
-  ],
-  [creatorStruct],
-  (data) => {
-    const METADATA_REPLACE = new RegExp('\u0000', 'g');
-    data.name = data.name.replace(METADATA_REPLACE, '');
-    data.uri = data.uri.replace(METADATA_REPLACE, '');
-    data.symbol = data.symbol.replace(METADATA_REPLACE, '');
-    return data;
-  },
-);
+type Args = {
+  updateAuthority: StringPublicKey;
+  mint: StringPublicKey;
+  data: MetadataDataData;
+  primarySaleHappened: boolean;
+  isMutable: boolean;
+  editionNonce: number | null;
+};
+export class MetadataData extends Borsh.Data<Args> {
+  static readonly SCHEMA = new Map([
+    ...MetadataDataData.SCHEMA,
+    ...this.struct([
+      ['key', 'u8'],
+      ['updateAuthority', 'pubkeyAsString'],
+      ['mint', 'pubkeyAsString'],
+      ['data', MetadataDataData],
+      ['primarySaleHappened', 'u8'], // bool
+      ['isMutable', 'u8'], // bool
+    ]),
+  ]);
 
-export interface MetadataData {
   key: MetadataKey;
   updateAuthority: StringPublicKey;
   mint: StringPublicKey;
@@ -55,22 +85,15 @@ export interface MetadataData {
   isMutable: boolean;
   editionNonce: number | null;
 
-  // set lazy - TODO - remove?
+  // set lazy
   masterEdition?: StringPublicKey;
   edition?: StringPublicKey;
-}
 
-const dataStruct = borsh.struct<MetadataData>(
-  [
-    ['key', 'u8'],
-    ['updateAuthority', 'pubkeyAsString'],
-    ['mint', 'pubkeyAsString'],
-    ['data', dataDataStruct.type],
-    ['primarySaleHappened', 'u8'], // bool
-    ['isMutable', 'u8'], // bool
-  ],
-  [dataDataStruct],
-);
+  constructor(args: Args) {
+    super(args);
+    this.key = MetadataKey.MetadataV1;
+  }
+}
 
 export class Metadata extends Account<MetadataData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
@@ -84,7 +107,7 @@ export class Metadata extends Account<MetadataData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = dataStruct.deserialize(this.info.data);
+    this.data = MetadataData.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {

@@ -2,12 +2,12 @@ import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { AuctionProgram } from '../AuctionProgram';
 import { BidderMetadata } from './BidderMetadata';
 import { BidderPot } from './BidderPot';
 import { Buffer } from 'buffer';
+import { Borsh } from '@metaplex/utils';
 
 export enum AuctionState {
   Created = 0,
@@ -26,59 +26,120 @@ export enum PriceFloorType {
   BlindedPrice = 2,
 }
 
-export interface Bid {
+type BidArgs = { key: StringPublicKey; amount: BN };
+export class Bid extends Borsh.Data<BidArgs> {
+  static readonly SCHEMA = this.struct([
+    ['key', 'pubkeyAsString'],
+    ['amount', 'u64'],
+  ]);
+
   key: StringPublicKey;
   amount: BN;
 }
 
-const bidStruct = borsh.struct<Bid>([
-  ['key', 'pubkeyAsString'],
-  ['amount', 'u64'],
-]);
+type BidStateArgs = { type: BidStateType; bids: Bid[]; max: BN };
+export class BidState extends Borsh.Data<BidStateArgs> {
+  static readonly SCHEMA = new Map([
+    ...Bid.SCHEMA,
+    ...this.struct([
+      ['type', 'u8'],
+      ['bids', [Bid]],
+      ['max', 'u64'],
+    ]),
+  ]);
 
-export interface BidState {
   type: BidStateType;
   bids: Bid[];
   max: BN;
+
+  getWinnerAt(winnerIndex: number): StringPublicKey | null {
+    const convertedIndex = this.bids.length - winnerIndex - 1;
+
+    if (convertedIndex >= 0 && convertedIndex < this.bids.length) {
+      return this.bids[convertedIndex].key;
+    } else {
+      return null;
+    }
+  }
+
+  getAmountAt(winnerIndex: number): BN | null {
+    const convertedIndex = this.bids.length - winnerIndex - 1;
+
+    if (convertedIndex >= 0 && convertedIndex < this.bids.length) {
+      return this.bids[convertedIndex].amount;
+    } else {
+      return null;
+    }
+  }
+
+  getWinnerIndex(bidder: StringPublicKey): number | null {
+    if (!this.bids) return null;
+
+    const index = this.bids.findIndex((b) => b.key === bidder);
+    // auction stores data in reverse order
+    if (index !== -1) {
+      const zeroBased = this.bids.length - index - 1;
+      return zeroBased < this.max.toNumber() ? zeroBased : null;
+    } else return null;
+  }
 }
 
-const bidStateStruct = borsh.struct<BidState>(
-  [
+type PriceFloorArgs = { type: PriceFloorType; hash?: Uint8Array; minPrice?: BN };
+export class PriceFloor extends Borsh.Data {
+  static readonly SCHEMA = this.struct([
     ['type', 'u8'],
-    ['bids', [bidStruct.type]],
-    ['max', 'u64'],
-  ],
-  [bidStruct],
-);
+    ['hash', [32]],
+  ]);
 
-export interface PriceFloor {
   type: PriceFloorType;
   // It's an array of 32 u8s, when minimum, only first 8 are used (a u64), when blinded price, the entire
   // thing is a hash and not actually a public key, and none is all zeroes
   hash: Uint8Array;
   minPrice?: BN;
-}
 
-const priceFloorStruct = borsh.struct<PriceFloor>(
-  [
-    ['type', 'u8'],
-    ['hash', [32]],
-  ],
-  [],
-  (data) => {
-    if (!data.hash) data.hash = new Uint8Array(32);
-    if (data.type === PriceFloorType.Minimum) {
-      if (data.minPrice) {
-        data.hash.set(data.minPrice.toArrayLike(Buffer, 'le', 8), 0);
+  constructor(args: PriceFloorArgs) {
+    super();
+    this.type = args.type;
+    this.hash = args.hash || new Uint8Array(32);
+    if (this.type === PriceFloorType.Minimum) {
+      if (args.minPrice) {
+        this.hash.set(args.minPrice.toArrayLike(Buffer, 'le', 8), 0);
       } else {
-        data.minPrice = new BN((data.hash || new Uint8Array(0)).slice(0, 8), 'le');
+        this.minPrice = new BN((args.hash || new Uint8Array(0)).slice(0, 8), 'le');
       }
     }
-    return data;
-  },
-);
+  }
+}
 
-export interface AuctionData {
+type Args = {
+  authority: StringPublicKey;
+  tokenMint: StringPublicKey;
+  lastBid: BN | null;
+  endedAt: BN | null;
+  endAuctionAt: BN | null;
+  auctionGap: BN | null;
+  priceFloor: PriceFloor;
+  state: AuctionState;
+  bidState: BidState;
+  totalUncancelledBids: BN;
+};
+export class AuctionData extends Borsh.Data<Args> {
+  static readonly SCHEMA = new Map([
+    ...BidState.SCHEMA,
+    ...PriceFloor.SCHEMA,
+    ...this.struct([
+      ['authority', 'pubkeyAsString'],
+      ['tokenMint', 'pubkeyAsString'],
+      ['lastBid', { kind: 'option', type: 'u64' }],
+      ['endedAt', { kind: 'option', type: 'u64' }],
+      ['endAuctionAt', { kind: 'option', type: 'u64' }],
+      ['auctionGap', { kind: 'option', type: 'u64' }],
+      ['priceFloor', PriceFloor],
+      ['state', 'u8'],
+      ['bidState', BidState],
+    ]),
+  ]);
+
   /// Pubkey of the authority with permission to modify this auction.
   authority: StringPublicKey;
   /// Token mint for the SPL token being used to bid
@@ -101,21 +162,6 @@ export interface AuctionData {
   bidRedemptionKey?: StringPublicKey;
 }
 
-const auctionDataStruct = borsh.struct<AuctionData>(
-  [
-    ['authority', 'pubkeyAsString'],
-    ['tokenMint', 'pubkeyAsString'],
-    ['lastBid', { kind: 'option', type: 'u64' }],
-    ['endedAt', { kind: 'option', type: 'u64' }],
-    ['endAuctionAt', { kind: 'option', type: 'u64' }],
-    ['auctionGap', { kind: 'option', type: 'u64' }],
-    ['priceFloor', priceFloorStruct.type],
-    ['state', 'u8'],
-    ['bidState', bidStateStruct.type],
-  ],
-  [priceFloorStruct, bidStateStruct],
-);
-
 export class Auction extends Account<AuctionData> {
   static readonly EXTENDED_DATA_SIZE = 8 + 9 + 2 + 200;
 
@@ -126,7 +172,7 @@ export class Auction extends Account<AuctionData> {
       throw ERROR_INVALID_OWNER();
     }
 
-    this.data = auctionDataStruct.deserialize(this.info.data);
+    this.data = AuctionData.deserialize(this.info.data);
   }
 
   static getPDA(vault: AnyPublicKey) {

@@ -1,9 +1,25 @@
 import { jest } from '@jest/globals';
+import { TupleNumericType } from '@metaplex/utils';
+import { AccountLayout, NATIVE_MINT } from '@solana/spl-token';
 import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
-import { Connection, SetStore, Store } from '../../src';
-import { FEE_PAYER } from '../utils';
+import BN from 'bn.js';
+import {
+  Auction,
+  AuctionManager,
+  AuctionWinnerTokenTypeTracker,
+  Connection,
+  CreateTokenAccount,
+  InitAuctionManagerV2,
+  SetStore,
+  SetWhitelistedCreator,
+  StartAuction,
+  Store,
+  Transaction,
+  WhitelistedCreator,
+} from '../../src';
+import { FEE_PAYER, VAULT_PUBKEY } from '../utils';
 
-describe('Metaplex transactions', () => {
+describe.skip('Metaplex transactions', () => {
   let connection: Connection;
   let owner: Keypair;
 
@@ -14,13 +30,11 @@ describe('Metaplex transactions', () => {
     owner = Keypair.generate();
   });
 
-  test.skip('setStore', async () => {
+  test('setStore', async () => {
     const storeId = await Store.getPDA(owner.publicKey);
 
-    const setStoreTx = new SetStore(
-      {
-        feePayer: FEE_PAYER.publicKey,
-      },
+    const tx = new SetStore(
+      { feePayer: FEE_PAYER.publicKey },
       {
         admin: owner.publicKey,
         store: storeId,
@@ -28,10 +42,89 @@ describe('Metaplex transactions', () => {
       },
     );
 
-    const txid = await sendAndConfirmTransaction(connection, setStoreTx, [FEE_PAYER, owner], {
+    await sendAndConfirmTransaction(connection, tx, [FEE_PAYER, owner], {
       commitment: 'confirmed',
     });
+  });
 
-    // console.log(txid);
+  test('setWhitelistedCreator', async () => {
+    const storeId = await Store.getPDA(owner.publicKey);
+    const creator = owner.publicKey;
+    const whitelistedCreatorPDA = await WhitelistedCreator.getPDA(storeId, creator);
+
+    const tx = new SetWhitelistedCreator(
+      { feePayer: FEE_PAYER.publicKey },
+      {
+        admin: owner.publicKey,
+        store: storeId,
+        whitelistedCreatorPDA,
+        creator,
+        activated: true,
+      },
+    );
+
+    await sendAndConfirmTransaction(connection, tx, [FEE_PAYER, owner], {
+      commitment: 'confirmed',
+    });
+  });
+
+  test('startAuction', async () => {
+    const storeId = await Store.getPDA(owner.publicKey);
+    const auctionPDA = await Auction.getPDA(VAULT_PUBKEY);
+    const auctionManagerPDA = await AuctionManager.getPDA(auctionPDA);
+
+    const tx = new StartAuction(
+      { feePayer: FEE_PAYER.publicKey },
+      {
+        store: storeId,
+        auction: auctionPDA,
+        auctionManager: auctionManagerPDA,
+        auctionManagerAuthority: owner.publicKey,
+      },
+    );
+
+    await sendAndConfirmTransaction(connection, tx, [FEE_PAYER, owner], {
+      commitment: 'confirmed',
+    });
+  });
+
+  test('initAuctionManagerV2', async () => {
+    const storeId = await Store.getPDA(owner.publicKey);
+    const auctionPDA = await Auction.getPDA(VAULT_PUBKEY);
+    const auctionManagerPDA = await AuctionManager.getPDA(auctionPDA);
+    const tokenTrackerPDA = await AuctionWinnerTokenTypeTracker.getPDA(auctionManagerPDA);
+
+    const paymentAccount = Keypair.generate();
+    const mintRent = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
+    const createTokenAccountTx = new CreateTokenAccount(
+      { feePayer: FEE_PAYER.publicKey },
+      {
+        newAccountPubkey: paymentAccount.publicKey,
+        lamports: mintRent,
+        mint: NATIVE_MINT,
+      },
+    );
+
+    const tx = new InitAuctionManagerV2(
+      { feePayer: FEE_PAYER.publicKey },
+      {
+        store: storeId,
+        vault: VAULT_PUBKEY,
+        auction: auctionPDA,
+        auctionManager: auctionManagerPDA,
+        auctionManagerAuthority: owner.publicKey,
+        acceptPaymentAccount: paymentAccount.publicKey,
+        tokenTracker: tokenTrackerPDA,
+        amountType: TupleNumericType.U8,
+        lengthType: TupleNumericType.U8,
+        maxRanges: new BN(10),
+      },
+    );
+
+    const txs = Transaction.fromCombined([createTokenAccountTx, tx]);
+
+    await sendAndConfirmTransaction(connection, txs, [FEE_PAYER, paymentAccount, owner], {
+      commitment: 'confirmed',
+    });
   });
 });

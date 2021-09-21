@@ -20,5 +20,6 @@ export enum MetaplexKey {
 
 export class MetaplexProgram extends Program {
   static readonly PREFIX = 'metaplex';
+  static readonly TOTALS = 'totals';
   static readonly PUBKEY = new PublicKey(config.programs.metaplex);
 }

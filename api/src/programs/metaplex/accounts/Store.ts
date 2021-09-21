@@ -1,5 +1,5 @@
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { MetaplexProgram, MetaplexKey } from '../MetaplexProgram';
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import bs58 from 'bs58';
@@ -9,27 +9,35 @@ import { Account } from '../../../Account';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
-export interface StoreData {
-  key: MetaplexKey;
+type Args = {
   public: boolean;
   auctionProgram: StringPublicKey;
   tokenVaultProgram: StringPublicKey;
   tokenMetadataProgram: StringPublicKey;
   tokenProgram: StringPublicKey;
-}
-
-const storeStruct = borsh.struct<StoreData>(
-  [
+};
+export class StoreData extends Borsh.Data<Args> {
+  static readonly SCHEMA = this.struct([
     ['key', 'u8'],
     ['public', 'u8'],
     ['auctionProgram', 'pubkeyAsString'],
     ['tokenVaultProgram', 'pubkeyAsString'],
     ['tokenMetadataProgram', 'pubkeyAsString'],
     ['tokenProgram', 'pubkeyAsString'],
-  ],
-  [],
-  (data) => Object.assign({ public: true }, data, { key: MetaplexKey.StoreV1 }),
-);
+  ]);
+
+  key: MetaplexKey = MetaplexKey.StoreV1;
+  public = true;
+  auctionProgram: StringPublicKey;
+  tokenVaultProgram: StringPublicKey;
+  tokenMetadataProgram: StringPublicKey;
+  tokenProgram: StringPublicKey;
+
+  constructor(args: Args) {
+    super(args);
+    this.key = MetaplexKey.StoreV1;
+  }
+}
 
 export class Store extends Account<StoreData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
@@ -43,7 +51,7 @@ export class Store extends Account<StoreData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = storeStruct.deserialize(this.info.data);
+    this.data = StoreData.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {

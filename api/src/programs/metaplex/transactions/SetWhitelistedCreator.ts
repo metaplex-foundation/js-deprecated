@@ -1,4 +1,5 @@
-import { borsh } from '@metaplex/utils';
+import { ParamsWithStore } from '@metaplex/types';
+import { Borsh } from '@metaplex/utils';
 import {
   PublicKey,
   SystemProgram,
@@ -9,18 +10,17 @@ import {
 import { Transaction } from '../../../Transaction';
 import { MetaplexProgram } from '../MetaplexProgram';
 
-export interface SetWhitelistedCreatorArgs {
-  instruction: number;
+export class SetWhitelistedCreatorArgs extends Borsh.Data<{ activated: boolean }> {
+  static readonly SCHEMA = this.struct([
+    ['instruction', 'u8'],
+    ['activated', 'u8'],
+  ]);
+
+  instruction = 9;
   activated: boolean;
 }
 
-const setWhitelistedCreatorStruct = borsh.struct<SetWhitelistedCreatorArgs>([
-  ['instruction', 'u8'],
-  ['activated', 'u8'],
-]);
-
 type SetWhitelistedCreatorParams = {
-  store: PublicKey;
   admin: PublicKey;
   whitelistedCreatorPDA: PublicKey;
   creator: PublicKey;
@@ -28,12 +28,20 @@ type SetWhitelistedCreatorParams = {
 };
 
 export class SetWhitelistedCreator extends Transaction {
-  constructor(options: TransactionCtorFields, params: SetWhitelistedCreatorParams) {
+  constructor(
+    options: TransactionCtorFields,
+    params: ParamsWithStore<SetWhitelistedCreatorParams>,
+  ) {
     super(options);
     const { feePayer } = options;
     const { admin, whitelistedCreatorPDA, store, creator, activated } = params;
 
-    const data = setWhitelistedCreatorStruct.serialize({ instruction: 8, activated });
+    const data = Buffer.from(
+      Borsh.serialize(
+        SetWhitelistedCreatorArgs.SCHEMA,
+        new SetWhitelistedCreatorArgs({ activated }),
+      ),
+    );
 
     this.add(
       new TransactionInstruction({

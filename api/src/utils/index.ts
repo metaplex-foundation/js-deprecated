@@ -1,3 +1,3 @@
-export * as borsh from './borsh';
-export * as crypto from './crypto';
+export * as Borsh from './borsh';
+export * as Crypto from './crypto';
 export * from './tupleNumeric';

@@ -3,7 +3,7 @@ import bs58 from 'bs58';
 import { PackCard } from './PackCard';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { NFTPacksAccountType, NFTPacksProgram } from '../NFTPacksProgram';
 import { Buffer } from 'buffer';
@@ -14,7 +14,29 @@ export enum PackSetState {
   Deactivated = 2,
 }
 
-export interface PackSetData {
+type Args = {
+  name: string;
+  authority: StringPublicKey;
+  mintingAuthority: StringPublicKey;
+  totalPacks: number;
+  packCards: number;
+  packVouchers: number;
+  mutable: boolean;
+  state: PackSetState;
+};
+export class PackSetData extends Borsh.Data<Args> {
+  static readonly SCHEMA = this.struct([
+    ['accountType', 'u8'],
+    ['name', [32]],
+    ['authority', 'pubkeyAsString'],
+    ['mintingAuthority', 'pubkeyAsString'],
+    ['totalPacks', 'u32'],
+    ['packCards', 'u32'],
+    ['packVouchers', 'u32'],
+    ['mutable', 'u8'],
+    ['state', 'u8'],
+  ]);
+
   accountType: NFTPacksAccountType;
   /// Name
   name: string;
@@ -32,29 +54,15 @@ export interface PackSetData {
   mutable: boolean;
   /// Pack state
   state: PackSetState;
-}
 
-const packSetStruct = borsh.struct<PackSetData>(
-  [
-    ['accountType', 'u8'],
-    ['name', [32]],
-    ['authority', 'pubkeyAsString'],
-    ['mintingAuthority', 'pubkeyAsString'],
-    ['totalPacks', 'u32'],
-    ['packCards', 'u32'],
-    ['packVouchers', 'u32'],
-    ['mutable', 'u8'],
-    ['state', 'u8'],
-  ],
-  [],
-  (data) => {
-    data.accountType = NFTPacksAccountType.PackSet;
+  constructor(args: Args) {
+    super(args);
+    this.accountType = NFTPacksAccountType.PackSet;
     // Fixed Uint8Array to utf-8 string
-    data.name = String.fromCharCode.apply(null, data.name).replace(/\0.*$/g, '');
-    data.state = data.state as PackSetState;
-    return data;
-  },
-);
+    this.name = String.fromCharCode.apply(null, args.name).replace(/\0.*$/g, '');
+    this.state = args.state as PackSetState;
+  }
+}
 
 export class PackSet extends Account<PackSetData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
@@ -68,7 +76,7 @@ export class PackSet extends Account<PackSetData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = packSetStruct.deserialize(this.info.data);
+    this.data = PackSetData.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {

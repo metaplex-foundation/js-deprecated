@@ -2,12 +2,27 @@ import { AccountInfo } from '@solana/web3.js';
 import BN from 'bn.js';
 import { Account } from '../../../Account';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { AuctionProgram } from '../AuctionProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
-export interface BidderMetadataData {
+type Args = {
+  bidderPubkey: StringPublicKey;
+  auctionPubkey: StringPublicKey;
+  lastBid: BN;
+  lastBidTimestamp: BN;
+  cancelled: boolean;
+};
+export class BidderMetadataData extends Borsh.Data<Args> {
+  static readonly SCHEMA = this.struct([
+    ['bidderPubkey', 'pubkeyAsString'],
+    ['auctionPubkey', 'pubkeyAsString'],
+    ['lastBid', 'u64'],
+    ['lastBidTimestamp', 'u64'],
+    ['cancelled', 'u8'],
+  ]);
+
   // Relationship with the bidder who's metadata this covers.
   bidderPubkey: StringPublicKey;
   // Relationship with the auction this bid was placed on.
@@ -20,14 +35,6 @@ export interface BidderMetadataData {
   // user is a winner, as if cancelled it implies previous bids were also cancelled.
   cancelled: boolean;
 }
-
-const bidderMetadataStruct = borsh.struct<BidderMetadataData>([
-  ['bidderPubkey', 'pubkeyAsString'],
-  ['auctionPubkey', 'pubkeyAsString'],
-  ['lastBid', 'u64'],
-  ['lastBidTimestamp', 'u64'],
-  ['cancelled', 'u8'],
-]);
 
 export class BidderMetadata extends Account<BidderMetadataData> {
   static readonly DATA_SIZE = 32 + 32 + 8 + 8 + 1;
@@ -43,7 +50,7 @@ export class BidderMetadata extends Account<BidderMetadataData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = bidderMetadataStruct.deserialize(this.info.data);
+    this.data = BidderMetadataData.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {

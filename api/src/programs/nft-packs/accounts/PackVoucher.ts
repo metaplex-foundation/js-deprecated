@@ -1,7 +1,7 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { NFTPacksAccountType, NFTPacksProgram } from '../NFTPacksProgram';
 import { Buffer } from 'buffer';
@@ -11,7 +11,29 @@ export enum ActionOnProve {
   Redeem = 1,
 }
 
-export interface PackVoucherData {
+type Args = {
+  packSet: StringPublicKey;
+  master: StringPublicKey;
+  metadata: StringPublicKey;
+  tokenAccount: StringPublicKey;
+  maxSupply?: number;
+  currentSupply: number;
+  numberToOpen: number;
+  actionOnProve: ActionOnProve;
+};
+export class PackVoucherData extends Borsh.Data<Args> {
+  static readonly SCHEMA = this.struct([
+    ['accountType', 'u8'],
+    ['packSet', 'pubkeyAsString'],
+    ['master', 'pubkeyAsString'],
+    ['metadata', 'pubkeyAsString'],
+    ['tokenAccount', 'pubkeyAsString'],
+    ['maxSupply', { kind: 'option', type: 'u32' }],
+    ['currentSupply', 'u32'],
+    ['numberToOpen', 'u32'],
+    ['actionOnProve', 'u8'],
+  ]);
+
   accountType: NFTPacksAccountType;
   /// Pack set
   packSet: StringPublicKey;
@@ -29,26 +51,12 @@ export interface PackVoucherData {
   numberToOpen: number;
   /// Burn / redeem
   actionOnProve: ActionOnProve;
-}
 
-const packVoucherStruct = borsh.struct<PackVoucherData>(
-  [
-    ['accountType', 'u8'],
-    ['packSet', 'pubkeyAsString'],
-    ['master', 'pubkeyAsString'],
-    ['metadata', 'pubkeyAsString'],
-    ['tokenAccount', 'pubkeyAsString'],
-    ['maxSupply', { kind: 'option', type: 'u32' }],
-    ['currentSupply', 'u32'],
-    ['numberToOpen', 'u32'],
-    ['actionOnProve', 'u8'],
-  ],
-  [],
-  (data) => {
-    data.accountType = NFTPacksAccountType.PackVoucher;
-    return data;
-  },
-);
+  constructor(args: Args) {
+    super(args);
+    this.accountType = NFTPacksAccountType.PackVoucher;
+  }
+}
 
 export class PackVoucher extends Account<PackVoucherData> {
   static readonly PREFIX = 'voucher';
@@ -64,7 +72,7 @@ export class PackVoucher extends Account<PackVoucherData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = packVoucherStruct.deserialize(this.info.data);
+    this.data = PackVoucherData.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {

@@ -1,7 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
-import { deserializeUnchecked, serialize, BinaryReader, BinaryWriter } from 'borsh';
+import { deserializeUnchecked, serialize, deserialize, BinaryReader, BinaryWriter } from 'borsh';
 import base58 from 'bs58';
-import { Buffer } from 'buffer';
 
 export const extendBorsh = () => {
   (BinaryReader.prototype as any).readPubkey = function () {
@@ -28,54 +27,27 @@ export const extendBorsh = () => {
 
 extendBorsh();
 
-export class Struct<T> {
-  readonly fields;
-  readonly dependencies: Struct<any>[] = [];
-  readonly type: any; //(args: T) => T;
-  readonly schema: Map<any, any>;
+type DataConstructor<T> = {
+  readonly SCHEMA;
+  new (args: any): T;
+};
 
-  constructor(fields: any[][], dependencies: Struct<any>[] = [], parse?: (args: T) => T) {
-    this.fields = fields;
-    this.dependencies = dependencies;
-
-    this.type = class Type {
-      constructor(args: T = {} as T) {
-        for (const [name] of fields) {
-          if (!(name in args)) {
-            (args as any)[name] = undefined;
-          }
-        }
-        parse && parse(args);
-        for (const key of Object.keys(args)) {
-          this[key] = args[key];
-        }
-      }
-    };
-
-    const entries = [
-      [
-        this.type,
-        {
-          kind: 'struct',
-          fields,
-        },
-      ],
-    ] as any;
-    for (const d of this.dependencies) entries.push(...d.schema.entries());
-    this.schema = new Map(entries);
+export class Data<T = {}> {
+  constructor(args: T = {} as T) {
+    Object.assign(this, args);
   }
 
-  static create<T>(fields: any[][], dependencies: Struct<any>[] = [], parse?: (args: T) => T) {
-    return new Struct(fields, dependencies, parse);
+  static struct<T>(this: DataConstructor<T>, fields: any) {
+    return struct(this, fields);
   }
 
-  serialize(struct: T) {
-    return Buffer.from(serialize(this.schema, new this.type(struct)));
-  }
-
-  deserialize(buffer: Buffer) {
-    return deserializeUnchecked(this.schema, this.type, buffer) as T;
+  static deserialize<T>(this: DataConstructor<T>, data: Buffer) {
+    return deserializeUnchecked(this.SCHEMA, this, data);
   }
 }
 
-export const struct = Struct.create;
+export const struct = <T>(type: any, fields: any) => {
+  return new Map<any, any>([[type, { kind: 'struct', fields }]]);
+};
+
+export { deserialize, deserializeUnchecked, serialize };

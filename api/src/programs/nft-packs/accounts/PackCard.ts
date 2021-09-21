@@ -2,7 +2,7 @@ import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { NFTPacksAccountType, NFTPacksProgram } from '../NFTPacksProgram';
 import { Buffer } from 'buffer';
@@ -12,17 +12,41 @@ export enum DistributionType {
   ProbabilityBased = 1,
 }
 
-export interface Distribution {
+type DistributionArgs = { type: DistributionType; value: BN };
+export class Distribution extends Borsh.Data<DistributionArgs> {
+  static readonly SCHEMA = this.struct([
+    ['type', 'u8'],
+    ['value', 'u64'],
+  ]);
+
   type: DistributionType;
   value: BN;
 }
 
-const distributionStruct = borsh.struct<Distribution>([
-  ['type', 'u8'],
-  ['value', 'u64'],
-]);
+type Args = {
+  packSet: StringPublicKey;
+  master: StringPublicKey;
+  metadata: StringPublicKey;
+  tokenAccount: StringPublicKey;
+  maxSupply?: number;
+  distribution: Distribution;
+  currentSupply: number;
+};
+export class PackCardData extends Borsh.Data<Args> {
+  static readonly SCHEMA = new Map([
+    ...Distribution.SCHEMA,
+    ...this.struct([
+      ['accountType', 'u8'],
+      ['packSet', 'pubkeyAsString'],
+      ['master', 'pubkeyAsString'],
+      ['metadata', 'pubkeyAsString'],
+      ['tokenAccount', 'pubkeyAsString'],
+      ['maxSupply', { kind: 'option', type: 'u32' }],
+      ['distribution', Distribution],
+      ['currentSupply', 'u32'],
+    ]),
+  ]);
 
-export interface PackCardData {
   accountType: NFTPacksAccountType;
   /// Pack set
   packSet: StringPublicKey;
@@ -38,25 +62,12 @@ export interface PackCardData {
   distribution: Distribution;
   /// How many cards already minted
   currentSupply: number;
-}
 
-const packCardStruct = borsh.struct<PackCardData>(
-  [
-    ['accountType', 'u8'],
-    ['packSet', 'pubkeyAsString'],
-    ['master', 'pubkeyAsString'],
-    ['metadata', 'pubkeyAsString'],
-    ['tokenAccount', 'pubkeyAsString'],
-    ['maxSupply', { kind: 'option', type: 'u32' }],
-    ['distribution', distributionStruct.type],
-    ['currentSupply', 'u32'],
-  ],
-  [distributionStruct],
-  (data) => {
-    data.accountType = NFTPacksAccountType.PackCard;
-    return data;
-  },
-);
+  constructor(args: Args) {
+    super(args);
+    this.accountType = NFTPacksAccountType.PackCard;
+  }
+}
 
 export class PackCard extends Account<PackCardData> {
   static readonly PREFIX = 'card';
@@ -72,7 +83,7 @@ export class PackCard extends Account<PackCardData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = packCardStruct.deserialize(this.info.data);
+    this.data = PackCardData.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {

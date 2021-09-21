@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import bs58 from 'bs58';
 import { Account } from '../../../Account';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { SafetyDepositBox } from './SafetyDepositBox';
 import { VaultKey, VaultProgram } from '../VaultProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
@@ -16,7 +16,33 @@ export enum VaultState {
   Deactivated = 3,
 }
 
-export interface VaultData {
+type Args = {
+  tokenProgram: StringPublicKey;
+  fractionMint: StringPublicKey;
+  authority: StringPublicKey;
+  fractionTreasury: StringPublicKey;
+  redeemTreasury: StringPublicKey;
+  allowFurtherShareCreation: boolean;
+  pricingLookupAddress: StringPublicKey;
+  tokenTypeCount: number;
+  state: VaultState;
+  lockedPricePerShare: BN;
+};
+export class VaultData extends Borsh.Data<Args> {
+  static readonly SCHEMA = this.struct([
+    ['key', 'u8'],
+    ['tokenProgram', 'pubkeyAsString'],
+    ['fractionMint', 'pubkeyAsString'],
+    ['authority', 'pubkeyAsString'],
+    ['fractionTreasury', 'pubkeyAsString'],
+    ['redeemTreasury', 'pubkeyAsString'],
+    ['allowFurtherShareCreation', 'u8'],
+    ['pricingLookupAddress', 'pubkeyAsString'],
+    ['tokenTypeCount', 'u8'],
+    ['state', 'u8'],
+    ['lockedPricePerShare', 'u64'],
+  ]);
+
   key: VaultKey;
   /// Store token program used
   tokenProgram: StringPublicKey;
@@ -45,28 +71,12 @@ export interface VaultData {
   /// Once combination happens, we copy price per share to vault so that if something nefarious happens
   /// to external price account, like price change, we still have the math 'saved' for use in our calcs
   lockedPricePerShare: BN;
-}
 
-const vaultStruct = borsh.struct<VaultData>(
-  [
-    ['key', 'u8'],
-    ['tokenProgram', 'pubkeyAsString'],
-    ['fractionMint', 'pubkeyAsString'],
-    ['authority', 'pubkeyAsString'],
-    ['fractionTreasury', 'pubkeyAsString'],
-    ['redeemTreasury', 'pubkeyAsString'],
-    ['allowFurtherShareCreation', 'u8'],
-    ['pricingLookupAddress', 'pubkeyAsString'],
-    ['tokenTypeCount', 'u8'],
-    ['state', 'u8'],
-    ['lockedPricePerShare', 'u64'],
-  ],
-  [],
-  (data) => {
-    data.key = VaultKey.VaultV1;
-    return data;
-  },
-);
+  constructor(args: Args) {
+    super(args);
+    this.key = VaultKey.VaultV1;
+  }
+}
 
 export class Vault extends Account<VaultData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
@@ -80,7 +90,7 @@ export class Vault extends Account<VaultData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = vaultStruct.deserialize(this.info.data);
+    this.data = VaultData.deserialize(this.info.data);
   }
 
   static async getPDA(pubkey: AnyPublicKey) {

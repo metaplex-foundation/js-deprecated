@@ -2,7 +2,7 @@ import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { BidRedemptionTicket, WINNER_INDEX_OFFSETS } from './BidRedemptionTicket';
 import { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
@@ -22,34 +22,47 @@ export enum AuctionManagerStatus {
   Finished,
 }
 
-export interface AuctionManagerStateV2 {
+export class AuctionManagerStateV2 extends Borsh.Data<{
   status: AuctionManagerStatus;
   safetyConfigItemsValidated: BN;
   bidsPushedToAcceptPayment: BN;
   hasParticipation: boolean;
-}
-
-const AuctionManagerStateV2Struct = borsh.struct<AuctionManagerStateV2>(
-  [
+}> {
+  static readonly SCHEMA = this.struct([
     ['status', 'u8'],
     ['safetyConfigItemsValidated', 'u64'],
     ['bidsPushedToAcceptPayment', 'u64'],
     ['hasParticipation', 'u8'],
-  ],
-  [],
-  (data) =>
-    Object.assign(
-      {
-        status: AuctionManagerStatus.Initialized,
-        safetyConfigItemsValidated: new BN(0),
-        bidsPushedToAcceptPayment: new BN(0),
-        hasParticipation: false,
-      },
-      data,
-    ),
-);
+  ]);
 
-export interface AuctionManagerV2Data {
+  status: AuctionManagerStatus = AuctionManagerStatus.Initialized;
+  safetyConfigItemsValidated: BN = new BN(0);
+  bidsPushedToAcceptPayment: BN = new BN(0);
+  hasParticipation = false;
+}
+
+type Args = {
+  store: StringPublicKey;
+  authority: StringPublicKey;
+  auction: StringPublicKey;
+  vault: StringPublicKey;
+  acceptPayment: StringPublicKey;
+  state: AuctionManagerStateV2;
+};
+export class AuctionManagerV2Data extends Borsh.Data<Args> {
+  static readonly SCHEMA = new Map([
+    ...AuctionManagerStateV2.SCHEMA,
+    ...this.struct([
+      ['key', 'u8'],
+      ['store', 'pubkeyAsString'],
+      ['authority', 'pubkeyAsString'],
+      ['auction', 'pubkeyAsString'],
+      ['vault', 'pubkeyAsString'],
+      ['acceptPayment', 'pubkeyAsString'],
+      ['state', AuctionManagerStateV2],
+    ]),
+  ]);
+
   key: MetaplexKey;
   store: StringPublicKey;
   authority: StringPublicKey;
@@ -57,24 +70,12 @@ export interface AuctionManagerV2Data {
   vault: StringPublicKey;
   acceptPayment: StringPublicKey;
   state: AuctionManagerStateV2;
-}
 
-const AuctionManagerV2Struct = borsh.struct<AuctionManagerV2Data>(
-  [
-    ['key', 'u8'],
-    ['store', 'pubkeyAsString'],
-    ['authority', 'pubkeyAsString'],
-    ['auction', 'pubkeyAsString'],
-    ['vault', 'pubkeyAsString'],
-    ['acceptPayment', 'pubkeyAsString'],
-    ['state', AuctionManagerStateV2Struct.type],
-  ],
-  [AuctionManagerStateV2Struct],
-  (data) => {
-    data.key = MetaplexKey.AuctionManagerV2;
-    return data;
-  },
-);
+  constructor(args: Args) {
+    super(args);
+    this.key = MetaplexKey.AuctionManagerV2;
+  }
+}
 
 export class AuctionManager extends Account<AuctionManagerV2Data> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
@@ -87,7 +88,7 @@ export class AuctionManager extends Account<AuctionManagerV2Data> {
     if (AuctionManager.isAuctionManagerV1(this.info.data)) {
       throw ERROR_DEPRECATED_ACCOUNT_DATA();
     } else if (AuctionManager.isAuctionManagerV2(this.info.data)) {
-      this.data = AuctionManagerV2Struct.deserialize(this.info.data);
+      this.data = AuctionManagerV2Data.deserialize(this.info.data);
     } else {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }

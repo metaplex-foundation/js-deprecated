@@ -6,36 +6,38 @@ import {
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../../vault';
 import { MetadataProgram } from '../../metadata';
 import { AuctionProgram } from '../../auction';
 import { MetaplexProgram } from '../MetaplexProgram';
+import { ParamsWithStore } from '@metaplex/types';
 
-export interface SetStoreArgs {
-  instruction: number;
+export class SetStoreArgs extends Borsh.Data<{ public: boolean }> {
+  static readonly SCHEMA = this.struct([
+    ['instruction', 'u8'],
+    ['public', 'u8'],
+  ]);
+
+  instruction = 8;
   public: boolean;
 }
 
-const setStoreStruct = borsh.struct<SetStoreArgs>([
-  ['instruction', 'u8'],
-  ['public', 'u8'],
-]);
-
 type SetStoreParams = {
-  store: PublicKey;
   admin: PublicKey;
   isPublic: boolean;
 };
 
 export class SetStore extends Transaction {
-  constructor(options: TransactionCtorFields, params: SetStoreParams) {
+  constructor(options: TransactionCtorFields, params: ParamsWithStore<SetStoreParams>) {
     super(options);
     const { feePayer } = options;
     const { admin, store, isPublic } = params;
 
-    const data = setStoreStruct.serialize({ instruction: 8, public: isPublic });
+    const data = Buffer.from(
+      Borsh.serialize(SetStoreArgs.SCHEMA, new SetStoreArgs({ public: isPublic })),
+    );
 
     this.add(
       new TransactionInstruction({

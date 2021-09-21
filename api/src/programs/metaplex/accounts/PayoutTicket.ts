@@ -2,30 +2,29 @@ import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import bs58 from 'bs58';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { MetaplexKey, MetaplexProgram } from '../MetaplexProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
-export interface PayoutTicketData {
-  key: MetaplexKey;
-  recipient: StringPublicKey;
-  amountPaid: BN;
-}
-
-const payoutTicketStruct = borsh.struct<PayoutTicketData>(
-  [
+type Args = { recipient: StringPublicKey; amountPaid: BN };
+export class PayoutTicketData extends Borsh.Data<Args> {
+  static readonly SCHEMA = this.struct([
     ['key', 'u8'],
     ['recipient', 'pubkeyAsString'],
     ['amountPaid', 'u64'],
-  ],
-  [],
-  (data) => {
-    data.key = MetaplexKey.PayoutTicketV1;
-    return data;
-  },
-);
+  ]);
+
+  key: MetaplexKey;
+  recipient: StringPublicKey;
+  amountPaid: BN;
+
+  constructor(args: Args) {
+    super(args);
+    this.key = MetaplexKey.PayoutTicketV1;
+  }
+}
 
 export class PayoutTicket extends Account<PayoutTicketData> {
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
@@ -39,7 +38,7 @@ export class PayoutTicket extends Account<PayoutTicketData> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = payoutTicketStruct.deserialize(this.info.data);
+    this.data = PayoutTicketData.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {

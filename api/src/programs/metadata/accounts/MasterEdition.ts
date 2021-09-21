@@ -3,21 +3,33 @@ import BN from 'bn.js';
 import bs58 from 'bs58';
 import { Account } from '../../../Account';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Edition } from './Edition';
 import { MetadataKey, MetadataProgram } from '../MetadataProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
-export interface MasterEditionData {
+type ArgsV1 = {
   key: MetadataKey;
   supply: BN;
   maxSupply?: BN;
+  printingMint: StringPublicKey;
+  oneTimePrintingAuthorizationMint: StringPublicKey;
+};
+export class MasterEditionV1Data extends Borsh.Data<ArgsV1> {
+  static readonly SCHEMA = this.struct([
+    ['key', 'u8'],
+    ['supply', 'u64'],
+    ['maxSupply', { kind: 'option', type: 'u64' }],
+    ['printingMint', 'pubkeyAsString'],
+    ['oneTimePrintingAuthorizationMint', 'pubkeyAsString'],
+  ]);
 
-  /// V1 Only Field
+  key: MetadataKey;
+  supply: BN;
+  maxSupply?: BN;
   /// Can be used to mint tokens that give one-time permission to mint a single limited edition.
   printingMint: StringPublicKey;
-  /// V1 Only Field
   /// If you don't know how many printing tokens you are going to need, but you do know
   /// you are going to need some amount in the future, you can use a token from this mint.
   /// Coming back to token metadata with one of these tokens allows you to mint (one time)
@@ -29,33 +41,32 @@ export interface MasterEditionData {
   /// get the printing tokens it needs to give to bidders. Each bidder then redeems a printing token
   /// to get their limited editions.
   oneTimePrintingAuthorizationMint: StringPublicKey;
+
+  constructor(args: ArgsV1) {
+    super(args);
+    this.key = MetadataKey.MasterEditionV1;
+  }
 }
 
-const masterEditionV2Struct = borsh.struct<MasterEditionData>(
-  [
+type ArgsV2 = { key: MetadataKey; supply: BN; maxSupply?: BN };
+export class MasterEditionV2Data extends Borsh.Data<ArgsV2> {
+  static readonly SCHEMA = this.struct([
     ['key', 'u8'],
     ['supply', 'u64'],
     ['maxSupply', { kind: 'option', type: 'u64' }],
-  ],
-  [],
-  (data) => {
-    data.key = MetadataKey.MasterEditionV2;
-    return data;
-  },
-);
+  ]);
 
-const masterEditionV1Struct = borsh.struct<MasterEditionData>(
-  [
-    ...masterEditionV2Struct.fields,
-    ['printingMint', 'pubkeyAsString'],
-    ['oneTimePrintingAuthorizationMint', 'pubkeyAsString'],
-  ],
-  [],
-  (data) => {
-    data.key = MetadataKey.MasterEditionV1;
-    return data;
-  },
-);
+  key: MetadataKey;
+  supply: BN;
+  maxSupply?: BN;
+
+  constructor(args: ArgsV2) {
+    super(args);
+    this.key = MetadataKey.MasterEditionV2;
+  }
+}
+
+export type MasterEditionData = MasterEditionV1Data | MasterEditionV2Data;
 
 export class MasterEdition extends Account<MasterEditionData> {
   static readonly EDITION_PREFIX = 'edition';
@@ -68,9 +79,9 @@ export class MasterEdition extends Account<MasterEditionData> {
     }
 
     if (MasterEdition.isMasterEditionV1(this.info.data)) {
-      this.data = masterEditionV1Struct.deserialize(this.info.data);
+      this.data = MasterEditionV1Data.deserialize(this.info.data);
     } else if (MasterEdition.isMasterEditionV2(this.info.data)) {
-      this.data = masterEditionV2Struct.deserialize(this.info.data);
+      this.data = MasterEditionV2Data.deserialize(this.info.data);
     } else {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }

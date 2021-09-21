@@ -1,19 +1,18 @@
 import { Transaction } from '../../../Transaction';
-import { MintLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { AccountLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey, SystemProgram, TransactionCtorFields } from '@solana/web3.js';
 
-type CreateMintParams = {
+type CreateTokenAccountParams = {
   newAccountPubkey: PublicKey;
   lamports: number;
-  decimals?: number;
+  mint: PublicKey;
   owner?: PublicKey;
-  freezeAuthority?: PublicKey;
 };
 
-export class CreateMint extends Transaction {
-  constructor(options: TransactionCtorFields, params: CreateMintParams) {
+export class CreateTokenAccount extends Transaction {
+  constructor(options: TransactionCtorFields, params: CreateTokenAccountParams) {
     const { feePayer } = options;
-    const { newAccountPubkey, lamports, decimals, owner, freezeAuthority } = params;
+    const { newAccountPubkey, lamports, mint, owner } = params;
 
     super(options);
 
@@ -22,18 +21,17 @@ export class CreateMint extends Transaction {
         fromPubkey: feePayer,
         newAccountPubkey,
         lamports,
-        space: MintLayout.span,
+        space: AccountLayout.span,
         programId: TOKEN_PROGRAM_ID,
       }),
     );
 
     this.add(
-      Token.createInitMintInstruction(
+      Token.createInitAccountInstruction(
         TOKEN_PROGRAM_ID,
+        mint,
         newAccountPubkey,
-        decimals ?? 0,
         owner ?? feePayer,
-        freezeAuthority ?? feePayer,
       ),
     );
   }

@@ -2,22 +2,27 @@ import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey } from '@metaplex/types';
-import { borsh } from '@metaplex/utils';
+import { Borsh } from '@metaplex/utils';
 import { Account } from '../../../Account';
 import { AuctionProgram } from '../AuctionProgram';
 import { Buffer } from 'buffer';
 
-export interface AuctionDataExtended {
+type Args = {
+  totalUncancelledBids: BN;
+  tickSize: BN | null;
+  gapTickSizePercentage: number | null;
+};
+export class AuctionDataExtended extends Borsh.Data<Args> {
+  static readonly SCHEMA = this.struct([
+    ['totalUncancelledBids', 'u64'],
+    ['tickSize', { kind: 'option', type: 'u64' }],
+    ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
+  ]);
+
   totalUncancelledBids: BN;
   tickSize: BN | null;
   gapTickSizePercentage: number | null;
 }
-
-const auctionDataExtendedStruct = borsh.struct<AuctionDataExtended>([
-  ['totalUncancelledBids', 'u64'],
-  ['tickSize', { kind: 'option', type: 'u64' }],
-  ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
-]);
 
 export class AuctionExtended extends Account<AuctionDataExtended> {
   static readonly DATA_SIZE = 8 + 9 + 2 + 200;
@@ -33,7 +38,7 @@ export class AuctionExtended extends Account<AuctionDataExtended> {
       throw ERROR_INVALID_ACCOUNT_DATA();
     }
 
-    this.data = auctionDataExtendedStruct.deserialize(this.info.data);
+    this.data = AuctionDataExtended.deserialize(this.info.data);
   }
 
   static isCompatible(data: Buffer) {
