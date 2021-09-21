@@ -27,9 +27,9 @@ export const extendBorsh = () => {
 
 extendBorsh();
 
-type DataConstructor<T> = {
+type DataConstructor<T, A> = {
   readonly SCHEMA;
-  new (args: any): T;
+  new (args: A): T;
 };
 
 export class Data<T = {}> {
@@ -37,11 +37,15 @@ export class Data<T = {}> {
     Object.assign(this, args);
   }
 
-  static struct<T>(this: DataConstructor<T>, fields: any) {
+  static struct<T, A>(this: DataConstructor<T, A>, fields: any) {
     return struct(this, fields);
   }
 
-  static deserialize<T>(this: DataConstructor<T>, data: Buffer) {
+  static serialize<T, A>(this: DataConstructor<T, A>, args: A) {
+    return Buffer.from(serialize(this.SCHEMA, new this(args)));
+  }
+
+  static deserialize<T, A>(this: DataConstructor<T, A>, data: Buffer) {
     return deserializeUnchecked(this.SCHEMA, this, data);
   }
 }

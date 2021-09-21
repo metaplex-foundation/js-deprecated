@@ -58,12 +58,7 @@ export class InitAuctionManagerV2 extends Transaction {
       maxRanges,
     } = params;
 
-    const data = Buffer.from(
-      Borsh.serialize(
-        InitAuctionManagerV2Args.SCHEMA,
-        new InitAuctionManagerV2Args({ amountType, lengthType, maxRanges }),
-      ),
-    );
+    const data = InitAuctionManagerV2Args.serialize({ amountType, lengthType, maxRanges });
 
     this.add(
       new TransactionInstruction({

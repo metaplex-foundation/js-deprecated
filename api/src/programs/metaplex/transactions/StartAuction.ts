@@ -27,7 +27,7 @@ export class StartAuction extends Transaction {
     super(options);
     const { store, auction, auctionManager, auctionManagerAuthority } = params;
 
-    const data = Buffer.from(Borsh.serialize(StartAuctionArgs.SCHEMA, new StartAuctionArgs()));
+    const data = StartAuctionArgs.serialize({});
 
     this.add(
       new TransactionInstruction({

@@ -36,12 +36,7 @@ export class SetWhitelistedCreator extends Transaction {
     const { feePayer } = options;
     const { admin, whitelistedCreatorPDA, store, creator, activated } = params;
 
-    const data = Buffer.from(
-      Borsh.serialize(
-        SetWhitelistedCreatorArgs.SCHEMA,
-        new SetWhitelistedCreatorArgs({ activated }),
-      ),
-    );
+    const data = SetWhitelistedCreatorArgs.serialize({ activated });
 
     this.add(
       new TransactionInstruction({

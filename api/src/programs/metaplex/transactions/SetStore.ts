@@ -35,9 +35,7 @@ export class SetStore extends Transaction {
     const { feePayer } = options;
     const { admin, store, isPublic } = params;
 
-    const data = Buffer.from(
-      Borsh.serialize(SetStoreArgs.SCHEMA, new SetStoreArgs({ public: isPublic })),
-    );
+    const data = SetStoreArgs.serialize({ public: isPublic });
 
     this.add(
       new TransactionInstruction({

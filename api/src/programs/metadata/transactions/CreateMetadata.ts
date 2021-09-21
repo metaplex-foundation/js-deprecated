@@ -39,15 +39,10 @@ export class CreateMetadata extends Transaction {
     const { feePayer } = options;
     const { metadata, metadataData, updateAuthority, mint, mintAuthority } = params;
 
-    const data = Buffer.from(
-      Borsh.serialize(
-        CreateMetadataArgs.SCHEMA,
-        new CreateMetadataArgs({
-          data: metadataData,
-          isMutable: true,
-        }),
-      ),
-    );
+    const data = CreateMetadataArgs.serialize({
+      data: metadataData,
+      isMutable: true,
+    });
 
     this.add(
       new TransactionInstruction({
