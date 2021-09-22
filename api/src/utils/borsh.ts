@@ -41,7 +41,7 @@ export class Data<T = {}> {
     return struct(this, fields);
   }
 
-  static serialize<T, A>(this: DataConstructor<T, A>, args: A) {
+  static serialize<T, A>(this: DataConstructor<T, A>, args: A = {} as A) {
     return Buffer.from(serialize(this.SCHEMA, new this(args)));
   }
 

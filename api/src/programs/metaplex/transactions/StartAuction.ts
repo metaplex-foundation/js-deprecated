@@ -27,7 +27,7 @@ export class StartAuction extends Transaction {
     super(options);
     const { store, auction, auctionManager, auctionManagerAuthority } = params;
 
-    const data = StartAuctionArgs.serialize({});
+    const data = StartAuctionArgs.serialize();
 
     this.add(
       new TransactionInstruction({

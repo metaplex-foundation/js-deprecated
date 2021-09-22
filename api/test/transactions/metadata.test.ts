@@ -1,7 +1,6 @@
 import { jest } from '@jest/globals';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Keypair, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
-import BN from 'bn.js';
 import {
   Connection,
   CreateAssociatedTokenAccount,
@@ -17,7 +16,7 @@ import {
 } from '../../src';
 import { FEE_PAYER } from '../utils';
 
-describe('Metaplex transactions', () => {
+describe.skip('Metaplex transactions', () => {
   let connection: Connection;
   let owner: Keypair;
   let mint: Keypair;
