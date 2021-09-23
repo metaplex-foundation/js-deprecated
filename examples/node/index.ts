@@ -14,10 +14,15 @@ const connection = new Connection('devnet');
 
 const run = async () => {
   // TODO: just waiting for layer service with combine
-  console.time('ownedMetadata');
-  const ownedMetadata = await Metadata.getMetdataByOwner(connection, payer.publicKey);
+  // console.time('ownedMetadata');
+  // const ownedMetadata = await Metadata.getMetdataByOwner(connection, payer.publicKey);
+  // console.log(ownedMetadata);
+  // console.timeEnd('ownedMetadata');
+
+  console.time('ownedMetadata v2');
+  const ownedMetadata = await Metadata.getMetdataByOwnerV2(connection, payer.publicKey);
   console.log(ownedMetadata);
-  console.timeEnd('ownedMetadata');
+  console.timeEnd('ownedMetadata v2');
 
   const metadata = await Metadata.load(connection, metadataPubkey);
   console.log(metadata);

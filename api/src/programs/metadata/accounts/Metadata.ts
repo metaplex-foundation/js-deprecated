@@ -140,6 +140,29 @@ export class Metadata extends Account<MetadataData> {
     ).map((account) => Metadata.from(account));
   }
 
+  static async getByMint(connection: Connection, mint: AnyPublicKey) {
+    return (
+      await MetadataProgram.getProgramAccounts(connection, {
+        filters: [
+          // Filter for MetadataV1 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([MetadataKey.MetadataV1])),
+            },
+          },
+          // Filter for assigned to mint
+          {
+            memcmp: {
+              offset: 33,
+              bytes: new PublicKey(mint).toBase58(),
+            },
+          },
+        ],
+      })
+    ).map((account) => Metadata.from(account));
+  }
+
   static async getMetdataByOwner(connection: Connection, owner: AnyPublicKey) {
     const accounts = await TokenAccount.getTokenAccountsByOwner(connection, owner);
     const accountMap = new Map(accounts.map(({ data }) => [data.mint.toString(), data]));
@@ -150,6 +173,18 @@ export class Metadata extends Account<MetadataData> {
         accountMap.has(metadata.data.mint) &&
         (accountMap?.get(metadata.data.mint)?.amount?.toNumber() || 0) > 0,
     );
+  }
+
+  // TODO: lol
+  static async getMetdataByOwnerV2(connection: Connection, owner: AnyPublicKey) {
+    const accounts = await TokenAccount.getTokenAccountsByOwner(connection, owner);
+    const accountsWithAmount = accounts
+      .map(({ data }) => data)
+      .filter(({ amount }) => amount?.toNumber() > 0);
+
+    return (
+      await Promise.all(accountsWithAmount.map(({ mint }) => Metadata.getByMint(connection, mint)))
+    ).flat();
   }
 
   async getEdition(connection: Connection) {
