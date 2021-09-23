@@ -1,12 +1,14 @@
-import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { Borsh } from '@metaplex/utils';
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import bs58 from 'bs58';
+import { Buffer } from 'buffer';
 import { Account } from '../../../Account';
+import { TokenAccount } from '../../shared';
+import { MetadataKey, MetadataProgram } from '../MetadataProgram';
 import { Edition } from './Edition';
 import { MasterEdition } from './MasterEdition';
-import { MetadataKey, MetadataProgram } from '../MetadataProgram';
-import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
-import { Buffer } from 'buffer';
 
 type CreatorArgs = { address: StringPublicKey; verified: boolean; share: number };
 export class Creator extends Borsh.Data<CreatorArgs> {
@@ -120,6 +122,34 @@ export class Metadata extends Account<MetadataData> {
       MetadataProgram.PUBKEY.toBuffer(),
       new PublicKey(mint).toBuffer(),
     ]);
+  }
+
+  static async getAll(connection: Connection) {
+    return (
+      await MetadataProgram.getProgramAccounts(connection, {
+        filters: [
+          // Filter for MetadataV1 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([MetadataKey.MetadataV1])),
+            },
+          },
+        ],
+      })
+    ).map((account) => Metadata.from(account));
+  }
+
+  static async getMetdataByOwner(connection: Connection, owner: AnyPublicKey) {
+    const accounts = await TokenAccount.getTokenAccountsByOwner(connection, owner);
+    const accountMap = new Map(accounts.map(({ data }) => [data.mint.toString(), data]));
+    const allMetadata = await Metadata.getAll(connection);
+
+    return allMetadata.filter(
+      (metadata) =>
+        accountMap.has(metadata.data.mint) &&
+        (accountMap?.get(metadata.data.mint)?.amount?.toNumber() || 0) > 0,
+    );
   }
 
   async getEdition(connection: Connection) {
