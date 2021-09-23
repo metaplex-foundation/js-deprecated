@@ -9,6 +9,32 @@ import { VaultKey, VaultProgram } from '../VaultProgram';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
 
+export class AmountArgs extends Borsh.Data<{
+  instruction: number;
+  amount: BN;
+}> {
+  static readonly SCHEMA = this.struct([
+    ['instruction', 'u8'],
+    ['amount', 'u8'],
+  ]);
+
+  instruction: number;
+  amount: BN;
+}
+
+export class NumberOfShareArgs extends Borsh.Data<{
+  instruction: number;
+  numberOfShares: BN;
+}> {
+  static readonly SCHEMA = this.struct([
+    ['instruction', 'u8'],
+    ['numberOfShares', 'u8'],
+  ]);
+
+  instruction: number;
+  numberOfShares: BN;
+}
+
 export enum VaultState {
   Inactive = 0,
   Active = 1,
