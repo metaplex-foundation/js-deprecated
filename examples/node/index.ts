@@ -1,4 +1,4 @@
-import { Connection, Metadata, NodeWallet, SetStore, Store } from '@metaplex/js';
+import { Connection, Metadata, NodeWallet, Metaplex } from '@metaplex/js';
 import { Keypair, PublicKey } from '@solana/web3.js';
 
 const payer = Keypair.fromSecretKey(
@@ -11,6 +11,8 @@ const payer = Keypair.fromSecretKey(
 );
 const metadataPubkey = new PublicKey('CZkFeERacU42qjApPyjamS13fNtz7y1wYLu5jyLpN1WL');
 const connection = new Connection('devnet');
+// Wallet
+const wallet = new NodeWallet(payer);
 
 const run = async () => {
   // Find metadata by owner
@@ -21,26 +23,28 @@ const run = async () => {
   const metadata = await Metadata.load(connection, metadataPubkey);
   console.log(metadata);
 
-  // Wallet
-  const wallet = new NodeWallet(payer);
-
   // Transactions
 
   // Set store
-  const storeId = await Store.getPDA(wallet.publicKey);
-  const tx = new SetStore(
-    { feePayer: wallet.publicKey },
-    {
-      admin: wallet.publicKey,
-      store: storeId,
-      isPublic: true,
-    },
-  );
+  // const storeId = await Store.getPDA(wallet.publicKey);
+  // const tx = new SetStore(
+  //   { feePayer: wallet.publicKey },
+  //   {
+  //     admin: wallet.publicKey,
+  //     store: storeId,
+  //     isPublic: true,
+  //   },
+  // );
 
-  tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
-  const signedTx = await wallet.signTransaction(tx);
-  const txId = await connection.sendRawTransaction(signedTx.serialize());
-  console.log(storeId.toString(), txId);
+  // tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+  // const signedTx = await wallet.signTransaction(tx);
+  // const txId = await connection.sendRawTransaction(signedTx.serialize());
+  // console.log(storeId.toString(), txId);
+
+  // Metaplex
+  Metaplex.init(connection, wallet);
+  const { storeId, txId } = await Metaplex.initStore(payer.publicKey);
+  console.log(storeId, txId);
 };
 
 run();

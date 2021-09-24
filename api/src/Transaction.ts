@@ -5,8 +5,8 @@ export class Transaction extends SolanaTransaction {
     super(options);
   }
 
-  static fromCombined(transactions: Transaction[]) {
-    const combinedTransaction = new Transaction({});
+  static fromCombined(transactions: Transaction[], options: TransactionCtorFields = {}) {
+    const combinedTransaction = new Transaction(options);
     transactions.forEach((transaction) =>
       transaction.instructions.forEach((instruction) => {
         combinedTransaction.add(instruction);
