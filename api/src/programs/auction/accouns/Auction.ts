@@ -1,13 +1,13 @@
-import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
-import BN from 'bn.js';
 import { ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
+import { Borsh } from '@metaplex/utils';
+import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import BN from 'bn.js';
+import { Buffer } from 'buffer';
 import { Account } from '../../../Account';
 import { AuctionProgram } from '../AuctionProgram';
 import { BidderMetadata } from './BidderMetadata';
 import { BidderPot } from './BidderPot';
-import { Buffer } from 'buffer';
-import { Borsh } from '@metaplex/utils';
 
 export enum AuctionState {
   Created = 0,
@@ -181,6 +181,28 @@ export class Auction extends Account<AuctionData> {
       AuctionProgram.PUBKEY.toBuffer(),
       new PublicKey(vault).toBuffer(),
     ]);
+  }
+
+  static async findMany(connection: Connection, filters: { authority?: AnyPublicKey }) {
+    return (
+      await AuctionProgram.getProgramAccounts(connection, {
+        filters: [
+          // Filter for assigned to authority
+          filters.authority && {
+            memcmp: {
+              offset: 0,
+              bytes: new PublicKey(filters.authority).toBase58(),
+            },
+          },
+        ].filter(Boolean),
+      })
+    )
+      .map((account) => {
+        try {
+          return Auction.from(account);
+        } catch (err) {}
+      })
+      .filter(Boolean);
   }
 
   async getBidderPots(connection: Connection) {

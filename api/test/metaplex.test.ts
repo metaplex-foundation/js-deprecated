@@ -56,6 +56,14 @@ describe('Metaplex', () => {
       expect(auctionManager.data.key).toEqual(MetaplexKey.AuctionManagerV2);
     });
 
+    test('findMany', async () => {
+      const auctionManagers = await AuctionManager.findMany(connection, {
+        store: STORE_PUBKEY,
+        authority: STORE_OWNER_PUBKEY,
+      });
+      expect(auctionManagers[0].data.store).toEqual(STORE_PUBKEY.toString());
+    });
+
     test('getAuction', async () => {
       const auctionManager = await AuctionManager.load(connection, AUCTION_MANAGER_PUBKEY);
       const auction = await auctionManager.getAuction(connection);

@@ -113,6 +113,39 @@ export class AuctionManager extends Account<AuctionManagerV2Data> {
     ]);
   }
 
+  static async findMany(
+    connection: Connection,
+    filters: { store?: AnyPublicKey; authority?: AnyPublicKey } = {},
+  ) {
+    return (
+      await MetaplexProgram.getProgramAccounts(connection, {
+        filters: [
+          // Filter for AuctionManagerV2 by key
+          {
+            memcmp: {
+              offset: 0,
+              bytes: bs58.encode(Buffer.from([MetaplexKey.AuctionManagerV2])),
+            },
+          },
+          // Filter for assigned to store
+          filters.store && {
+            memcmp: {
+              offset: 1,
+              bytes: new PublicKey(filters.store).toBase58(),
+            },
+          },
+          // Filter for assigned to authority
+          filters.authority && {
+            memcmp: {
+              offset: 33,
+              bytes: new PublicKey(filters.authority).toBase58(),
+            },
+          },
+        ].filter(Boolean),
+      })
+    ).map((account) => AuctionManager.from(account));
+  }
+
   async getAuction(connection: Connection) {
     return Auction.load(connection, this.data.auction);
   }

@@ -1,5 +1,10 @@
 import { Auction, AuctionExtended, AuctionState, Connection } from '../src';
-import { AUCTION_EXTENDED_PUBKEY, AUCTION_PUBKEY, VAULT_PUBKEY } from './utils';
+import {
+  AUCTION_EXTENDED_PUBKEY,
+  AUCTION_MANAGER_PUBKEY,
+  AUCTION_PUBKEY,
+  VAULT_PUBKEY,
+} from './utils';
 
 describe('Auction', () => {
   let connection: Connection;
@@ -14,6 +19,11 @@ describe('Auction', () => {
 
       expect(auction.pubkey).toEqual(AUCTION_PUBKEY);
       expect(auction.data.state).toEqual(AuctionState.Started);
+    });
+
+    test('findMany', async () => {
+      const auctions = await Auction.findMany(connection, { authority: AUCTION_MANAGER_PUBKEY });
+      expect(auctions[0].data.authority).toEqual(AUCTION_MANAGER_PUBKEY.toString());
     });
 
     test('getBidderPots', async () => {
