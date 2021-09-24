@@ -4,3 +4,4 @@ export * from './types';
 export * from './providers';
 export * from './Connection';
 export * from './programs';
+export * from './wallet';

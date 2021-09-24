@@ -1,4 +1,4 @@
-import { Connection, Metadata } from '@metaplex/js';
+import { Connection, Metadata, NodeWallet, SetStore, Store } from '@metaplex/js';
 import { Keypair, PublicKey } from '@solana/web3.js';
 
 const payer = Keypair.fromSecretKey(
@@ -13,19 +13,34 @@ const metadataPubkey = new PublicKey('CZkFeERacU42qjApPyjamS13fNtz7y1wYLu5jyLpN1
 const connection = new Connection('devnet');
 
 const run = async () => {
-  // TODO: just waiting for layer service with combine
-  // console.time('ownedMetadata');
-  // const ownedMetadata = await Metadata.findByOwner(connection, payer.publicKey);
-  // console.log(ownedMetadata);
-  // console.timeEnd('ownedMetadata');
-
-  console.time('ownedMetadata v2');
+  // Find metadata by owner
   const ownedMetadata = await Metadata.findByOwnerV2(connection, payer.publicKey);
   console.log(ownedMetadata);
-  console.timeEnd('ownedMetadata v2');
 
+  // Find specific metadada
   const metadata = await Metadata.load(connection, metadataPubkey);
   console.log(metadata);
+
+  // Wallet
+  const wallet = new NodeWallet(payer);
+
+  // Transactions
+
+  // Set store
+  const storeId = await Store.getPDA(wallet.publicKey);
+  const tx = new SetStore(
+    { feePayer: wallet.publicKey },
+    {
+      admin: wallet.publicKey,
+      store: storeId,
+      isPublic: true,
+    },
+  );
+
+  tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+  const signedTx = await wallet.signTransaction(tx);
+  const txId = await connection.sendRawTransaction(signedTx.serialize());
+  console.log(storeId.toString(), txId);
 };
 
 run();
