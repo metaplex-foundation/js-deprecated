@@ -10,7 +10,7 @@ import {
 import BN from 'bn.js';
 import { AuctionProgram } from '../AuctionProgram';
 import { Transaction } from '../../../Transaction';
-import { PriceFloor } from '../accouns/Auction';
+import { PriceFloor } from '../accounts/Auction';
 
 export enum WinnerLimitType {
   Unlimited = 0,
