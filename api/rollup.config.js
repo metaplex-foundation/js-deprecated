@@ -1,4 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
+import ttypescript from 'ttypescript';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
@@ -9,10 +10,11 @@ const input = 'src/index.ts';
 
 const plugins = ({ browser }) => [
   typescript({
+    typescript: ttypescript,
     tsconfig: 'tsconfig.build.json',
     tsconfigOverride: {
       compilerOptions: {
-        declaration: false,
+        declaration: true,
         module: 'ES2015',
       },
     },
