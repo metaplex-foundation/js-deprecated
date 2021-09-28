@@ -2,7 +2,7 @@ import { Connection } from './Connection';
 import { Wallet } from './wallet';
 
 export class Provider {
-  constructor(public connection: Connection, public wallet: Wallet) {}
+  constructor(public connection: Connection, public wallet?: Wallet) {}
 }
 
 let _provider: Provider = null;
