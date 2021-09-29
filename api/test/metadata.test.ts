@@ -1,5 +1,6 @@
+import { PublicKey } from '@solana/web3.js';
 import { Connection, MasterEdition, Metadata, MetadataKey } from '../src';
-import { MASTER_EDITION_PUBKEY, METADATA_PUBKEY } from './utils';
+import { MASTER_EDITION_PUBKEY, METADATA_PUBKEY, STORE_OWNER_PUBKEY } from './utils';
 
 describe('Metadata', () => {
   let connection: Connection;
@@ -14,6 +15,14 @@ describe('Metadata', () => {
 
       expect(metadata.pubkey).toEqual(METADATA_PUBKEY);
       expect(metadata.data.key).toEqual(MetadataKey.MetadataV1);
+    });
+
+    test('findMany', async () => {
+      const metadata = await Metadata.findMany(connection, {
+        creators: [STORE_OWNER_PUBKEY],
+      });
+
+      expect(metadata[0].data.key).toBe(MetadataKey.MetadataV1);
     });
   });
 
