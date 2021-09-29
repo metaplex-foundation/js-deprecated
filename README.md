@@ -6,11 +6,12 @@ Metaplex JavaScript SDK
 
 ## Roadmap
 
-- [ ] Load and Deserialize Accounts
+- [x] Load and Deserialize Accounts
+- [x] Child Accounts
+- [x] Transactions
+- [ ] Actions (mint NFT, create auction, ...)
 - [ ] Candy Machine
-- [ ] Child Accounts
-- [ ] Transactions
-- [ ] Helpers (ease of use)
+- [ ] More negative tests
 
 ## Load and Deserialize Accounts
 
