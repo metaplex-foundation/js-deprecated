@@ -4,6 +4,7 @@ import { Borsh } from '@metaplex/utils';
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import bs58 from 'bs58';
 import { Buffer } from 'buffer';
+import { config } from '../../../config';
 import { Account } from '../../../Account';
 import { TokenAccount } from '../../shared';
 import { MetadataKey, MetadataProgram } from '../MetadataProgram';
@@ -126,35 +127,67 @@ export class Metadata extends Account<MetadataData> {
 
   static async findMany(
     connection: Connection,
-    filters: { mint?: AnyPublicKey; updateAuthority?: AnyPublicKey } = {},
+    filters: {
+      mint?: AnyPublicKey;
+      updateAuthority?: AnyPublicKey;
+      creators?: AnyPublicKey[];
+    } = {},
   ) {
-    return (
-      await MetadataProgram.getProgramAccounts(connection, {
-        filters: [
-          // Filter for MetadataV1 by key
-          {
-            memcmp: {
-              offset: 0,
-              bytes: bs58.encode(Buffer.from([MetadataKey.MetadataV1])),
-            },
-          },
-          // Filter for assigned to update authority
-          filters.updateAuthority && {
-            memcmp: {
-              offset: 1,
-              bytes: new PublicKey(filters.updateAuthority).toBase58(),
-            },
-          },
-          // Filter for assigned to mint
-          filters.mint && {
-            memcmp: {
-              offset: 33,
-              bytes: new PublicKey(filters.mint).toBase58(),
-            },
-          },
-        ].filter(Boolean),
-      })
-    ).map((account) => Metadata.from(account));
+    const baseFilters = [
+      // Filter for MetadataV1 by key
+      {
+        memcmp: {
+          offset: 0,
+          bytes: bs58.encode(Buffer.from([MetadataKey.MetadataV1])),
+        },
+      },
+      // Filter for assigned to update authority
+      filters.updateAuthority && {
+        memcmp: {
+          offset: 1,
+          bytes: new PublicKey(filters.updateAuthority).toBase58(),
+        },
+      },
+      // Filter for assigned to mint
+      filters.mint && {
+        memcmp: {
+          offset: 33,
+          bytes: new PublicKey(filters.mint).toBase58(),
+        },
+      },
+    ].filter(Boolean);
+
+    if (filters.creators) {
+      return (
+        await Promise.all(
+          Array.from(Array(config.maxCreatorLimit).keys()).reduce(
+            (prev, i) => [
+              ...prev,
+              ...filters.creators.map((pubkey) =>
+                MetadataProgram.getProgramAccounts(connection, {
+                  filters: [
+                    ...baseFilters,
+                    {
+                      memcmp: {
+                        offset: computeCreatorOffset(i),
+                        bytes: new PublicKey(pubkey).toBase58(),
+                      },
+                    },
+                  ],
+                }),
+              ),
+            ],
+            [],
+          ),
+        )
+      )
+        .flat()
+        .map((account) => Metadata.from(account));
+    } else {
+      return (await MetadataProgram.getProgramAccounts(connection, { filters: baseFilters })).map(
+        (account) => Metadata.from(account),
+      );
+    }
   }
 
   static async findByOwner(connection: Connection, owner: AnyPublicKey) {
@@ -202,3 +235,26 @@ export class Metadata extends Account<MetadataData> {
     }
   }
 }
+
+export const MAX_NAME_LENGTH = 32;
+export const MAX_SYMBOL_LENGTH = 10;
+export const MAX_URI_LENGTH = 200;
+export const MAX_CREATOR_LEN = 32 + 1 + 1;
+
+export const computeCreatorOffset = (index: number) => {
+  return (
+    1 + // key
+    32 + // update auth
+    32 + // mint
+    4 + // name string length
+    MAX_NAME_LENGTH + // name
+    4 + // uri string length
+    MAX_URI_LENGTH + // uri
+    4 + // symbol string length
+    MAX_SYMBOL_LENGTH + // symbol
+    2 + // seller fee basis points
+    1 + // whether or not there is a creators vec
+    4 + // creators vec length
+    index * MAX_CREATOR_LEN
+  );
+};

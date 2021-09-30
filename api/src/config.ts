@@ -11,4 +11,5 @@ export const config = {
     // External
     memo: 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
   },
+  maxCreatorLimit: 5,
 };

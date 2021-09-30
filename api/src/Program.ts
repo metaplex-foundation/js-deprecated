@@ -1,4 +1,10 @@
-import { PublicKey, Connection, GetProgramAccountsConfig, Commitment } from '@solana/web3.js';
+import {
+  PublicKey,
+  Connection,
+  GetProgramAccountsConfig,
+  Commitment,
+  AccountInfo,
+} from '@solana/web3.js';
 import { Account } from './Account';
 import { Buffer } from 'buffer';
 
@@ -13,8 +19,39 @@ export abstract class Program {
     connection: Connection,
     configOrCommitment?: GetProgramAccountsConfig | Commitment,
   ) {
-    return (await connection.getProgramAccounts(this.PUBKEY, configOrCommitment)).map(
-      ({ pubkey, account }) => new Account(pubkey, account),
-    );
+    const extra: Pick<GetProgramAccountsConfig, 'dataSlice' | 'filters'> = {};
+    let commitment;
+    if (configOrCommitment) {
+      if (typeof configOrCommitment === 'string') {
+        commitment = configOrCommitment;
+      } else {
+        commitment = configOrCommitment.commitment;
+        if (configOrCommitment.dataSlice) {
+          extra.dataSlice = configOrCommitment.dataSlice;
+        }
+        if (configOrCommitment.filters) {
+          extra.filters = configOrCommitment.filters;
+        }
+      }
+    }
+    const args = connection._buildArgs([this.PUBKEY.toBase58()], commitment, 'base64', extra);
+    const unsafeRes = await (connection as any)._rpcRequest('getProgramAccounts', args);
+
+    return (
+      unsafeRes.result as Array<{
+        account: AccountInfo<[string, string]>;
+        pubkey: string;
+      }>
+    )
+      .map(({ account: { data, executable, lamports, owner }, pubkey }) => ({
+        account: {
+          data: Buffer.from(data[0], 'base64'),
+          executable,
+          lamports,
+          owner: new PublicKey(owner),
+        } as AccountInfo<Buffer>,
+        pubkey: new PublicKey(pubkey),
+      }))
+      .map(({ pubkey, account }) => new Account(pubkey, account));
   }
 }

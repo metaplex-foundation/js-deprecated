@@ -183,7 +183,7 @@ export class Auction extends Account<AuctionData> {
     ]);
   }
 
-  static async findMany(connection: Connection, filters: { authority?: AnyPublicKey }) {
+  static async findMany(connection: Connection, filters: { authority?: AnyPublicKey } = {}) {
     return (
       await AuctionProgram.getProgramAccounts(connection, {
         filters: [
