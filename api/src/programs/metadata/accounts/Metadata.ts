@@ -39,7 +39,7 @@ export class MetadataDataData extends Borsh.Data<DataArgs> {
       ['symbol', 'string'],
       ['uri', 'string'],
       ['sellerFeeBasisPoints', 'u16'],
-      ['creators', { kind: 'option', type: Creator }],
+      ['creators', { kind: 'option', type: [Creator] }],
     ]),
   ]);
 
