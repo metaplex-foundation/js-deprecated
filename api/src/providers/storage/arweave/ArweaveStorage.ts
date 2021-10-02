@@ -1,10 +1,19 @@
 import { Storage, UploadResult } from '../Storage';
 import axios from 'axios';
-import { Buffer } from 'buffer';
+import { File, FormData } from 'formdata-node';
 
 const ARWEAVE_URL = 'https://arweave.net';
 const LAMPORT_MULTIPLIER = 10 ** 9;
 const WINSTON_MULTIPLIER = 10 ** 12;
+
+export interface ArweaveUploadResult extends UploadResult {
+  messages?: {
+    filename: string;
+    status: 'success' | 'fail';
+    transactionId?: string;
+    error?: string;
+  }[];
+}
 
 export interface ArweaveStorageCtorFields {
   endpoint: string;
@@ -20,52 +29,58 @@ export class ArweaveStorage implements Storage {
     this.env = env;
   }
 
-  async getAssetCostToStore(files: Map<string, Buffer>, arweaveRate: number, solanaRate: number) {
-    const buffers = Array.from(files.values());
-    const totalBytes = buffers.reduce((sum, f) => (sum += f.byteLength), 0);
+  async getAssetCostToStore(
+    files: Map<string, File | Buffer>,
+    arweaveRate: number,
+    solanaRate: number,
+  ) {
+    const blobs = Array.from(files.values());
+    const totalBytes = blobs.reduce((sum, f) => (sum += f.size), 0);
     const txnFeeInWinstons = parseInt(await (await axios(`${ARWEAVE_URL}/price/0`)).data);
     const byteCostInWinstons = parseInt(
       await (
         await axios(`${ARWEAVE_URL}/price/${totalBytes.toString()}`)
       ).data,
     );
-    const totalArCost =
-      (txnFeeInWinstons * buffers.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
+    const totalArCost = (txnFeeInWinstons * blobs.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
     // To figure out how many lamports are required, multiply ar byte cost by this number
     const arMultiplier = arweaveRate / solanaRate;
     // We also always make a manifest file, which, though tiny, needs payment.
     return LAMPORT_MULTIPLIER * totalArCost * arMultiplier * 1.1;
   }
 
-  async upload(files: Map<string, Buffer>, mintKey: string, txid: string): Promise<UploadResult> {
+  async upload(
+    files: Map<string, File | Buffer>,
+    mintKey: string,
+    txid: string,
+  ): Promise<ArweaveUploadResult> {
     const fileEntries = Array.from(files.entries());
     const tags = fileEntries.reduce(
-      (acc: Record<string, Array<{ name: string; value: string }>>, f) => {
-        acc[f[0]] = [{ name: 'mint', value: mintKey }];
+      (acc: Record<string, Array<{ name: string; value: string }>>, [fileName]) => {
+        acc[fileName] = [{ name: 'mint', value: mintKey }];
         return acc;
       },
       {},
     );
 
-    return {};
+    const body = new FormData();
 
-    // data.append('tags', JSON.stringify(tags));
-    // data.append('transaction', txid);
-    // data.append('env', this.env);
-    // files.map((f) => {
-    //   data.append('file[]', f);
-    // });
+    body.append('tags', JSON.stringify(tags));
+    body.append('transaction', txid);
+    body.append('env', this.env);
+    fileEntries.map(([, file]) => {
+      body.append('file[]', file);
+    });
 
-    // const response = await fetch(this.endpoint, {
-    //   method: 'POST',
-    //   // TODO: I hate to do this, but it seems to be like an upstream problem:
-    //   // https://github.com/jimmywarting/FormData/issues/133
-    //   // I'll make sure to track it. - Danny
-    //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //   // @ts-ignore
-    //   body: data,
-    // });
+    // TODO: I hate to do this, but it seems to be like an upstream problem:
+    // https://github.com/jimmywarting/FormData/issues/133
+    // I'll make sure to track it. - Danny
+    const response = await axios.post(this.endpoint, body);
 
-    // return response.json();
+    if (response.data.error) {
+      return Promise.reject(new Error(response.data.error));
+    }
+
+    return response.data;
   }
 }

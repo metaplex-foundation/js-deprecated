@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+import { File } from 'formdata-node';
 
 export interface UploadResult {
   error?: string;
@@ -6,9 +6,9 @@ export interface UploadResult {
 
 export abstract class Storage {
   getAssetCostToStore: (
-    files: Map<string, Buffer>,
+    files: Map<string, File>,
     arweaveRate: number,
     solanaRate: number,
   ) => Promise<number>;
-  upload: (files: Map<string, Buffer>, mintKey: string, txid: string) => Promise<UploadResult>;
+  upload: (files: Map<string, File>, mintKey: string, txid: string) => Promise<UploadResult>;
 }
