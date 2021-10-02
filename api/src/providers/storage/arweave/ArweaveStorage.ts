@@ -1,6 +1,7 @@
 import { Storage, UploadResult } from '../Storage';
+import { Buffer } from 'buffer';
 import axios from 'axios';
-import { File, FormData } from 'formdata-node';
+import FormData from 'form-data';
 
 const ARWEAVE_URL = 'https://arweave.net';
 const LAMPORT_MULTIPLIER = 10 ** 9;
@@ -29,20 +30,17 @@ export class ArweaveStorage implements Storage {
     this.env = env;
   }
 
-  async getAssetCostToStore(
-    files: Map<string, File | Buffer>,
-    arweaveRate: number,
-    solanaRate: number,
-  ) {
-    const blobs = Array.from(files.values());
-    const totalBytes = blobs.reduce((sum, f) => (sum += f.size), 0);
+  async getAssetCostToStore(files: Map<string, Buffer>, arweaveRate: number, solanaRate: number) {
+    const fileEntries = Array.from(files.values());
+    const totalBytes = fileEntries.reduce((sum, f) => (sum += f.byteLength), 0);
     const txnFeeInWinstons = parseInt(await (await axios(`${ARWEAVE_URL}/price/0`)).data);
     const byteCostInWinstons = parseInt(
       await (
         await axios(`${ARWEAVE_URL}/price/${totalBytes.toString()}`)
       ).data,
     );
-    const totalArCost = (txnFeeInWinstons * blobs.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
+    const totalArCost =
+      (txnFeeInWinstons * fileEntries.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
     // To figure out how many lamports are required, multiply ar byte cost by this number
     const arMultiplier = arweaveRate / solanaRate;
     // We also always make a manifest file, which, though tiny, needs payment.
@@ -50,7 +48,7 @@ export class ArweaveStorage implements Storage {
   }
 
   async upload(
-    files: Map<string, File | Buffer>,
+    files: Map<string, Buffer>,
     mintKey: string,
     txid: string,
   ): Promise<ArweaveUploadResult> {

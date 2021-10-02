@@ -39,6 +39,6 @@
     ]
   },
   "dependencies": {
-    "formdata-node": "^4.2.4"
+    "form-data": "^4.0.0"
   }
 }

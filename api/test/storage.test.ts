@@ -1,6 +1,8 @@
+import { Buffer } from 'buffer';
 import axios from 'axios';
 import * as fs from 'fs';
-import * as FormData from 'form-data';
+import FormData from 'form-data';
+
 import { ArweaveStorage, ArweaveUploadResult, ConversionRatePair, Currency } from '../src';
 
 const UPLOAD_ENDPOINT = 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
