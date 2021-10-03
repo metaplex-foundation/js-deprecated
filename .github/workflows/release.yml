@@ -13,11 +13,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: 12.x
     - name: Install dependencies
-      run: yarn
+      run: yarn install --frozen-lockfile
     - name: Install semantic-release extra plugins
       run: yarn add -D @semantic-release/changelog @semantic-release/git
     - name: Test
