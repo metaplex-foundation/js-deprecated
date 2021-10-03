@@ -10,7 +10,7 @@
 
 All pull requests SHOULD adhere to the [Conventional Commits specification](https://conventionalcommits.org/). Semantic-release uses that specification to determine the type of release.
 
-fix: use proper key on WhitelistedCreator will bump the version to 1.0.1
-feat: implement ArweaveStorage provider will bump the version to 1.1.0
-BREAKING CHANGE: rewrite Metaplex.init will bump the version to 2.0.0
-feat!: rewrite Metaplex.init will bump the version to 2.0.0
+* fix: use proper key on WhitelistedCreator will bump the version to 1.0.1
+* feat: implement ArweaveStorage provider will bump the version to 1.1.0
+* BREAKING CHANGE: rewrite Metaplex.init will bump the version to 2.0.0
+* feat!: rewrite Metaplex.init will bump the version to 2.0.0
