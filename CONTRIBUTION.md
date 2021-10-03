@@ -4,7 +4,7 @@
 
 1. Fork the Metaplex JS repository
 2. Create a new branch for each feature, fix or improvement
-3. Send a pull request from each feature branch to the **master** branch
+3. Send a pull request from each feature branch to the **main** branch
 
 ## Style Guide
 
