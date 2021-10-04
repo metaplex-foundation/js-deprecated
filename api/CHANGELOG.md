@@ -1,3 +1,10 @@
+# @metaplex/js [1.1.0](https://github.com/metaplex/js/compare/@metaplex/js@1.0.0...@metaplex/js@1.1.0) (2021-10-04)
+
+
+### Features
+
+* arweave storage ([#16](https://github.com/metaplex/js/issues/16)) ([48630a9](https://github.com/metaplex/js/commit/48630a951ecda4675d992a65760b29ef6fab545a))
+
 # @metaplex/js 1.0.0 (2021-10-04)
 
 
