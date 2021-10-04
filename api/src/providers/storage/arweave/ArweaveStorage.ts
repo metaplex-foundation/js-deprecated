@@ -31,8 +31,8 @@ export class ArweaveStorage implements Storage {
   }
 
   async getAssetCostToStore(files: Map<string, Buffer>, arweaveRate: number, solanaRate: number) {
-    const fileEntries = Array.from(files.values());
-    const totalBytes = fileEntries.reduce((sum, f) => (sum += f.byteLength), 0);
+    const buffers = Array.from(files.values());
+    const totalBytes = buffers.reduce((sum, f) => (sum += f.byteLength), 0);
     const txnFeeInWinstons = parseInt(await (await axios(`${ARWEAVE_URL}/price/0`)).data);
     const byteCostInWinstons = parseInt(
       await (
@@ -40,7 +40,7 @@ export class ArweaveStorage implements Storage {
       ).data,
     );
     const totalArCost =
-      (txnFeeInWinstons * fileEntries.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
+      (txnFeeInWinstons * buffers.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
     // To figure out how many lamports are required, multiply ar byte cost by this number
     const arMultiplier = arweaveRate / solanaRate;
     // We also always make a manifest file, which, though tiny, needs payment.
