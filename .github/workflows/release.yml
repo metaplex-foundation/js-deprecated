@@ -17,7 +17,7 @@ jobs:
       with:
         node-version: 12.x
     - name: Install dependencies
-      run: yarn install --frozen-lockfile
+      run: yarn install --immutable --immutable-cache
     - name: Install semantic-release extra plugins
       run: yarn add -D @semantic-release/changelog @semantic-release/git
     - name: Test
