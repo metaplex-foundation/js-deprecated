@@ -1,8 +1,7 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
+  pull_request:
 
 jobs:
   release:
@@ -25,6 +24,8 @@ jobs:
       run: yarn test
     - name: Build
       run: yarn build
+    - name: Copy README
+      run: cp "README.md" "./api/README.md"
     - name: Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
