@@ -19,12 +19,12 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
     - name: Install dependencies
       run: yarn install --immutable
-    - name: Install semantic-release extra plugins
-      run: yarn add -D @semantic-release/changelog @semantic-release/git
     - name: Test
       run: yarn test
     - name: Build
       run: yarn build
+    - name: Copy README
+      run: cp "README.md" "./api/README.md"
     - name: Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
