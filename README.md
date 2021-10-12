@@ -44,7 +44,6 @@ import { Connection, Wallet, Metaplex } from '@metaplex/js';
 
 const connection = new Connection('devnet');
 
-Metaplex.init(connection, wallet);
 await Metaplex.initStore({ connection, wallet });
 
 ```
