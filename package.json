@@ -12,12 +12,14 @@
     "build:docs": "yarn workspace @metaplex/js run build:docs",
     "build": "yarn workspace @metaplex/js run build",
     "test": "yarn workspace @metaplex/js run test",
+    "lint": "yarn workspace @metaplex/js run lint",
+    "prettier": "yarn workspace @metaplex/js run prettier",
     "example:web": "yarn workspace example-web run start",
     "example:iife": "yarn workspace example-iife run start",
     "example:node": "yarn workspace example-node run start",
     "clean": "yarn cache clean && rm -rf node_modules",
     "preinstall": "npx only-allow yarn",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
