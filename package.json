@@ -12,6 +12,7 @@
     "build:docs": "yarn workspace @metaplex/js run build:docs",
     "build": "yarn workspace @metaplex/js run build",
     "test": "yarn workspace @metaplex/js run test",
+    "lint": "yarn workspace @metaplex/js run lint",
     "example:web": "yarn workspace example-web run start",
     "example:iife": "yarn workspace example-iife run start",
     "example:node": "yarn workspace example-node run start",
