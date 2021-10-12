@@ -18,7 +18,7 @@
     "example:node": "yarn workspace example-node run start",
     "clean": "yarn cache clean && rm -rf node_modules",
     "preinstall": "npx only-allow yarn",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
