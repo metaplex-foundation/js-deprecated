@@ -1,3 +1,5 @@
+## @metaplex/js [1.1.1](https://github.com/metaplex/js/compare/@metaplex/js@1.1.0...@metaplex/js@1.1.1) (2021-10-12)
+
 # @metaplex/js [1.1.0](https://github.com/metaplex/js/compare/@metaplex/js@1.0.0...@metaplex/js@1.1.0) (2021-10-04)
 
 
