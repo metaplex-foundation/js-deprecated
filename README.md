@@ -42,8 +42,9 @@ The Metaplex SDK currently has low level transaction convenience classes for all
 
 import { Connection, Wallet, Metaplex } from '@metaplex/js';
 
-Metaplex.init(connection, wallet);
-await Metaplex.initStore(wallet.publicKey);
+const connection = new Connection('devnet');
+
+await Metaplex.initStore({ connection, wallet });
 
 ```
 

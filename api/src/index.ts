@@ -5,4 +5,3 @@ export * from './providers';
 export * from './Connection';
 export * from './programs';
 export * from './wallet';
-export * as Metaplex from './metaplex';

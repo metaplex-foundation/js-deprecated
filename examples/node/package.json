@@ -10,7 +10,7 @@
     "start": "ts-node -P tsconfig.json index.ts"
   },
   "dependencies": {
-    "@metaplex/js": "workspace:^0.0.1",
+    "@metaplex/js": "workspace:^1.1.1",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.24.1"
   },

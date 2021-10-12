@@ -1,15 +1,23 @@
-import { Transaction } from '../Transaction';
-import { Provider } from '../provider';
 import { Keypair, SendOptions } from '@solana/web3.js';
+import { Connection, Wallet } from 'src';
+import { Transaction } from '../Transaction';
 
-export const sendTransaction = async (
-  provider: Provider,
-  txs: Transaction[],
-  signers: Keypair[] = [],
-  options?: SendOptions,
-): Promise<string> => {
-  const { connection, wallet } = provider;
-  let tx = Transaction.fromCombined(txs, { feePayer: provider.wallet.publicKey });
+interface ISendTransactionParams {
+  connection: Connection;
+  wallet: Wallet;
+  txs: Transaction[];
+  signers?: Keypair[];
+  options?: SendOptions;
+}
+
+export const sendTransaction = async ({
+  connection,
+  wallet,
+  txs,
+  signers = [],
+  options,
+}: ISendTransactionParams): Promise<string> => {
+  let tx = Transaction.fromCombined(txs, { feePayer: wallet.publicKey });
   tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
 
   if (signers.length) {
