@@ -5,7 +5,7 @@ export type AnyPublicKey = StringPublicKey | PublicKey;
 
 export type ParamsWithStore<P> = P & { store: PublicKey };
 
-export type MetaDataJsonCategory = 'image' | 'video' | 'audio' | 'vr';
+export type MetaDataJsonCategory = 'image' | 'video' | 'audio' | 'vr' | 'html';
 
 export type MetadataJsonAttribute = {
   trait_type: string;
