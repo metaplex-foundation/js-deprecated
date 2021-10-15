@@ -1,3 +1,10 @@
+# @metaplex/js [1.2.0](https://github.com/metaplex/js/compare/@metaplex/js@1.1.1...@metaplex/js@1.2.0) (2021-10-15)
+
+
+### Features
+
+* add html to MetaDataJsonCategory ([#30](https://github.com/metaplex/js/issues/30)) ([b9299cf](https://github.com/metaplex/js/commit/b9299cfa1a95e99d7f3b03e6af47e15382b20e64))
+
 ## @metaplex/js [1.1.1](https://github.com/metaplex/js/compare/@metaplex/js@1.1.0...@metaplex/js@1.1.1) (2021-10-12)
 
 # @metaplex/js [1.1.0](https://github.com/metaplex/js/compare/@metaplex/js@1.0.0...@metaplex/js@1.1.0) (2021-10-04)
