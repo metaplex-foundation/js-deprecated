@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/metaplex/js/compare/v1.0.0...v2.0.0) (2021-10-15)
+
+
+### Features
+
+* bump major version ([c3a7a26](https://github.com/metaplex/js/commit/c3a7a26378f5701cb9c87e88beb90a60763c4e45))
+
+
+### BREAKING CHANGES
+
+* Don't use Metaplex.init. Provide connection and wallet directly to actions.
+
 # 1.0.0 (2021-10-15)
 
 
