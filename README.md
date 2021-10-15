@@ -4,6 +4,8 @@ Metaplex JavaScript SDK
 
 > **In Development** - All interfaces are very likely to change very frequently. Please be aware.
 
+[Learn how to use Metaplex JavaScript SDK in your own project](https://docs.metaplex.com/development/clients/js-sdk/getting-started).
+
 ## Roadmap
 
 - [x] Load and Deserialize Accounts
