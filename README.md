@@ -1,8 +1,10 @@
-# @metaplex/js
+# @metaplex/js &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/metaplex/js/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@metaplex/js.svg?style=flat)](https://www.npmjs.com/package/react)
 
 Metaplex JavaScript SDK
 
 > **In Development** - All interfaces are very likely to change very frequently. Please be aware.
+
+[Learn how to use Metaplex JavaScript SDK in your own project](https://docs.metaplex.com/development/clients/js-sdk/getting-started).
 
 ## Roadmap
 
