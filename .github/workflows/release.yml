@@ -15,7 +15,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: 12.x
+        node-version: 14.17.0
         registry-url: 'https://registry.npmjs.org'
     - name: Install dependencies
       run: yarn install --immutable
