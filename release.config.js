@@ -8,7 +8,11 @@ module.exports = {
         releaseRules: [
           { type: 'refactor', release: 'patch' },
           { type: 'style', release: 'patch' },
+          { type: 'feat!', release: 'major' },
         ],
+        parserOpts: {
+          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES'],
+        },
       },
     ],
     '@semantic-release/release-notes-generator',

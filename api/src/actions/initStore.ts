@@ -1,12 +1,13 @@
 import { PublicKey } from '@solana/web3.js';
-import { Wallet, Connection } from 'src';
+import { Wallet } from '../wallet';
+import { Connection } from '../Connection';
 import { SetStore, Store } from '../programs';
 import { sendTransaction } from './transactions';
 
 interface IInitStoreParams {
   connection: Connection;
   wallet: Wallet;
-  isPublic: boolean;
+  isPublic?: boolean;
 }
 
 interface IInitStoreResponse {

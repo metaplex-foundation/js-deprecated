@@ -40,11 +40,11 @@ The Metaplex SDK currently has low level transaction convenience classes for all
 
 ```ts
 
-import { Connection, Wallet, Metaplex } from '@metaplex/js';
+import { Connection, Wallet, Actions } from '@metaplex/js';
 
 const connection = new Connection('devnet');
 
-await Metaplex.initStore({ connection, wallet });
+await Actions.initStore({ connection, wallet });
 
 ```
 

@@ -1,0 +1,6 @@
+{
+  "entryPoints": ["api/src/index.ts"],
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "out": "./docs/api"
+}

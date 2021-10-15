@@ -1,9 +1,9 @@
 import { pathsToModuleNameMapper } from 'ts-jest/utils';
 
 const paths = {
-  '@metaplex/utils': ['./src/utils'],
-  '@metaplex/types': ['./src/types'],
-  '@metaplex/errors': ['./src/errors'],
+  '@metaplex/utils': ['./api/src/utils'],
+  '@metaplex/types': ['./api/src/types'],
+  '@metaplex/errors': ['./api/src/errors'],
 };
 
 export default {

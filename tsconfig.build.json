@@ -1,5 +1,4 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
     "target": "es6",
@@ -12,16 +11,16 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "skipLibCheck": true,
+    "module": "commonjs",
     "paths": {
-      "@metaplex/utils": ["./src/utils"],
-      "@metaplex/types": ["./src/types"],
-      "@metaplex/errors": ["./src/errors"],
+      "@metaplex/utils": ["./api/src/utils"],
+      "@metaplex/types": ["./api/src/types"],
+      "@metaplex/errors": ["./api/src/errors"],
     },
     "plugins": [
       { "transform": "@zerollup/ts-transform-paths" }
     ]
   },
-  "include": [
-    "./src"
-  ],
+  "include": ["./api/src"],
+  "exclude": ["node_modules", "dist", "build", "lib"]
 }

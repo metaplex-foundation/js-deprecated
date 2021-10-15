@@ -1,4 +1,4 @@
-import { Connection, Metadata, NodeWallet, Metaplex } from '@metaplex/js';
+import { Connection, Metadata, NodeWallet, Actions } from '@metaplex/js';
 import { Keypair, PublicKey } from '@solana/web3.js';
 
 const payer = Keypair.fromSecretKey(
@@ -42,8 +42,7 @@ const run = async () => {
   // console.log(storeId.toString(), txId);
 
   // Metaplex
-  Metaplex.init(connection, wallet);
-  const { storeId, txId } = await Metaplex.initStore(payer.publicKey);
+  const { storeId, txId } = await Actions.initStore({ connection, wallet });
   console.log(storeId, txId);
 };
 

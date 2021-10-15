@@ -6,7 +6,7 @@ import json from '@rollup/plugin-json';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { terser } from 'rollup-plugin-terser';
 
-const input = 'src/index.ts';
+const input = 'api/src/index.ts';
 
 const plugins = ({ browser }) => [
   typescript({

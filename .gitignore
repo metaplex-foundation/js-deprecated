@@ -47,3 +47,6 @@ coverage/
 
 # Docs
 **/docs/api
+
+# Bundle stats file
+stats.html

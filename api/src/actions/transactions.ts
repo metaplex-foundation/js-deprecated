@@ -1,5 +1,6 @@
 import { Keypair, SendOptions } from '@solana/web3.js';
-import { Connection, Wallet } from 'src';
+import { Wallet } from '../wallet';
+import { Connection } from '../Connection';
 import { Transaction } from '../Transaction';
 
 interface ISendTransactionParams {
