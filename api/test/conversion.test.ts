@@ -3,6 +3,8 @@ import { Coingecko, Currency } from '../src/providers/conversion';
 describe('Conversion', () => {
   let coingecko: Coingecko;
 
+  jest.setTimeout(80000);
+
   beforeAll(() => {
     // why not just do a static method? well, even though our current Coingecko implementation
     // for ConversionRateProvider is fully public API. Someone else might want to create a
