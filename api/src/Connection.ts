@@ -7,6 +7,10 @@ export enum ChainId {
 }
 
 export const ENV: Record<string, { endpoint: string; ChainId: ChainId }> = {
+  devnet: {
+    endpoint: clusterApiUrl('devnet'),
+    ChainId: ChainId.Devnet,
+  },
   'mainnet-beta': {
     endpoint: 'https://api.metaplex.solana.com/',
     ChainId: ChainId.MainnetBeta,
@@ -22,10 +26,6 @@ export const ENV: Record<string, { endpoint: string; ChainId: ChainId }> = {
   testnet: {
     endpoint: clusterApiUrl('testnet'),
     ChainId: ChainId.Testnet,
-  },
-  devnet: {
-    endpoint: clusterApiUrl('devnet'),
-    ChainId: ChainId.Devnet,
   },
 };
 
