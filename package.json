@@ -36,7 +36,7 @@
     "fix": "yarn fix:lint && yarn fix:prettier",
     "test": "jest",
     "test:watch": "jest --watch",
-    "postinstall": "husky install"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@solana/spl-token": "^0.1.8",
