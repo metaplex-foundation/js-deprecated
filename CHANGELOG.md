@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/metaplex/js/compare/v2.0.0...v2.0.1) (2021-10-17)
+
+
+### Bug Fixes
+
+* use prepare instead of postinstall ([#38](https://github.com/metaplex/js/issues/38)) ([fca112a](https://github.com/metaplex/js/commit/fca112aa8ecee3bb76e8a5934530eb5e9666f775))
+
 # [2.0.0](https://github.com/metaplex/js/compare/v1.0.0...v2.0.0) (2021-10-15)
 
 
