@@ -1,12 +1,12 @@
+import { Connection } from '../src';
 import {
-  Connection,
   PackSet,
   PackSetState,
   PackCard,
-  DistributionType,
   PackVoucher,
+  DistributionType,
   ProvingProcess,
-} from '../src';
+} from '../src/programs/nft-packs';
 import {
   PACKSET_PUBKEY,
   PACKCARD_PUBKEY,

@@ -1,4 +1,5 @@
-import { Auction, AuctionExtended, AuctionState, Connection } from '../src';
+import { Auction, AuctionState, AuctionExtended } from '../src/programs/auction';
+import { Connection } from '../src';
 import {
   AUCTION_EXTENDED_PUBKEY,
   AUCTION_MANAGER_PUBKEY,

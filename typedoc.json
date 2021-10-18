@@ -1,5 +1,14 @@
 {
-  "entryPoints": ["api/src/index.ts"],
+  "entryPoints": [
+    "api/src/actions/index.ts",
+    "api/src/programs/auction/index.ts",
+    "api/src/programs/metadata/index.ts",
+    "api/src/programs/metaplex/index.ts",
+    "api/src/programs/nft-packs/index.ts",
+    "api/src/programs/shared/index.ts",
+    "api/src/programs/vault/index.ts",
+    "api/src/index.ts"
+  ],
   "excludeInternal": true,
   "excludePrivate": true,
   "out": "./docs/api"
