@@ -7,7 +7,7 @@ import multiInput from 'rollup-plugin-multi-input';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { terser } from 'rollup-plugin-terser';
 
-const input = ['src/actions/*.ts', 'src/programs/*.ts', 'src/index.ts'];
+const input = ['src/actions/*.ts', 'src/programs/**/*.ts', 'src/index.ts'];
 
 const plugins = ({ browser }) => [
   typescript({
@@ -63,6 +63,6 @@ export default [
   // Node
   config(),
   // Browser
-  config({ browser: true, format: 'esm' }),
-  config({ browser: true, format: 'iife' }),
+  // config({ browser: true, format: 'esm' }),
+  // config({ browser: true, format: 'iife' }),
 ];
