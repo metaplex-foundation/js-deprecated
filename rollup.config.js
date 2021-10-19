@@ -7,7 +7,7 @@ import multiInput from 'rollup-plugin-multi-input';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { terser } from 'rollup-plugin-terser';
 
-const input = ['api/src/actions/*.ts', 'api/src/programs/*.ts', 'api/src/index.ts'];
+const input = ['src/actions/*.ts', 'src/programs/*.ts', 'src/index.ts'];
 
 const plugins = ({ browser }) => [
   typescript({
@@ -27,7 +27,7 @@ const plugins = ({ browser }) => [
   }),
   commonjs(),
   json(),
-  multiInput({ relative: 'api/src/' }),
+  multiInput({ relative: 'src/' }),
 ];
 
 const config = ({ browser, format } = { browser: false }) => {
