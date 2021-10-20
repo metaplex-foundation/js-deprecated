@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/metaplex/js/compare/v2.0.1...v3.0.0) (2021-10-20)
+
+
+### Features
+
+* update package exports ([#40](https://github.com/metaplex/js/issues/40)) ([f0d72ea](https://github.com/metaplex/js/commit/f0d72ea35e932d8ed4d68e1450eb4d6b24ede993))
+
+
+### BREAKING CHANGES
+
+* export actions & programs in separate folders.
+
+Co-authored-by: Paul Kurochka <kurochka.p@gmail.com>
+
 ## [2.0.1](https://github.com/metaplex/js/compare/v2.0.0...v2.0.1) (2021-10-17)
 
 
