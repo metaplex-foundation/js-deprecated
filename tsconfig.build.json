@@ -13,14 +13,14 @@
     "skipLibCheck": true,
     "module": "commonjs",
     "paths": {
-      "@metaplex/utils": ["./api/src/utils"],
-      "@metaplex/types": ["./api/src/types"],
-      "@metaplex/errors": ["./api/src/errors"],
+      "@metaplex/utils": ["./src/utils"],
+      "@metaplex/types": ["./src/types"],
+      "@metaplex/errors": ["./src/errors"],
     },
     "plugins": [
       { "transform": "@zerollup/ts-transform-paths" }
     ]
   },
-  "include": ["./api/src"],
+  "include": ["./src"],
   "exclude": ["node_modules", "dist", "build", "lib"]
 }

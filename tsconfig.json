@@ -5,7 +5,7 @@
     "types": ["jest"]
   },
   "include": [
-    "./api/src",
-    "./api/test"
+    "./src",
+    "test"
   ]
 }

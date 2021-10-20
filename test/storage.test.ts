@@ -33,7 +33,7 @@ describe('Storage', () => {
   let files: Map<string, Buffer>;
 
   beforeAll(() => {
-    files = new Map([['metaplex.jpg', fs.readFileSync('./api/test/uploads/metaplex.jpg')]]);
+    files = new Map([['metaplex.jpg', fs.readFileSync('./test/uploads/metaplex.jpg')]]);
   });
 
   describe('arweave', () => {

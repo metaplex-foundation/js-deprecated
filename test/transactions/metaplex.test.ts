@@ -3,20 +3,19 @@ import { TupleNumericType } from '@metaplex/utils';
 import { AccountLayout, NATIVE_MINT } from '@solana/spl-token';
 import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
 import BN from 'bn.js';
+import { Connection } from '../../src';
 import {
-  Auction,
+  Store,
+  SetStore,
+  WhitelistedCreator,
+  SetWhitelistedCreator,
   AuctionManager,
   AuctionWinnerTokenTypeTracker,
-  Connection,
-  CreateTokenAccount,
   InitAuctionManagerV2,
-  SetStore,
-  SetWhitelistedCreator,
   StartAuction,
-  Store,
-  Transaction,
-  WhitelistedCreator,
-} from '../../src';
+} from '../../src/programs/metaplex';
+import { Auction } from '../../src/programs/auction';
+import { CreateTokenAccount, Transaction } from '../../src/programs/shared';
 import { FEE_PAYER, VAULT_PUBKEY } from '../utils';
 
 describe.skip('Metaplex transactions', () => {

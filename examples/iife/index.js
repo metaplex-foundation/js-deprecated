@@ -2,7 +2,8 @@ console.log(solanaWeb3);
 console.log(metaplex);
 
 const { PublicKey } = solanaWeb3;
-const { Metadata, Connection } = metaplex;
+const { programs, Connection } = metaplex;
+const { Metadata } = programs.metadata;
 
 const metadataPubkey = new PublicKey('CZkFeERacU42qjApPyjamS13fNtz7y1wYLu5jyLpN1WL');
 const connection = new Connection('devnet');

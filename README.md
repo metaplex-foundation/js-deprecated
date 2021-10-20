@@ -18,7 +18,9 @@ Metaplex JavaScript SDK
 ## Load and Deserialize Accounts
 
 ```ts
-import { Connection, Metadata, Auction, Vault, AuctionManager, Store } from '@metaplex/js';
+import { Connection, Account, programs } from '@metaplex/js';
+const { metaplex: { Store, AuctionManager }, metadata: { Metadata }, auction: { Auction }, vault: { Vault } } = programs;
+
 
 const connection = new Connection('devnet');
 
@@ -42,11 +44,11 @@ The Metaplex SDK currently has low level transaction convenience classes for all
 
 ```ts
 
-import { Connection, Wallet, Actions } from '@metaplex/js';
+import { Connection, Wallet, actions } from '@metaplex/js';
 
 const connection = new Connection('devnet');
 
-await Actions.initStore({ connection, wallet });
+await actions.initStore({ connection, wallet });
 
 ```
 
@@ -54,6 +56,6 @@ await Actions.initStore({ connection, wallet });
 
 ### Coingecko - for exchange rates
 ```ts
-import { Coingecko, Currency } from "@metaplex/js";
+import { Coingecko, Currency } from '@metaplex/js';
 const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currency.USD);
 ```

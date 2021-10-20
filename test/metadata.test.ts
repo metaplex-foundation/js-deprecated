@@ -1,6 +1,6 @@
-import { PublicKey } from '@solana/web3.js';
-import { Connection, MasterEdition, Metadata, MetadataKey } from '../src';
+import { Connection } from '../src';
 import { MASTER_EDITION_PUBKEY, METADATA_PUBKEY, STORE_OWNER_PUBKEY } from './utils';
+import { Metadata, MetadataKey, MasterEdition } from '../src/programs/metadata';
 
 describe('Metadata', () => {
   let connection: Connection;

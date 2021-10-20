@@ -1,19 +1,22 @@
 import { jest } from '@jest/globals';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Keypair, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
+import { Connection } from '../../src';
+
 import {
-  Connection,
-  CreateAssociatedTokenAccount,
-  CreateMasterEdition,
-  CreateMetadata,
-  CreateMint,
-  MasterEdition,
   Metadata,
   MetadataDataData,
+  CreateMetadata,
+  UpdateMetadata,
+  MasterEdition,
+  CreateMasterEdition,
+} from '../../src/programs/metadata';
+import {
+  CreateMint,
+  CreateAssociatedTokenAccount,
   MintTo,
   Transaction,
-  UpdateMetadata,
-} from '../../src';
+} from '../../src/programs/shared';
 import { FEE_PAYER } from '../utils';
 
 describe.skip('Metaplex transactions', () => {
