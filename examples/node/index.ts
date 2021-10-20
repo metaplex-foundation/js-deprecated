@@ -1,5 +1,8 @@
-import { Connection, Metadata, NodeWallet, Actions } from '@metaplex/js';
+import { Connection, NodeWallet, programs, actions } from '@metaplex/js';
 import { Keypair, PublicKey } from '@solana/web3.js';
+
+const { Metadata } = programs.metadata;
+const { initStore } = actions;
 
 const payer = Keypair.fromSecretKey(
   new Uint8Array([
@@ -42,7 +45,7 @@ const run = async () => {
   // console.log(storeId.toString(), txId);
 
   // Metaplex
-  const { storeId, txId } = await Actions.initStore({ connection, wallet });
+  const { storeId, txId } = await initStore({ connection, wallet });
   console.log(storeId, txId);
 };
 

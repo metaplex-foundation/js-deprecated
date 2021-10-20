@@ -1,7 +1,8 @@
-export * as Utils from './utils';
-export * as Errors from './errors';
 export * from './types';
 export * from './providers';
 export * from './Connection';
-export * from './Transaction';
 export * from './wallet';
+export * as utils from './utils';
+export * as errors from './errors';
+export * as actions from './actions';
+export * as programs from './programs';
