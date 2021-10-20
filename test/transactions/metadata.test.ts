@@ -11,7 +11,12 @@ import {
   MasterEdition,
   CreateMasterEdition,
 } from '../../src/programs/metadata';
-import { CreateMint, CreateAssociatedTokenAccount, MintTo, Transaction } from '../../src/programs/shared';
+import {
+  CreateMint,
+  CreateAssociatedTokenAccount,
+  MintTo,
+  Transaction,
+} from '../../src/programs/shared';
 import { FEE_PAYER } from '../utils';
 
 describe.skip('Metaplex transactions', () => {
