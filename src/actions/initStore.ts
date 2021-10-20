@@ -2,7 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
-import { Store, SetStore } from 'src/programs/metaplex';
+import { SetStore, Store } from '../programs/metaplex';
 
 interface IInitStoreParams {
   connection: Connection;

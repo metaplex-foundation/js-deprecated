@@ -3,7 +3,7 @@ import { TupleNumericType } from '@metaplex/utils';
 import { AccountLayout, NATIVE_MINT } from '@solana/spl-token';
 import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
 import BN from 'bn.js';
-import { Connection, Transaction } from '../../src';
+import { Connection } from '../../src';
 import {
   Store,
   SetStore,
@@ -15,7 +15,7 @@ import {
   StartAuction,
 } from '../../src/programs/metaplex';
 import { Auction } from '../../src/programs/auction';
-import { CreateTokenAccount } from '../../src/programs/shared';
+import { CreateTokenAccount, Transaction } from '../../src/programs/shared';
 import { FEE_PAYER, VAULT_PUBKEY } from '../utils';
 
 describe.skip('Metaplex transactions', () => {
