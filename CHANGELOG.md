@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/metaplex/js/compare/v3.0.0...v3.1.0) (2021-10-26)
+
+
+### Features
+
+* extend AuctionExtendedData with new fields ([#43](https://github.com/metaplex/js/issues/43)) ([41a4e2a](https://github.com/metaplex/js/commit/41a4e2a65439602181f5e56571ea48d5e0ec27a4))
+
 # [3.0.0](https://github.com/metaplex/js/compare/v2.0.1...v3.0.0) (2021-10-20)
 
 
