@@ -6,15 +6,6 @@ Metaplex JavaScript SDK
 
 [Learn how to use Metaplex JavaScript SDK in your own project](https://docs.metaplex.com/development/clients/js-sdk/getting-started).
 
-## Roadmap
-
-- [x] Load and Deserialize Accounts
-- [x] Child Accounts
-- [x] Transactions
-- [ ] Actions (mint NFT, create auction, ...)
-- [ ] Candy Machine
-- [ ] More negative tests
-
 ## Load and Deserialize Accounts
 
 ```ts
@@ -59,3 +50,140 @@ await actions.initStore({ connection, wallet });
 import { Coingecko, Currency } from '@metaplex/js';
 const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currency.USD);
 ```
+
+## Checklist
+
+- [x] Structure
+  - [x] Builds and Deployments
+  - [x] Connection, Account, Transaction, Errors
+- [ ] Programs (serialize/deserialize accounts, rpc transactions, simple actions)
+  - [ ] Metadata
+    - [ ] Accounts
+      - [ ] Metadata
+      - [ ] Master Edition
+      - [ ] Edition
+      - [ ] Edition Marker
+    - [ ] Instructions
+      - [ ] CreateMetadataAccount
+      - [ ] UpdateMetadataAccount
+      - [ ] UpdatePrimarySaleHappenedViaToken
+      - [ ] SignMetadata
+      - [ ] CreateMasterEdition
+      - [ ] MintNewEditionFromMasterEditionViaToken
+      - [ ] MintNewEditionFromMasterEditionViaVaultProxy
+    - [ ] Actions
+      - [ ] Create
+      - [ ] Update
+      - [ ] Sign
+      - [ ] Send
+      - [ ] Mint
+      - [ ] Burn
+  - [ ] Metaplex
+    - [ ] Accounts
+      - [ ] Bid Redemption Ticket
+      - [ ] Auction Manager (V2)
+      - [ ] Safety Deposit Validation Ticket
+      - [ ] Payout Ticket
+      - [ ] Token Tracker
+      - [ ] Prize Tracking Ticket
+      - [ ] Auction Cache
+      - [ ] Store Indexer
+      - [ ] Store
+      - [ ] Whitelisted Creator
+      - [ ] Safety Deposit Config
+      - [ ] Original Authority Lookup
+    - [ ] Instructions
+      - [ ] RedeemBid
+      - [ ] RedeemFullRightsTransferBid
+      - [ ] StartAuction
+      - [ ] ClaimBid
+      - [ ] EmptyPaymentAccount
+      - [ ] SetStore
+      - [ ] SetWhitelistedCreator
+      - [ ] RedeemUnusedWinningConfigItemsAsAuctioneer
+      - [ ] DecommissionAuctionManager
+      - [ ] RedeemPrintingV2Bid
+      - [ ] WithdrawMasterEdition
+      - [ ] InitAuctionManagerV2
+      - [ ] ValidateSafetyDepositBoxV2
+      - [ ] RedeemParticipationBidV3
+      - [ ] EndAuction
+      - [ ] SetStoreIndex
+      - [ ] SetAuctionCache
+    - [ ] Actions
+  - [ ] Auction
+    - [ ] Accounts
+      - [ ] Auction
+      - [ ] Auction Extended
+      - [ ] Bidder Pot
+      - [ ] Bidder Meta
+    - [ ] Instructions
+      - [ ] CancelBid
+      - [ ] CreateAuctionV2
+      - [ ] ClaimBid
+      - [ ] EndAuction
+      - [ ] StartAuction
+      - [ ] SetAuthority
+      - [ ] PlaceBid
+    - [ ] Actions (no standalone actions)
+  - [ ] Vault
+    - [ ] Accounts
+      - [ ] Safety Deposit Box
+      - [ ] Vault
+      - [ ] External Price
+    - [ ] Instructions
+      - [ ] InitVault
+      - [ ] AddTokenToInactiveVault
+      - [ ] ActivateVault
+      - [ ] CombineVault
+      - [ ] RedeemShares
+      - [ ] WithdrawTokenFromSafetyDepositBox
+      - [ ] MintFractionalShares
+      - [ ] WithdrawSharesFromTreasury
+      - [ ] AddSharesToTreasury
+      - [ ] UpdateExternalPriceAccount
+      - [ ] SetAuthority
+    - [ ] Actions
+  - [ ] Candy Machine
+    - [ ] Accounts
+      - [ ] Candy Machine
+    - [ ] Instructions
+      - [ ] Mint
+      - [ ] Update
+      - [ ] Initialize
+      - [ ] Initialize Config
+      - [ ] Add Config Lines
+    - [ ] Actions
+  - [ ] Fair Launch
+    - [ ] Accounts
+      - [ ] Fair Launch
+      - [ ] Ticket
+      - [ ] Ticket Seq Lookup
+      - [ ] Lottery Bitmap
+    - [ ] Instructions
+      - [ ] Initialize
+      - [ ] Update
+      - [ ] Create Lottery Bitmap
+      - [ ] Update Lottery Bitmap
+      - [ ] Start Phase Three
+      - [ ] Restart Phase Two
+      - [ ] Purchase Ticket
+      - [ ] Adjust Ticket
+      - [ ] Punch Ticket
+      - [ ] Create Ticket Seq
+      - [ ] Withdraw Funds
+      - [ ] Receive Refund
+      - [ ] Set Token Metadata
+      - [ ] Set Participation NFT
+      - [ ] Update Participation NFT
+      - [ ] Mint Participation NFT
+      - [ ] Mint Tokens
+    - [ ] Actions
+  - [ ] Packs TBD
+  - [ ] Airdrop TBD
+  - [ ] Fusion TBD
+- [ ] Providers
+  - [ ] CoinGecko
+  - [ ] Arweave
+- [ ] Global (common use cases)
+  - [ ] Actions
