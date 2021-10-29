@@ -56,20 +56,20 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
 - [x] Structure
   - [x] Builds and Deployments
   - [x] Connection, Account, Transaction, Errors
-- [ ] Programs (serialize/deserialize accounts, rpc transactions, simple actions)
-  - [ ] Metadata
-    - [ ] Accounts
-      - [ ] Metadata
-      - [ ] Master Edition
-      - [ ] Edition
-      - [ ] Edition Marker
+- [x] Programs (serialize/deserialize accounts, rpc transactions, simple actions)
+  - [x] Metadata
+    - [x] Accounts
+      - [x] Metadata
+      - [x] Master Edition
+      - [x] Edition
+      - [x] Edition Marker
     - [ ] Instructions
-      - [ ] CreateMetadataAccount
-      - [ ] UpdateMetadataAccount
-      - [ ] UpdatePrimarySaleHappenedViaToken
-      - [ ] SignMetadata
-      - [ ] CreateMasterEdition
-      - [ ] MintNewEditionFromMasterEditionViaToken
+      - [x] CreateMetadataAccount
+      - [x] UpdateMetadataAccount
+      - [x] UpdatePrimarySaleHappenedViaToken
+      - [x] SignMetadata
+      - [x] CreateMasterEdition
+      - [x] MintNewEditionFromMasterEditionViaToken
       - [ ] MintNewEditionFromMasterEditionViaVaultProxy
     - [ ] Actions
       - [ ] Create
@@ -80,31 +80,31 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [ ] Burn
   - [ ] Metaplex
     - [ ] Accounts
-      - [ ] Bid Redemption Ticket
-      - [ ] Auction Manager (V2)
+      - [x] Bid Redemption Ticket
+      - [x] Auction Manager (V2)
       - [ ] Safety Deposit Validation Ticket
-      - [ ] Payout Ticket
+      - [x] Payout Ticket
       - [ ] Token Tracker
-      - [ ] Prize Tracking Ticket
+      - [x] Prize Tracking Ticket
       - [ ] Auction Cache
       - [ ] Store Indexer
-      - [ ] Store
-      - [ ] Whitelisted Creator
-      - [ ] Safety Deposit Config
+      - [x] Store
+      - [x] Whitelisted Creator
+      - [x] Safety Deposit Config
       - [ ] Original Authority Lookup
     - [ ] Instructions
-      - [ ] RedeemBid
+      - [x] RedeemBid
       - [ ] RedeemFullRightsTransferBid
-      - [ ] StartAuction
-      - [ ] ClaimBid
+      - [x] StartAuction
+      - [x] ClaimBid
       - [ ] EmptyPaymentAccount
-      - [ ] SetStore
-      - [ ] SetWhitelistedCreator
+      - [x] SetStore
+      - [x] SetWhitelistedCreator
       - [ ] RedeemUnusedWinningConfigItemsAsAuctioneer
       - [ ] DecommissionAuctionManager
       - [ ] RedeemPrintingV2Bid
       - [ ] WithdrawMasterEdition
-      - [ ] InitAuctionManagerV2
+      - [x] InitAuctionManagerV2
       - [ ] ValidateSafetyDepositBoxV2
       - [ ] RedeemParticipationBidV3
       - [ ] EndAuction
@@ -112,37 +112,37 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [ ] SetAuctionCache
     - [ ] Actions
   - [ ] Auction
-    - [ ] Accounts
-      - [ ] Auction
-      - [ ] Auction Extended
-      - [ ] Bidder Pot
-      - [ ] Bidder Meta
+    - [x] Accounts
+      - [x] Auction
+      - [x] Auction Extended
+      - [x] Bidder Pot
+      - [x] Bidder Meta
     - [ ] Instructions
-      - [ ] CancelBid
+      - [x] CancelBid
       - [ ] CreateAuctionV2
       - [ ] ClaimBid
       - [ ] EndAuction
       - [ ] StartAuction
-      - [ ] SetAuthority
-      - [ ] PlaceBid
+      - [x] SetAuthority
+      - [x] PlaceBid
     - [ ] Actions (no standalone actions)
   - [ ] Vault
     - [ ] Accounts
-      - [ ] Safety Deposit Box
-      - [ ] Vault
-      - [ ] External Price
+      - [x] Safety Deposit Box
+      - [x] Vault
+      - [x] External Price
     - [ ] Instructions
-      - [ ] InitVault
-      - [ ] AddTokenToInactiveVault
-      - [ ] ActivateVault
-      - [ ] CombineVault
+      - [x] InitVault
+      - [x] AddTokenToInactiveVault
+      - [x] ActivateVault
+      - [x] CombineVault
       - [ ] RedeemShares
-      - [ ] WithdrawTokenFromSafetyDepositBox
+      - [x] WithdrawTokenFromSafetyDepositBox
       - [ ] MintFractionalShares
       - [ ] WithdrawSharesFromTreasury
       - [ ] AddSharesToTreasury
-      - [ ] UpdateExternalPriceAccount
-      - [ ] SetAuthority
+      - [x] UpdateExternalPriceAccount
+      - [x] SetAuthority
     - [ ] Actions
   - [ ] Candy Machine
     - [ ] Accounts
