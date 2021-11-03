@@ -10,6 +10,7 @@ export const config = {
     packs: 'BNRmGgciUJuyznkYHnmitA9an1BcDDiU9JmjEQwvBYVR',
     // External
     memo: 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
+    token: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
   },
   maxCreatorLimit: 5,
 };

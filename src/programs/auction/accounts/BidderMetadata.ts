@@ -1,4 +1,4 @@
-import { AccountInfo } from '@solana/web3.js';
+import { AccountInfo, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { Account } from '../../../Account';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
@@ -55,5 +55,15 @@ export class BidderMetadata extends Account<BidderMetadataData> {
 
   static isCompatible(data: Buffer) {
     return data.length === BidderMetadata.DATA_SIZE;
+  }
+
+  static getPDA(auction: AnyPublicKey, bidder: AnyPublicKey) {
+    return AuctionProgram.findProgramAddress([
+      Buffer.from(AuctionProgram.PREFIX),
+      AuctionProgram.PUBKEY.toBuffer(),
+      new PublicKey(auction).toBuffer(),
+      new PublicKey(bidder).toBuffer(),
+      Buffer.from('metadata'),
+    ]);
   }
 }
