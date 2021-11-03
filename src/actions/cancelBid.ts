@@ -28,7 +28,6 @@ export const cancelBid = async ({
   destAccount,
 }: ICancelBidParams): Promise<ICancelBidResponse> => {
   const bidder = wallet.publicKey;
-  const txBatch = new TransactionsBatch({ transactions: [] });
 
   const manager = await AuctionManager.load(connection, auctionManager);
   const auction = await manager.getAuction(connection);
@@ -41,41 +40,18 @@ export const cancelBid = async ({
   const bidderMetaKey = await BidderMetadata.getPDA(auctionStrKey, bidder);
 
   const accountRentExempt = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
-
-  if (!destAccount) {
-    const account = Keypair.generate();
-    const createTokenAccountTransaction = new CreateTokenAccount(
-      { feePayer: bidder },
-      {
-        newAccountPubkey: account.publicKey,
-        lamports: accountRentExempt,
-        mint: NATIVE_MINT,
-      },
-    );
-    const closeTokenAccountInstruction = new Transaction().add(
-      Token.createCloseAccountInstruction(TOKEN_PROGRAM_ID, account.publicKey, bidder, bidder, []),
-    );
-    txBatch.addTransaction(createTokenAccountTransaction);
-    txBatch.addAfterTransaction(closeTokenAccountInstruction);
-    txBatch.addSigner(account);
-    destAccount = account.publicKey;
-  }
-
-  const cancelBidTransaction = new CancelBid(
-    { feePayer: bidder },
-    {
-      bidder,
-      bidderToken: destAccount,
-      bidderPot: bidderPotKey,
-      bidderPotToken,
-      bidderMeta: bidderMetaKey,
-      auction: new PublicKey(auctionStrKey),
-      auctionExtended: auctionExtendedKey,
-      tokenMint: new PublicKey(auctionTokenMintStrKey),
-      resource: new PublicKey(vaultStrKey),
-    },
-  );
-  txBatch.addTransaction(cancelBidTransaction);
+  const txBatch = await getCancelTransactions({
+    destAccount,
+    bidder,
+    accountRentExempt,
+    bidderPotKey,
+    bidderPotToken,
+    bidderMetaKey,
+    auctionStrKey,
+    auctionExtendedKey,
+    auctionTokenMintStrKey,
+    vaultStrKey,
+  });
 
   const txId = await sendTransaction({
     connection,
@@ -86,6 +62,19 @@ export const cancelBid = async ({
 
   return { txId };
 };
+
+interface ICancelBidTransactionsParams {
+  destAccount: PublicKey;
+  bidder: PublicKey;
+  accountRentExempt: number;
+  bidderPotKey: PublicKey;
+  bidderPotToken: PublicKey;
+  bidderMetaKey: PublicKey;
+  auctionStrKey: string;
+  auctionExtendedKey: PublicKey;
+  auctionTokenMintStrKey: string;
+  vaultStrKey: string;
+}
 
 export const getCancelTransactions = async ({
   destAccount,
@@ -98,7 +87,7 @@ export const getCancelTransactions = async ({
   auctionExtendedKey,
   auctionTokenMintStrKey,
   vaultStrKey,
-}): Promise<TransactionsBatch> => {
+}: ICancelBidTransactionsParams): Promise<TransactionsBatch> => {
   const txBatch = new TransactionsBatch({ transactions: [] });
   if (!destAccount) {
     const account = Keypair.generate();
