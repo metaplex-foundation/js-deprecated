@@ -6,6 +6,7 @@ import {
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
+import { VaultInstructions } from '..';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
 
@@ -15,7 +16,7 @@ export class InitVaultArgs extends Borsh.Data<{ allowFurtherShareCreation: boole
     ['allowFurtherShareCreation', 'u8'],
   ]);
 
-  instruction = 0;
+  instruction = VaultInstructions.InitVault;
   allowFurtherShareCreation = false;
 }
 

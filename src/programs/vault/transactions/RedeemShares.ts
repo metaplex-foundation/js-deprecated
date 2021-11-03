@@ -1,4 +1,4 @@
-import { ParamsWithStore } from '@metaplex/types';
+import { Borsh } from '@metaplex/utils';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import {
   PublicKey,
@@ -6,64 +6,51 @@ import {
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
-import BN from 'bn.js';
 import { VaultInstructions } from '..';
 import { Transaction } from '../../../Transaction';
-import { AmountArgs } from '../accounts/Vault';
 import { VaultProgram } from '../VaultProgram';
 
-type WithdrawTokenFromSafetyDepositBoxParams = {
-  vault: PublicKey;
-  destination: PublicKey;
-  safetyDepositBox: PublicKey;
+export class RedeemSharesArgs extends Borsh.Data {
+  static readonly SCHEMA = this.struct([['instruction', 'u8']]);
+
+  instruction = VaultInstructions.RedeemShares;
+}
+
+type RedeemSharsParams = {
+  burnAuthority: PublicKey;
   fractionMint: PublicKey;
-  vaultAuthority: PublicKey;
+  outstandingSharesAccount: PublicKey;
+  proceedsAccount: PublicKey;
+  redeemTreasury: PublicKey;
   transferAuthority: PublicKey;
-  amount: BN;
+  vault: PublicKey;
 };
 
-export class WithdrawTokenFromSafetyDepositBox extends Transaction {
-  constructor(
-    options: TransactionCtorFields,
-    params: ParamsWithStore<WithdrawTokenFromSafetyDepositBoxParams>,
-  ) {
+export class RedeemShares extends Transaction {
+  constructor(options: TransactionCtorFields, params: RedeemSharsParams) {
     super(options);
     const {
       vault,
-      vaultAuthority,
-      store,
-      destination,
+      burnAuthority,
       fractionMint,
+      outstandingSharesAccount,
+      proceedsAccount,
+      redeemTreasury,
       transferAuthority,
-      safetyDepositBox,
-      amount,
     } = params;
 
-    const data = AmountArgs.serialize({
-      instruction: VaultInstructions.WithdrawTokenFromSafetyDepositBox,
-      amount,
-    });
+    const data = RedeemSharesArgs.serialize();
 
     this.add(
       new TransactionInstruction({
         keys: [
           {
-            pubkey: destination,
+            pubkey: outstandingSharesAccount,
             isSigner: false,
             isWritable: true,
           },
           {
-            pubkey: safetyDepositBox,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: store,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: vault,
+            pubkey: proceedsAccount,
             isSigner: false,
             isWritable: true,
           },
@@ -73,12 +60,23 @@ export class WithdrawTokenFromSafetyDepositBox extends Transaction {
             isWritable: true,
           },
           {
-            pubkey: vaultAuthority,
+            pubkey: redeemTreasury,
+            isSigner: false,
+            isWritable: true,
+          },
+          {
+            pubkey: transferAuthority,
+            isSigner: false,
+            isWritable: false,
+          },
+
+          {
+            pubkey: burnAuthority,
             isSigner: true,
             isWritable: false,
           },
           {
-            pubkey: transferAuthority,
+            pubkey: vault,
             isSigner: false,
             isWritable: false,
           },

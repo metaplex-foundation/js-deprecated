@@ -1,6 +1,7 @@
 import { ParamsWithStore } from '@metaplex/types';
 import { Borsh } from '@metaplex/utils';
 import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
+import { VaultInstructions } from '..';
 import { Transaction } from '../../../Transaction';
 import { ExternalPriceAccountData } from '../accounts/ExternalPriceAccount';
 import { VaultProgram } from '../VaultProgram';
@@ -16,7 +17,7 @@ export class UpdateExternalPriceAccountArgs extends Borsh.Data<{
     ]),
   ]);
 
-  instruction = 9;
+  instruction = VaultInstructions.UpdateExternalPriceAccount;
   externalPriceAccount: ExternalPriceAccountData;
 }
 

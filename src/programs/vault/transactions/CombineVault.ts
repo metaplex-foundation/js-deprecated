@@ -1,13 +1,14 @@
 import { Borsh } from '@metaplex/utils';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
+import { VaultInstructions } from '..';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
 
 export class CombineVaultArgs extends Borsh.Data {
   static readonly SCHEMA = this.struct([['instruction', 'u8']]);
 
-  instruction = 3;
+  instruction = VaultInstructions.CombineVault;
 }
 
 type CombineVaultParams = {
