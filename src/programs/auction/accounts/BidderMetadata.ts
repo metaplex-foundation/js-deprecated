@@ -63,7 +63,7 @@ export class BidderMetadata extends Account<BidderMetadataData> {
       AuctionProgram.PUBKEY.toBuffer(),
       new PublicKey(auction).toBuffer(),
       new PublicKey(bidder).toBuffer(),
-      Buffer.from('metadata')
+      Buffer.from('metadata'),
     ]);
   }
 }
