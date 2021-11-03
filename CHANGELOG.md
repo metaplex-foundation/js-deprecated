@@ -1,3 +1,5 @@
+## [3.1.1](https://github.com/metaplex/js/compare/v3.1.0...v3.1.1) (2021-11-03)
+
 # [3.1.0](https://github.com/metaplex/js/compare/v3.0.0...v3.1.0) (2021-10-26)
 
 
