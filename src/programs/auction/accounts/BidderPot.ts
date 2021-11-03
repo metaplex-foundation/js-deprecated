@@ -1,7 +1,7 @@
 import { Borsh } from '@metaplex/utils';
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { AuctionProgram } from '../AuctionProgram';
-import { AccountInfo } from '@solana/web3.js';
+import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { Account } from '../../../Account';
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
 import { Buffer } from 'buffer';
@@ -46,5 +46,14 @@ export class BidderPot extends Account<BidderPotData> {
 
   static isCompatible(data: Buffer) {
     return data.length === BidderPot.DATA_SIZE;
+  }
+
+  static getPDA(auction: AnyPublicKey, bidder: AnyPublicKey) {
+    return AuctionProgram.findProgramAddress([
+      Buffer.from(AuctionProgram.PREFIX),
+      AuctionProgram.PUBKEY.toBuffer(),
+      new PublicKey(auction).toBuffer(),
+      new PublicKey(bidder).toBuffer(),
+    ]);
   }
 }
