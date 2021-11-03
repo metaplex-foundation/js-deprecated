@@ -76,7 +76,7 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [ ] Update
       - [ ] Sign
       - [ ] Send
-      - [ ] Mint
+      - [X] Mint
       - [ ] Burn
   - [ ] Metaplex
     - [ ] Accounts
