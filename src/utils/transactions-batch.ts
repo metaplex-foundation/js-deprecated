@@ -45,10 +45,6 @@ export class TransactionsBatch {
   }
 
   toInstructions() {
-    return [
-      ...this.beforeTransactions.flatMap((t) => t.instructions),
-      ...this.transactions.flatMap((t) => t.instructions),
-      ...this.afterTransactions.flatMap((t) => t.instructions),
-    ];
+    return this.toTransactions().flatMap((t) => t.instructions);
   }
 }
