@@ -5,10 +5,10 @@ import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
 import { AuctionExtended, BidderMetadata, BidderPot, PlaceBid } from '../programs/auction';
-import { TransactionsBatch } from 'src/utils/transactions-batch';
+import { TransactionsBatch } from '../utils/transactions-batch';
 import { getCancelBidTransactions } from './cancelBid';
-import { AuctionManager } from 'src/programs/metaplex';
-import { CreateTokenAccount, Transaction } from 'src/programs';
+import { AuctionManager } from '../programs/metaplex';
+import { CreateTokenAccount, Transaction } from '../programs';
 
 interface IPlaceBidParams {
   connection: Connection;
