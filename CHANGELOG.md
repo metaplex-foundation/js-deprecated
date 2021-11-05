@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/metaplex/js/compare/v3.3.0...v3.4.0) (2021-11-05)
+
+
+### Features
+
+* Mint NFT Action ([#51](https://github.com/metaplex/js/issues/51)) ([122d08c](https://github.com/metaplex/js/commit/122d08c0ed948dbc13740c78dc9819413c5c6527))
+
 # [3.3.0](https://github.com/metaplex/js/compare/v3.2.0...v3.3.0) (2021-11-05)
 
 
