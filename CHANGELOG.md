@@ -1,3 +1,10 @@
+# [3.3.0](https://github.com/metaplex/js/compare/v3.2.0...v3.3.0) (2021-11-05)
+
+
+### Features
+
+* **actions:** add place bid action  ([#52](https://github.com/metaplex/js/issues/52)) ([1db3e7d](https://github.com/metaplex/js/commit/1db3e7da6845fa03d188615e5d39fa6b38532e68))
+
 # [3.2.0](https://github.com/metaplex/js/compare/v3.1.1...v3.2.0) (2021-11-03)
 
 
