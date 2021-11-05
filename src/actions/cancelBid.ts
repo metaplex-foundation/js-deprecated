@@ -1,17 +1,17 @@
-import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
+import { AccountLayout, NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
-import { AccountLayout, NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AuctionExtended, BidderMetadata, BidderPot, CancelBid } from '../programs/auction';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import { AuctionManager } from '../programs/metaplex';
-import { CreateTokenAccount } from '../programs';
+import { CreateTokenAccount, Transaction } from '../programs';
 
 interface ICancelBidParams {
   connection: Connection;
   wallet: Wallet;
-  auctionManager: PublicKey;
+  auction: PublicKey;
   bidderPotToken: PublicKey;
   destAccount?: PublicKey;
 }
@@ -23,34 +23,35 @@ interface ICancelBidResponse {
 export const cancelBid = async ({
   connection,
   wallet,
-  auctionManager,
+  auction,
   bidderPotToken,
   destAccount,
 }: ICancelBidParams): Promise<ICancelBidResponse> => {
   const bidder = wallet.publicKey;
-
+  const auctionManager = await AuctionManager.getPDA(auction);
   const manager = await AuctionManager.load(connection, auctionManager);
-  const auction = await manager.getAuction(connection);
+  const {
+    data: { tokenMint },
+  } = await manager.getAuction(connection);
 
-  const auctionStrKey = manager.data.auction;
-  const auctionTokenMintStrKey = auction.data.tokenMint;
-  const vaultStrKey = manager.data.vault;
-  const auctionExtendedKey = await AuctionExtended.getPDA(vaultStrKey);
-  const bidderPotKey = await BidderPot.getPDA(auctionStrKey, bidder);
-  const bidderMetaKey = await BidderMetadata.getPDA(auctionStrKey, bidder);
+  const auctionTokenMint = new PublicKey(tokenMint);
+  const vault = new PublicKey(manager.data.vault);
+  const auctionExtended = await AuctionExtended.getPDA(vault);
+  const bidderPot = await BidderPot.getPDA(auction, bidder);
+  const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
 
   const accountRentExempt = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
-  const txBatch = await getCancelTransactions({
+  const txBatch = await getCancelBidTransactions({
     destAccount,
     bidder,
     accountRentExempt,
-    bidderPotKey,
+    bidderPot,
     bidderPotToken,
-    bidderMetaKey,
-    auctionStrKey,
-    auctionExtendedKey,
-    auctionTokenMintStrKey,
-    vaultStrKey,
+    bidderMeta,
+    auction,
+    auctionExtended,
+    auctionTokenMint,
+    vault,
   });
 
   const txId = await sendTransaction({
@@ -64,29 +65,29 @@ export const cancelBid = async ({
 };
 
 interface ICancelBidTransactionsParams {
-  destAccount: PublicKey;
+  destAccount?: PublicKey;
   bidder: PublicKey;
   accountRentExempt: number;
-  bidderPotKey: PublicKey;
+  bidderPot: PublicKey;
   bidderPotToken: PublicKey;
-  bidderMetaKey: PublicKey;
-  auctionStrKey: string;
-  auctionExtendedKey: PublicKey;
-  auctionTokenMintStrKey: string;
-  vaultStrKey: string;
+  bidderMeta: PublicKey;
+  auction: PublicKey;
+  auctionExtended: PublicKey;
+  auctionTokenMint: PublicKey;
+  vault: PublicKey;
 }
 
-export const getCancelTransactions = async ({
+export const getCancelBidTransactions = async ({
   destAccount,
   bidder,
   accountRentExempt,
-  bidderPotKey,
+  bidderPot,
   bidderPotToken,
-  bidderMetaKey,
-  auctionStrKey,
-  auctionExtendedKey,
-  auctionTokenMintStrKey,
-  vaultStrKey,
+  bidderMeta,
+  auction,
+  auctionExtended,
+  auctionTokenMint,
+  vault,
 }: ICancelBidTransactionsParams): Promise<TransactionsBatch> => {
   const txBatch = new TransactionsBatch({ transactions: [] });
   if (!destAccount) {
@@ -113,13 +114,13 @@ export const getCancelTransactions = async ({
     {
       bidder,
       bidderToken: destAccount,
-      bidderPot: bidderPotKey,
+      bidderPot,
       bidderPotToken,
-      bidderMeta: bidderMetaKey,
-      auction: new PublicKey(auctionStrKey),
-      auctionExtended: auctionExtendedKey,
-      tokenMint: new PublicKey(auctionTokenMintStrKey),
-      resource: new PublicKey(vaultStrKey),
+      bidderMeta,
+      auction,
+      auctionExtended,
+      tokenMint: auctionTokenMint,
+      resource: vault,
     },
   );
   txBatch.addTransaction(cancelBidTransaction);
