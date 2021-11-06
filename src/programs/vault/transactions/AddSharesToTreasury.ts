@@ -1,34 +1,34 @@
+import { ParamsWithStore } from '@metaplex/types';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
+import {
+  PublicKey,
+  SYSVAR_RENT_PUBKEY,
+  TransactionCtorFields,
+  TransactionInstruction,
+} from '@solana/web3.js';
 import BN from 'bn.js';
 import { VaultInstructions } from '..';
 import { Transaction } from '../../../Transaction';
 import { NumberOfShareArgs } from '../accounts/Vault';
 import { VaultProgram } from '../VaultProgram';
 
-type ActivateVaultParams = {
+type AddSharesToTreasuryParams = {
   vault: PublicKey;
-  fractionMint: PublicKey;
+  source: PublicKey;
   fractionTreasury: PublicKey;
-  fractionMintAuthority: PublicKey;
   vaultAuthority: PublicKey;
+  transferAuthority: PublicKey;
   numberOfShares: BN;
 };
 
-export class ActivateVault extends Transaction {
-  constructor(options: TransactionCtorFields, params: ActivateVaultParams) {
+export class AddSharesToTreasury extends Transaction {
+  constructor(options: TransactionCtorFields, params: ParamsWithStore<AddSharesToTreasuryParams>) {
     super(options);
-    const {
-      vault,
-      vaultAuthority,
-      fractionMint,
-      fractionTreasury,
-      fractionMintAuthority,
-      numberOfShares,
-    } = params;
+    const { vault, vaultAuthority, source, transferAuthority, fractionTreasury, numberOfShares } =
+      params;
 
     const data = NumberOfShareArgs.serialize({
-      instruction: VaultInstructions.ActivateVault,
+      instruction: VaultInstructions.AddSharesToTreasury,
       numberOfShares,
     });
 
@@ -36,12 +36,7 @@ export class ActivateVault extends Transaction {
       new TransactionInstruction({
         keys: [
           {
-            pubkey: vault,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: fractionMint,
+            pubkey: source,
             isSigner: false,
             isWritable: true,
           },
@@ -51,17 +46,27 @@ export class ActivateVault extends Transaction {
             isWritable: true,
           },
           {
-            pubkey: fractionMintAuthority,
+            pubkey: vault,
+            isSigner: false,
+            isWritable: false,
+          },
+          {
+            pubkey: transferAuthority,
             isSigner: false,
             isWritable: false,
           },
           {
             pubkey: vaultAuthority,
-            isSigner: true,
-            isWritable: false,
+            isSigner: false,
+            isWritable: true,
           },
           {
             pubkey: TOKEN_PROGRAM_ID,
+            isSigner: false,
+            isWritable: false,
+          },
+          {
+            pubkey: SYSVAR_RENT_PUBKEY,
             isSigner: false,
             isWritable: false,
           },

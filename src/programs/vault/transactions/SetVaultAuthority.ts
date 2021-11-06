@@ -1,12 +1,13 @@
 import { Borsh } from '@metaplex/utils';
 import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
+import { VaultInstructions } from '..';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
 
 export class SetVaultAuthorityArgs extends Borsh.Data {
   static readonly SCHEMA = this.struct([['instruction', 'u8']]);
 
-  instruction = 10;
+  instruction = VaultInstructions.SetVaultAuthority;
 }
 
 type SetVaultAuthorityParams = {
