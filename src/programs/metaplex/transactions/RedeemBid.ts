@@ -44,7 +44,7 @@ type RedeemBidParams = {
   auction: PublicKey;
   auctionManager: PublicKey;
   bidRedemption: PublicKey;
-  bidMetadata: PublicKey;
+  bidderMeta: PublicKey;
   safetyDepositTokenStore: PublicKey;
   destination: PublicKey;
   safetyDeposit: PublicKey;
@@ -52,6 +52,7 @@ type RedeemBidParams = {
   bidder: PublicKey;
   isPrintingType: boolean;
   safetyDepositConfig: PublicKey;
+  auctionExtended: PublicKey;
   transferAuthority: PublicKey;
   masterEdition?: PublicKey;
   reservationList?: PublicKey;
@@ -69,9 +70,10 @@ export class RedeemBid extends Transaction {
       store,
       vault,
       auction,
+      auctionExtended,
       auctionManager,
       bidRedemption,
-      bidMetadata,
+      bidderMeta: bidMetadata,
       safetyDepositTokenStore,
       destination,
       safetyDeposit,
@@ -187,6 +189,11 @@ export class RedeemBid extends Transaction {
           },
           {
             pubkey: safetyDepositConfig,
+            isSigner: false,
+            isWritable: false,
+          },
+          {
+            pubkey: auctionExtended,
             isSigner: false,
             isWritable: false,
           },
