@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/metaplex/js/compare/v3.4.1...v3.5.0) (2021-11-08)
+
+
+### Features
+
+* **actions:** add redeem and claim bid actions ([#55](https://github.com/metaplex/js/issues/55)) ([b4f13f3](https://github.com/metaplex/js/commit/b4f13f30292c7a6f1f2cb43d7cd4c3a002384c54))
+
 ## [3.4.1](https://github.com/metaplex/js/compare/v3.4.0...v3.4.1) (2021-11-08)
 
 
