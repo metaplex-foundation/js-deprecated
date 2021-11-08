@@ -84,3 +84,11 @@ export const mockTransaction: TransactionCtorFields = {
   recentBlockhash: RECENT_ISH_BLOCKHASH,
 };
 export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
+
+export async function pause(ms: number) {
+  await new Promise((response) =>
+    setTimeout(() => {
+      response(0);
+    }, ms),
+  );
+}

@@ -1,10 +1,10 @@
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { Keypair } from '@solana/web3.js';
 import axios, { AxiosResponse } from 'axios';
-import { Connection } from './../../src/Connection';
-import { NodeWallet, Wallet } from './../../src/wallet';
-import { mintNFT } from './../../src/actions';
-import { FEE_PAYER } from './../utils';
-import { MasterEdition, Metadata } from './../../src/programs/metadata';
+import { Connection } from '../../src';
+import { NodeWallet, Wallet } from '../../src';
+import { mintNFT } from '../../src/actions';
+import { FEE_PAYER } from '../utils';
+import { MasterEdition, Metadata } from '../../src/programs/metadata';
 
 jest.mock('axios');
 
