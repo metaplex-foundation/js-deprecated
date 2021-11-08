@@ -1,7 +1,7 @@
 import { Borsh } from '@metaplex/utils';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
-import { VaultInstructions } from '..';
+import { VaultInstructions } from '../VaultProgram';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
 

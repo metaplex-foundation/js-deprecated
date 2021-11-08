@@ -10,7 +10,7 @@ import BN from 'bn.js';
 import { AmountArgs } from '../accounts/Vault';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
-import { VaultInstructions } from '..';
+import { VaultInstructions } from '../VaultProgram';
 
 type AddTokenToInactiveVaultParams = {
   vault: PublicKey;

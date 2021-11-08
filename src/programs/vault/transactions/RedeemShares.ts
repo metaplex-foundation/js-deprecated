@@ -6,7 +6,7 @@ import {
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
-import { VaultInstructions } from '..';
+import { VaultInstructions } from '../VaultProgram';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
 

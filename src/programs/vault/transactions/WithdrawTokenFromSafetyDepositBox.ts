@@ -7,7 +7,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import BN from 'bn.js';
-import { VaultInstructions } from '..';
+import { VaultInstructions } from '../VaultProgram';
 import { Transaction } from '../../../Transaction';
 import { AmountArgs } from '../accounts/Vault';
 import { VaultProgram } from '../VaultProgram';
