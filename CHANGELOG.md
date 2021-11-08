@@ -1,3 +1,10 @@
+## [3.4.1](https://github.com/metaplex/js/compare/v3.4.0...v3.4.1) (2021-11-08)
+
+
+### Bug Fixes
+
+* fixed circular deps ([#54](https://github.com/metaplex/js/issues/54)) ([84a7272](https://github.com/metaplex/js/commit/84a7272349049da8fcc41d5036781ca5a77d852a))
+
 # [3.4.0](https://github.com/metaplex/js/compare/v3.3.0...v3.4.0) (2021-11-05)
 
 
