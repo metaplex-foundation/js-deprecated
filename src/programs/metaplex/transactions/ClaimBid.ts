@@ -20,6 +20,7 @@ export class ClaimBidArgs extends Borsh.Data {
 type ClaimBidParams = {
   vault: PublicKey;
   auction: PublicKey;
+  auctionExtended: PublicKey;
   auctionManager: PublicKey;
   acceptPayment: PublicKey;
   bidder: PublicKey;
@@ -35,6 +36,7 @@ export class ClaimBid extends Transaction {
       store,
       vault,
       auction,
+      auctionExtended,
       auctionManager,
       bidder,
       bidderPot,
@@ -106,6 +108,11 @@ export class ClaimBid extends Transaction {
           },
           {
             pubkey: TOKEN_PROGRAM_ID,
+            isSigner: false,
+            isWritable: false,
+          },
+          {
+            pubkey: auctionExtended,
             isSigner: false,
             isWritable: false,
           },
