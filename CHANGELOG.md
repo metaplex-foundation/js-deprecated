@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/metaplex/js/compare/v3.5.0...v4.0.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* make getEdition a static method ([#53](https://github.com/metaplex/js/issues/53)) ([fd4ce52](https://github.com/metaplex/js/commit/fd4ce525d8816e9717d8c8ff4c0acdda5e8cfe8c))
+
+
+### BREAKING CHANGES
+
+* getEdition is now a Metadata's static method
+
 # [3.5.0](https://github.com/metaplex/js/compare/v3.4.1...v3.5.0) (2021-11-08)
 
 
