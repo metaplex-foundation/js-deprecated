@@ -1,56 +1,23 @@
 import { Keypair } from '@solana/web3.js';
-import axios, { AxiosResponse } from 'axios';
-import { Account, Connection, NodeWallet, Wallet } from '../../src';
+import { Account, Connection, NodeWallet } from '../../src';
 import { FEE_PAYER, pause } from '../utils';
 import { Creator, MasterEdition, Metadata, MetadataDataData } from '../../src/programs/metadata';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { createMetadata } from '../../src/actions/createMetadata';
 import { createMasterEdition } from '../../src/actions/createMasterEdition';
 import BN from 'bn.js';
+import { uri } from './shared';
 
-jest.mock('axios');
 jest.setTimeout(150000); //this one takes particularly long
-
-const mockedAxiosGet = axios.get as jest.MockedFunction<typeof axios>;
-const uri = 'https://bafkreibj4hjlhf3ehpugvfy6bzhhu2c7frvyhrykjqmoocsvdw24omfqga.ipfs.dweb.link';
 
 // NOTE: testing the two together because latter effectively requires former
 describe('creatomg metadata and master edition PDAs', () => {
-  let connection: Connection;
+  const connection = new Connection('devnet');
+  const wallet = new NodeWallet(FEE_PAYER);
   let mint: Keypair;
-  let wallet: Wallet;
-
-  beforeAll(() => {
-    connection = new Connection('devnet');
-    wallet = new NodeWallet(FEE_PAYER);
-  });
 
   beforeEach(() => {
     mint = Keypair.generate();
-    const mockedResponse: AxiosResponse = {
-      data: {
-        name: 'Holo Design (0)',
-        symbol: '',
-        description:
-          'A holo of some design in a lovely purple, pink, and yellow. Pulled from the Internet. Demo only.',
-        seller_fee_basis_points: 100,
-        image: 'https://bafybeidq34cu23fq4u57xu3hp2usqqs7miszscyu4kjqyjo3hv7xea6upe.ipfs.dweb.link',
-        external_url: '',
-        properties: {
-          creators: [
-            {
-              address: wallet.publicKey.toString(),
-              share: 100,
-            },
-          ],
-        },
-      },
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
-    };
-    mockedAxiosGet.mockResolvedValue(mockedResponse);
   });
 
   test('creates both successfully', async () => {

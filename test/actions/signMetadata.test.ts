@@ -1,61 +1,25 @@
 import { Keypair } from '@solana/web3.js';
-import axios, { AxiosResponse } from 'axios';
-import { Account, Connection, NodeWallet, Wallet } from '../../src';
+import axios from 'axios';
+import { Account, Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER, pause } from '../utils';
 import { Metadata } from '../../src/programs/metadata';
 import { signMetadata } from '../../src/actions/signMetadata';
+import { mockAxios200, uri } from './shared';
 
 jest.mock('axios');
 jest.setTimeout(100000);
 
-const mockedAxiosGet = axios.get as jest.MockedFunction<typeof axios>;
-const uri = 'https://bafkreibj4hjlhf3ehpugvfy6bzhhu2c7frvyhrykjqmoocsvdw24omfqga.ipfs.dweb.link';
-
 describe('signing metadata on a master edition', () => {
-  let connection: Connection;
+  const connection = new Connection('devnet');
+  const wallet = new NodeWallet(FEE_PAYER);
   let mint: Keypair;
   let secondSigner: Keypair;
-  let wallet: Wallet;
-
-  beforeAll(() => {
-    connection = new Connection('devnet');
-    wallet = new NodeWallet(FEE_PAYER);
-  });
 
   beforeEach(() => {
     mint = Keypair.generate();
     secondSigner = Keypair.generate();
-    const mockedResponse: AxiosResponse = {
-      data: {
-        name: 'Holo Design (0)',
-        symbol: '',
-        description:
-          'A holo of some design in a lovely purple, pink, and yellow. Pulled from the Internet. Demo only.',
-        seller_fee_basis_points: 100,
-        image: 'https://bafybeidq34cu23fq4u57xu3hp2usqqs7miszscyu4kjqyjo3hv7xea6upe.ipfs.dweb.link',
-        external_url: '',
-        properties: {
-          creators: [
-            {
-              address: wallet.publicKey.toString(),
-              verified: 1,
-              share: 50,
-            },
-            {
-              address: secondSigner.publicKey.toString(),
-              verified: 0,
-              share: 50,
-            },
-          ],
-        },
-      },
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
-    };
-    mockedAxiosGet.mockResolvedValue(mockedResponse);
+    mockAxios200(wallet, secondSigner);
   });
 
   test('signs successfully', async () => {
@@ -70,7 +34,7 @@ describe('signing metadata on a master edition', () => {
     // empirically, I found anything below 20s to be unreliable
     await pause(20000);
 
-    // before update
+    // before signing
     const metadata = await Metadata.getPDA(masterMintResponse.mint);
     let info = await Account.getInfo(connection, metadata);
     let metadataData = new Metadata(metadata, info).data;
@@ -85,7 +49,7 @@ describe('signing metadata on a master edition', () => {
 
     await pause(20000);
 
-    //after update
+    //after signing
     info = await Account.getInfo(connection, metadata);
     metadataData = new Metadata(metadata, info).data;
     expect(metadataData.data.creators[1].verified).toEqual(1);
