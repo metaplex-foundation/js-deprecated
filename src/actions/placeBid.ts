@@ -21,6 +21,7 @@ interface IPlaceBidParams {
 
 interface IPlaceBidResponse {
   txId: string;
+  bidderPotToken: PublicKey;
 }
 
 export const placeBid = async ({
@@ -45,7 +46,7 @@ export const placeBid = async ({
   const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
   ////
 
-  const txBatch = await getPlaceBidTransactions({
+  const txs = await getPlaceBidTransactions({
     accountRentExempt,
     bidder,
     auctionTokenMint,
@@ -61,11 +62,11 @@ export const placeBid = async ({
   const txId = await sendTransaction({
     connection,
     wallet,
-    txs: txBatch.toTransactions(),
-    signers: txBatch.signers,
+    txs: txs.txBatch.toTransactions(),
+    signers: txs.txBatch.signers,
   });
 
-  return { txId };
+  return { txId, bidderPotToken: txs.bidderPotToken };
 };
 
 interface IPlaceBidTransactionsParams {
@@ -81,6 +82,11 @@ interface IPlaceBidTransactionsParams {
   amount: BN;
 }
 
+interface IPlaceBidTransactionsResponse {
+  txBatch: TransactionsBatch;
+  bidderPotToken: PublicKey;
+}
+
 export const getPlaceBidTransactions = async ({
   accountRentExempt,
   bidder,
@@ -92,7 +98,7 @@ export const getPlaceBidTransactions = async ({
   bidderPotToken,
   bidderMeta,
   amount,
-}: IPlaceBidTransactionsParams): Promise<TransactionsBatch> => {
+}: IPlaceBidTransactionsParams): Promise<IPlaceBidTransactionsResponse> => {
   let txBatch = new TransactionsBatch({ transactions: [] });
 
   if (bidderPotToken) {
@@ -194,5 +200,5 @@ export const getPlaceBidTransactions = async ({
   txBatch.addTransaction(placeBidTransaction);
   ////
 
-  return txBatch;
+  return { txBatch, bidderPotToken };
 };

@@ -8,7 +8,7 @@ import { TransactionsBatch } from '../utils/transactions-batch';
 import {
   AuctionManager,
   MetaplexProgram,
-  RedeemBid,
+  RedeemFullRightsTransferBid,
   SafetyDepositConfig,
 } from '../programs/metaplex';
 import { CreateTokenAccount } from '../programs';
@@ -144,7 +144,7 @@ export const getRedeemBidTransactions = async ({
   ////
 
   // create redeem bid
-  const redeemBidTransaction = new RedeemBid(
+  const redeemBidTransaction = new RedeemFullRightsTransferBid(
     { feePayer: bidder },
     {
       store,
@@ -152,17 +152,17 @@ export const getRedeemBidTransactions = async ({
       auction,
       auctionManager,
       bidRedemption,
-      bidderMeta: bidMetadata,
+      bidMetadata,
       safetyDepositTokenStore,
       destination: account.publicKey,
       safetyDeposit,
       fractionMint,
       bidder,
-      // set to false for now to setup basic flow
-      isPrintingType: false,
       safetyDepositConfig,
       auctionExtended,
       transferAuthority,
+      newAuthority: bidder,
+      masterMetadata: metadata,
     },
   );
   txBatch.addTransaction(redeemBidTransaction);
