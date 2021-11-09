@@ -23,7 +23,7 @@ export const signMetadata = async (
   );
   return await sendTransaction({
     connection,
-    signers: [signer ? signer : undefined],
+    signers: signer ? [signer] : [],
     txs: [signTx],
     wallet,
   });

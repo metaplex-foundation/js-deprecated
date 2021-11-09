@@ -27,7 +27,7 @@ interface MintEditionFromMasterResponse {
   edition: PublicKey;
 }
 
-export const mintEditionFromMaser = async (
+export const mintEditionFromMaster = async (
   { connection, wallet, masterEditionMint, updateAuthority } = {} as MintEditionFromMasterParams,
 ): Promise<MintEditionFromMasterResponse> => {
   const masterPDA = await MasterEdition.getPDA(masterEditionMint);
@@ -57,7 +57,7 @@ export const mintEditionFromMaser = async (
     {
       edition: editionPDA, //empty, created inside program
       metadata: metadataPDA, //empty, created inside program
-      updateAuthority: updateAuthority ? updateAuthority : wallet.publicKey,
+      updateAuthority: updateAuthority ?? wallet.publicKey,
       mint: mint.publicKey,
       mintAuthority: wallet.publicKey,
       masterEdition: masterPDA,

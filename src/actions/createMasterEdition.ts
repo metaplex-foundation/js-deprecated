@@ -27,7 +27,7 @@ export const createMasterEdition = async (
     {
       edition,
       metadata,
-      updateAuthority: updateAuthority ? updateAuthority : wallet.publicKey,
+      updateAuthority: updateAuthority ?? wallet.publicKey,
       mint: editionMint,
       mintAuthority: wallet.publicKey,
       maxSupply,

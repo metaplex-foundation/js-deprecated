@@ -3,7 +3,7 @@ import { Connection, NodeWallet, Wallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER, pause } from '../utils';
 import { MasterEdition, Metadata } from '../../src/programs/metadata';
-import { mintEditionFromMaser } from '../../src/actions/mintEditionFromMaster';
+import { mintEditionFromMaster } from '../../src/actions/mintEditionFromMaster';
 import { mockAxios200, uri } from './shared';
 
 jest.mock('axios');
@@ -31,7 +31,7 @@ describe('minting a limited edition from master', () => {
     // empirically, I found anything below 20s to be unreliable
     await pause(20000);
 
-    const editionMintResponse = await mintEditionFromMaser({
+    const editionMintResponse = await mintEditionFromMaster({
       connection,
       wallet,
       masterEditionMint: masterMintResponse.mint,

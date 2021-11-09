@@ -21,7 +21,7 @@ export const createMetadata = async (
     {
       metadata,
       metadataData,
-      updateAuthority: updateAuthority ? updateAuthority : wallet.publicKey,
+      updateAuthority: updateAuthority ?? wallet.publicKey,
       mint: editionMint,
       mintAuthority: wallet.publicKey,
     },
