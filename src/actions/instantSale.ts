@@ -4,12 +4,13 @@ import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
 import { Auction, AuctionExtended, BidderMetadata, BidderPot } from '../programs/auction';
-import { AuctionManager, MetaplexProgram, SafetyDepositConfig } from '../programs/metaplex';
+import { AuctionManager, SafetyDepositConfig } from '../programs/metaplex';
 import { placeBid } from './placeBid';
 import { getClaimBidTransactions } from './claimBid';
 import { getRedeemBidTransactions } from './redeemBid';
 import { Vault } from '../programs/vault/accounts/Vault';
 import { Metadata } from '../programs/metadata';
+import { getBidRedemptionPDA } from './redeemBid';
 
 interface IInstantSaleParams {
   connection: Connection;
@@ -50,13 +51,7 @@ export const instantSale = async ({
   const metadataTokenMint = new PublicKey(safetyDepositBox.data.tokenMint);
   const safetyDepositTokenStore = new PublicKey(safetyDepositBox.data.store);
   const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
-  // TODO: probably should be moved to a class
-  const bidRedemption = (
-    await PublicKey.findProgramAddress(
-      [Buffer.from(MetaplexProgram.PREFIX), auction.toBuffer(), bidderMeta.toBuffer()],
-      MetaplexProgram.PUBKEY,
-    )
-  )[0];
+  const bidRedemption = await getBidRedemptionPDA(auction, bidderMeta);
   const safetyDepositConfig = await SafetyDepositConfig.getPDA(
     auctionManager,
     safetyDepositBox.pubkey,

@@ -45,13 +45,7 @@ export const redeemBid = async ({
   const tokenMint = new PublicKey(safetyDepositBox.data.tokenMint);
   const safetyDepositTokenStore = new PublicKey(safetyDepositBox.data.store);
   const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
-  // TODO: probably should be moved to a class
-  const bidRedemption = (
-    await PublicKey.findProgramAddress(
-      [Buffer.from(MetaplexProgram.PREFIX), auction.toBuffer(), bidderMeta.toBuffer()],
-      MetaplexProgram.PUBKEY,
-    )
-  )[0];
+  const bidRedemption = await getBidRedemptionPDA(auction, bidderMeta);
   const safetyDepositConfig = await SafetyDepositConfig.getPDA(
     auctionManager,
     safetyDepositBox.pubkey,
@@ -181,4 +175,13 @@ export const getRedeemBidTransactions = async ({
   ////
 
   return txBatch;
+};
+
+export const getBidRedemptionPDA = async (auction: PublicKey, bidderMeta: PublicKey) => {
+  return (
+    await PublicKey.findProgramAddress(
+      [Buffer.from(MetaplexProgram.PREFIX), auction.toBuffer(), bidderMeta.toBuffer()],
+      MetaplexProgram.PUBKEY,
+    )
+  )[0];
 };
