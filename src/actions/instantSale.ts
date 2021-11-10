@@ -68,14 +68,9 @@ export const instantSale = async ({
   });
 
   // workaround to wait for bidderMeta to be created
-  await retry(
-    async (bail) => {
-      await Account.getInfo(connection, bidderMeta);
-    },
-    {
-      retries: 5,
-    },
-  );
+  await retry(async (bail) => {
+    await Account.getInfo(connection, bidderMeta);
+  });
   const bidRedemption = await getBidRedemptionPDA(auction, bidderMeta);
 
   const redeemBatch = await getRedeemBidTransactions({
