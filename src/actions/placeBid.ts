@@ -22,6 +22,7 @@ interface IPlaceBidParams {
 interface IPlaceBidResponse {
   txId: string;
   bidderPotToken: PublicKey;
+  bidderMeta: PublicKey;
 }
 
 export const placeBid = async ({
@@ -154,5 +155,5 @@ export const placeBid = async ({
     signers: txBatch.signers,
   });
 
-  return { txId, bidderPotToken };
+  return { txId, bidderPotToken, bidderMeta };
 };

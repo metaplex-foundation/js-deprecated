@@ -1,9 +1,10 @@
 import { PublicKey } from '@solana/web3.js';
 import { AccountLayout } from '@solana/spl-token';
+import retry from 'async-retry';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
-import { Auction, AuctionExtended, BidderMetadata, BidderPot } from '../programs/auction';
+import { Auction, AuctionExtended, BidderPot } from '../programs/auction';
 import { AuctionManager, SafetyDepositConfig } from '../programs/metaplex';
 import { placeBid } from './placeBid';
 import { getClaimBidTransactions } from './claimBid';
@@ -11,6 +12,7 @@ import { getRedeemBidTransactions } from './redeemBid';
 import { Vault } from '../programs/vault/accounts/Vault';
 import { Metadata } from '../programs/metadata';
 import { getBidRedemptionPDA } from './redeemBid';
+import { Account } from '../Account';
 
 interface IInstantSaleParams {
   connection: Connection;
@@ -50,8 +52,6 @@ export const instantSale = async ({
   const [safetyDepositBox] = await vault.getSafetyDepositBoxes(connection);
   const metadataTokenMint = new PublicKey(safetyDepositBox.data.tokenMint);
   const safetyDepositTokenStore = new PublicKey(safetyDepositBox.data.store);
-  const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
-  const bidRedemption = await getBidRedemptionPDA(auction, bidderMeta);
   const safetyDepositConfig = await SafetyDepositConfig.getPDA(
     auctionManager,
     safetyDepositBox.pubkey,
@@ -60,12 +60,23 @@ export const instantSale = async ({
   const metadata = await Metadata.getPDA(metadataTokenMint);
   ////
 
-  const { bidderPotToken } = await placeBid({
+  const { bidderPotToken, bidderMeta } = await placeBid({
     connection,
     wallet,
     amount: instantSalePrice,
     auction,
   });
+
+  // workaround to wait for bidderMeta to be created
+  await retry(
+    async (bail) => {
+      await Account.getInfo(connection, bidderMeta);
+    },
+    {
+      retries: 5,
+    },
+  );
+  const bidRedemption = await getBidRedemptionPDA(auction, bidderMeta);
 
   const redeemBatch = await getRedeemBidTransactions({
     accountRentExempt,
