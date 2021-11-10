@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/metaplex/js/compare/v4.0.0...v4.1.0) (2021-11-10)
+
+
+### Features
+
+* added new actions for metadata program ([#56](https://github.com/metaplex/js/issues/56)) ([a9208c9](https://github.com/metaplex/js/commit/a9208c976d32b0a64e498279a35146352432ff43))
+
 # [4.0.0](https://github.com/metaplex/js/compare/v3.5.0...v4.0.0) (2021-11-09)
 
 
