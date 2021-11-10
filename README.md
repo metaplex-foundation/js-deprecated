@@ -72,11 +72,12 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] MintNewEditionFromMasterEditionViaToken
       - [ ] MintNewEditionFromMasterEditionViaVaultProxy
     - [ ] Actions
-      - [ ] Create
-      - [ ] Update
-      - [ ] Sign
+      - [X] Create
+      - [X] Update
+      - [X] Sign
       - [ ] Send
-      - [X] Mint
+      - [X] Mint Master Edition
+      - [X] Mint Limited Edition from Master
       - [ ] Burn
   - [ ] Metaplex
     - [ ] Accounts

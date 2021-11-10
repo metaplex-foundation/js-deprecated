@@ -20,8 +20,9 @@ export class UpdateMetadataArgs extends Borsh.Data<{
   ]);
 
   instruction = 1;
-  data: MetadataDataData | null = null;
-  updateAuthority: string | null = null;
+  // NOTE: do not add "=null". This breaks serialization.
+  data: MetadataDataData | null;
+  updateAuthority: string | null;
   primarySaleHappened: boolean | null;
 }
 
