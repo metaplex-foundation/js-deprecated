@@ -1,9 +1,6 @@
-import { MintLayout, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token';
-import { Keypair, PublicKey } from '@solana/web3.js';
-import { ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
-import { Connection } from './../Connection';
-import { MintTo, CreateAssociatedTokenAccount, CreateMint } from './../programs';
+import { Connection } from '../Connection';
 import {
   CreateMasterEdition,
   CreateMetadata,
@@ -11,10 +8,11 @@ import {
   MasterEdition,
   Metadata,
   MetadataDataData,
-} from './../programs/metadata';
-import { Wallet } from './../wallet';
+} from '../programs/metadata';
+import { Wallet } from '../wallet';
 import { sendTransaction } from './transactions';
-import { lookup } from './../utils/metadata';
+import { lookup } from '../utils/metadata';
+import { prepareTokenAccountAndMintTx } from './shared';
 
 interface MintNFTParams {
   connection: Connection;
@@ -36,12 +34,11 @@ export const mintNFT = async ({
   uri,
   maxSupply,
 }: MintNFTParams): Promise<MintNFTResponse> => {
-  const mint = Keypair.generate();
+  const { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx } =
+    await prepareTokenAccountAndMintTx(connection, wallet.publicKey);
 
   const metadataPDA = await Metadata.getPDA(mint.publicKey);
   const editionPDA = await MasterEdition.getPDA(mint.publicKey);
-
-  const mintRent = await connection.getMinimumBalanceForRentExemption(MintLayout.span);
 
   const {
     name,
@@ -64,14 +61,6 @@ export const mintNFT = async ({
     return memo;
   }, []);
 
-  const createMintTx = new CreateMint(
-    { feePayer: wallet.publicKey },
-    {
-      newAccountPubkey: mint.publicKey,
-      lamports: mintRent,
-    },
-  );
-
   const metadataData = new MetadataDataData({
     name,
     symbol,
@@ -90,30 +79,6 @@ export const mintNFT = async ({
       updateAuthority: wallet.publicKey,
       mint: mint.publicKey,
       mintAuthority: wallet.publicKey,
-    },
-  );
-
-  const recipient = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
-    mint.publicKey,
-    wallet.publicKey,
-  );
-
-  const createAssociatedTokenAccountTx = new CreateAssociatedTokenAccount(
-    { feePayer: wallet.publicKey },
-    {
-      associatedTokenAddress: recipient,
-      splTokenMintAddress: mint.publicKey,
-    },
-  );
-
-  const mintToTx = new MintTo(
-    { feePayer: wallet.publicKey },
-    {
-      mint: mint.publicKey,
-      dest: recipient,
-      amount: 1,
     },
   );
 
