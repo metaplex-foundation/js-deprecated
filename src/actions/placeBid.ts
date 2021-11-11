@@ -21,6 +21,8 @@ interface IPlaceBidParams {
 
 interface IPlaceBidResponse {
   txId: string;
+  bidderPotToken: PublicKey;
+  bidderMeta: PublicKey;
 }
 
 export const placeBid = async ({
@@ -45,54 +47,6 @@ export const placeBid = async ({
   const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
   ////
 
-  const txBatch = await getPlaceBidTransactions({
-    accountRentExempt,
-    bidder,
-    auctionTokenMint,
-    vault,
-    auction,
-    auctionExtended,
-    bidderPot,
-    bidderPotToken,
-    bidderMeta,
-    amount,
-  });
-
-  const txId = await sendTransaction({
-    connection,
-    wallet,
-    txs: txBatch.toTransactions(),
-    signers: txBatch.signers,
-  });
-
-  return { txId };
-};
-
-interface IPlaceBidTransactionsParams {
-  bidder: PublicKey;
-  accountRentExempt: number;
-  bidderPot: PublicKey;
-  bidderPotToken?: PublicKey;
-  bidderMeta: PublicKey;
-  auction: PublicKey;
-  auctionExtended: PublicKey;
-  auctionTokenMint: PublicKey;
-  vault: PublicKey;
-  amount: BN;
-}
-
-export const getPlaceBidTransactions = async ({
-  accountRentExempt,
-  bidder,
-  auctionTokenMint,
-  vault,
-  auction,
-  auctionExtended,
-  bidderPot,
-  bidderPotToken,
-  bidderMeta,
-  amount,
-}: IPlaceBidTransactionsParams): Promise<TransactionsBatch> => {
   let txBatch = new TransactionsBatch({ transactions: [] });
 
   if (bidderPotToken) {
@@ -194,5 +148,12 @@ export const getPlaceBidTransactions = async ({
   txBatch.addTransaction(placeBidTransaction);
   ////
 
-  return txBatch;
+  const txId = await sendTransaction({
+    connection,
+    wallet,
+    txs: txBatch.toTransactions(),
+    signers: txBatch.signers,
+  });
+
+  return { txId, bidderPotToken, bidderMeta };
 };

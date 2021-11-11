@@ -8,7 +8,7 @@ import { TransactionsBatch } from '../utils/transactions-batch';
 import {
   AuctionManager,
   MetaplexProgram,
-  RedeemBid,
+  RedeemFullRightsTransferBid,
   SafetyDepositConfig,
 } from '../programs/metaplex';
 import { CreateTokenAccount } from '../programs';
@@ -45,13 +45,7 @@ export const redeemBid = async ({
   const tokenMint = new PublicKey(safetyDepositBox.data.tokenMint);
   const safetyDepositTokenStore = new PublicKey(safetyDepositBox.data.store);
   const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
-  // TODO: probably should be moved to a class
-  const bidRedemption = (
-    await PublicKey.findProgramAddress(
-      [Buffer.from(MetaplexProgram.PREFIX), auction.toBuffer(), bidderMeta.toBuffer()],
-      MetaplexProgram.PUBKEY,
-    )
-  )[0];
+  const bidRedemption = await getBidRedemptionPDA(auction, bidderMeta);
   const safetyDepositConfig = await SafetyDepositConfig.getPDA(
     auctionManager,
     safetyDepositBox.pubkey,
@@ -144,7 +138,7 @@ export const getRedeemBidTransactions = async ({
   ////
 
   // create redeem bid
-  const redeemBidTransaction = new RedeemBid(
+  const redeemBidTransaction = new RedeemFullRightsTransferBid(
     { feePayer: bidder },
     {
       store,
@@ -152,17 +146,17 @@ export const getRedeemBidTransactions = async ({
       auction,
       auctionManager,
       bidRedemption,
-      bidderMeta: bidMetadata,
+      bidMetadata,
       safetyDepositTokenStore,
       destination: account.publicKey,
       safetyDeposit,
       fractionMint,
       bidder,
-      // set to false for now to setup basic flow
-      isPrintingType: false,
       safetyDepositConfig,
       auctionExtended,
       transferAuthority,
+      newAuthority: bidder,
+      masterMetadata: metadata,
     },
   );
   txBatch.addTransaction(redeemBidTransaction);
@@ -181,4 +175,13 @@ export const getRedeemBidTransactions = async ({
   ////
 
   return txBatch;
+};
+
+export const getBidRedemptionPDA = async (auction: PublicKey, bidderMeta: PublicKey) => {
+  return (
+    await PublicKey.findProgramAddress(
+      [Buffer.from(MetaplexProgram.PREFIX), auction.toBuffer(), bidderMeta.toBuffer()],
+      MetaplexProgram.PUBKEY,
+    )
+  )[0];
 };
