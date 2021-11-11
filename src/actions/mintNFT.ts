@@ -18,7 +18,7 @@ interface MintNFTParams {
   connection: Connection;
   wallet: Wallet;
   uri: string;
-  maxSupply: number;
+  maxSupply?: number;
 }
 
 interface MintNFTResponse {
@@ -90,7 +90,7 @@ export const mintNFT = async ({
       updateAuthority: wallet.publicKey,
       mint: mint.publicKey,
       mintAuthority: wallet.publicKey,
-      maxSupply: new BN(maxSupply),
+      maxSupply: maxSupply ? new BN(maxSupply) : null,
     },
   );
 
