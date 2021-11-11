@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/metaplex/js/compare/v4.1.0...v4.2.0) (2021-11-11)
+
+
+### Features
+
+* add instant sale action ([#57](https://github.com/metaplex/js/issues/57)) ([7011a90](https://github.com/metaplex/js/commit/7011a906e56c11382ce13e88af50a48ef25568a3))
+
 # [4.1.0](https://github.com/metaplex/js/compare/v4.0.0...v4.1.0) (2021-11-10)
 
 
