@@ -1,3 +1,11 @@
+## [4.2.1](https://github.com/metaplex/js/compare/v4.2.0...v4.2.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* added missing metadata actions to index ([#58](https://github.com/metaplex/js/issues/58)) ([6c7b9f3](https://github.com/metaplex/js/commit/6c7b9f3f8e95298d68fb6771a81002058f35f3c0))
+* make max supply optional ([#59](https://github.com/metaplex/js/issues/59)) ([f64c5a2](https://github.com/metaplex/js/commit/f64c5a285ceaf9e0b20d12ea904b33de93fdc6b8))
+
 # [4.2.0](https://github.com/metaplex/js/compare/v4.1.0...v4.2.0) (2021-11-11)
 
 
