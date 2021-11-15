@@ -11,56 +11,17 @@ import BN from 'bn.js';
 import { AuctionProgram } from '../AuctionProgram';
 import { Transaction } from '../../../Transaction';
 import { PriceFloor } from '../accounts/Auction';
+import { Args as CreateAuctionArgsType, CreateAuctionArgs, WinnerLimit } from './CreateAuction';
 
-export enum WinnerLimitType {
-  Unlimited = 0,
-  Capped = 1,
-}
-
-type WinnerLimitArgs = {
-  type: WinnerLimitType;
-  usize: BN;
-};
-
-export class WinnerLimit extends Borsh.Data<WinnerLimitArgs> {
-  static readonly SCHEMA = this.struct([
-    ['type', 'u8'],
-    ['usize', 'u64'],
-  ]);
-
-  type: WinnerLimitType;
-  usize: BN;
-}
-
-type Args = {
-  winners: WinnerLimit;
-  endAuctionAt: BN | null;
-  auctionGap: BN | null;
-  tokenMint: StringPublicKey;
-  authority: StringPublicKey;
-  resource: StringPublicKey;
-  priceFloor: PriceFloor;
-  tickSize: BN | null;
-  gapTickSizePercentage: number | null;
+type Args = CreateAuctionArgsType & {
   instantSalePrice: BN | null;
   name: number[] | null;
 };
 
 export class CreateAuctionV2Args extends Borsh.Data<Args> {
   static readonly SCHEMA = new Map([
-    ...WinnerLimit.SCHEMA,
-    ...PriceFloor.SCHEMA,
+    ...CreateAuctionArgs.SCHEMA,
     ...this.struct([
-      ['instruction', 'u8'],
-      ['winners', WinnerLimit],
-      ['endAuctionAt', { kind: 'option', type: 'u64' }],
-      ['auctionGap', { kind: 'option', type: 'u64' }],
-      ['tokenMint', 'pubkeyAsString'],
-      ['authority', 'pubkeyAsString'],
-      ['resource', 'pubkeyAsString'],
-      ['priceFloor', PriceFloor],
-      ['tickSize', { kind: 'option', type: 'u64' }],
-      ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
       ['instantSalePrice', { kind: 'option', type: 'u64' }],
       ['name', { kind: 'option', type: [32] }],
     ]),
@@ -79,10 +40,15 @@ export class CreateAuctionV2Args extends Borsh.Data<Args> {
   authority: StringPublicKey;
   /// The resource being auctioned. See AuctionData.
   resource: StringPublicKey;
+  /// Set a price floor.
   priceFloor: PriceFloor;
+  /// Add a tick size increment
   tickSize: BN | null;
+  /// Add a minimum percentage increase each bid must meet.
   gapTickSizePercentage: number | null;
+  /// Add a instant sale price.
   instantSalePrice: BN | null;
+  /// Auction name
   name: number[] | null;
 }
 
