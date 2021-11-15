@@ -21,6 +21,7 @@ type WinnerLimitArgs = {
   type: WinnerLimitType;
   usize: BN;
 };
+
 export class WinnerLimit extends Borsh.Data<WinnerLimitArgs> {
   static readonly SCHEMA = this.struct([
     ['type', 'u8'],
@@ -41,8 +42,11 @@ type Args = {
   priceFloor: PriceFloor;
   tickSize: BN | null;
   gapTickSizePercentage: number | null;
+  instantSalePrice: BN | null;
+  name: number[] | null;
 };
-export class CreateAuctionArgs extends Borsh.Data<Args> {
+
+export class CreateAuctionV2Args extends Borsh.Data<Args> {
   static readonly SCHEMA = new Map([
     ...WinnerLimit.SCHEMA,
     ...PriceFloor.SCHEMA,
@@ -57,10 +61,12 @@ export class CreateAuctionArgs extends Borsh.Data<Args> {
       ['priceFloor', PriceFloor],
       ['tickSize', { kind: 'option', type: 'u64' }],
       ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
+      ['instantSalePrice', { kind: 'option', type: 'u64' }],
+      ['name', { kind: 'option', type: [32] }],
     ]),
   ]);
 
-  instruction = 1;
+  instruction = 7;
   /// How many winners are allowed for this auction. See AuctionData.
   winners: WinnerLimit;
   /// End time is the cut-off point that the auction is forced to end by. See AuctionData.
@@ -76,21 +82,23 @@ export class CreateAuctionArgs extends Borsh.Data<Args> {
   priceFloor: PriceFloor;
   tickSize: BN | null;
   gapTickSizePercentage: number | null;
+  instantSalePrice: BN | null;
+  name: number[] | null;
 }
 
-type CreateAuctionParams = {
+type CreateAuctionV2Params = {
   auction: PublicKey;
   auctionExtended: PublicKey;
   creator: PublicKey;
-  args: CreateAuctionArgs;
+  args: CreateAuctionV2Args;
 };
 
-export class CreateAuction extends Transaction {
-  constructor(options: TransactionCtorFields, params: CreateAuctionParams) {
+export class CreateAuctionV2 extends Transaction {
+  constructor(options: TransactionCtorFields, params: CreateAuctionV2Params) {
     super(options);
     const { args, auction, auctionExtended, creator } = params;
 
-    const data = CreateAuctionArgs.serialize(args);
+    const data = CreateAuctionV2Args.serialize(args);
 
     this.add(
       new TransactionInstruction({
