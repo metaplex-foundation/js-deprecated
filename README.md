@@ -120,6 +120,7 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] Bidder Meta
     - [ ] Instructions
       - [x] CancelBid
+      - [x] CreateAuction
       - [x] CreateAuctionV2
       - [x] SetAuthority
       - [x] PlaceBid
