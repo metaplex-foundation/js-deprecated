@@ -1,3 +1,10 @@
+# [4.3.0](https://github.com/metaplex/js/compare/v4.2.1...v4.3.0) (2021-11-16)
+
+
+### Features
+
+* add create auction v2 transaction ([#62](https://github.com/metaplex/js/issues/62)) ([04bbba7](https://github.com/metaplex/js/commit/04bbba7a831bfc5e71ec5e5596f7fe659ad8664e))
+
 ## [4.2.1](https://github.com/metaplex/js/compare/v4.2.0...v4.2.1) (2021-11-12)
 
 
