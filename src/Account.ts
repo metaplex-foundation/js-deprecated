@@ -80,10 +80,12 @@ export class Account<T = unknown> {
       throw new Error('failed to get info about accounts ' + unsafeRes.error.message);
     }
     if (!unsafeRes.result.value) return;
-    const infos = (unsafeRes.result.value as AccountInfo<string[]>[]).filter((info) => info != null).map((info) => ({
-      ...info,
-      data: Buffer.from(info.data[0], 'base64'),
-    })) as AccountInfo<Buffer>[];
+    const infos = (unsafeRes.result.value as AccountInfo<string[]>[])
+      .filter(Boolean)
+      .map((info) => ({
+        ...info,
+        data: Buffer.from(info.data[0], 'base64'),
+      })) as AccountInfo<Buffer>[];
     return infos.reduce((acc, info, index) => {
       acc.set(pubkeys[index], info);
       return acc;
