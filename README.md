@@ -97,6 +97,7 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] RedeemBid
       - [ ] RedeemFullRightsTransferBid
       - [x] StartAuction
+      - [ ] EndAuction
       - [x] ClaimBid
       - [ ] EmptyPaymentAccount
       - [x] SetStore
@@ -108,7 +109,6 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] InitAuctionManagerV2
       - [ ] ValidateSafetyDepositBoxV2
       - [ ] RedeemParticipationBidV3
-      - [ ] EndAuction
       - [ ] SetStoreIndex
       - [ ] SetAuctionCache
     - [ ] Actions
@@ -120,17 +120,15 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] Bidder Meta
     - [ ] Instructions
       - [x] CancelBid
-      - [ ] CreateAuctionV2
-      - [ ] ClaimBid
-      - [ ] EndAuction
-      - [ ] StartAuction
+      - [x] CreateAuction
+      - [x] CreateAuctionV2
       - [x] SetAuthority
       - [x] PlaceBid
     - [ ] Actions (no standalone actions)
       - [x] Cancel Bid
       - [x] Place Bid
-      - [ ] Redeem Bid
-      - [ ] Instant Sale
+      - [x] Redeem Bid
+      - [x] Instant Sale
   - [ ] Vault
     - [ ] Accounts
       - [x] Safety Deposit Box
