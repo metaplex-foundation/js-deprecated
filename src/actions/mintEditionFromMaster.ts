@@ -46,7 +46,7 @@ export const mintEditionFromMaster = async (
     TOKEN_PROGRAM_ID,
     masterEditionMint,
     wallet.publicKey,
-    true
+    true,
   );
 
   const metadataPDA = await Metadata.getPDA(mint.publicKey);
