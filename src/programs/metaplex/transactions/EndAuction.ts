@@ -13,10 +13,8 @@ import { MetaplexProgram } from '../MetaplexProgram';
 
 export class EndAuctionArgs extends Borsh.Data<{ reveal: BN[] | null }> {
   static readonly SCHEMA = this.struct([
-    [
-      ['instruction', 'u8'],
-      ['reveal', { kind: 'option', type: [BN] }],
-    ],
+    ['instruction', 'u8'],
+    ['reveal', { kind: 'option', type: [BN, BN] }],
   ]);
 
   instruction = 20;

@@ -1,129 +1,42 @@
-import { jest } from '@jest/globals';
-import { TupleNumericType } from '@metaplex/utils';
-import { AccountLayout, NATIVE_MINT } from '@solana/spl-token';
-import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
-import BN from 'bn.js';
-import { Connection } from '../../src';
 import {
-  Store,
-  SetStore,
-  WhitelistedCreator,
-  SetWhitelistedCreator,
-  AuctionManager,
-  AuctionWinnerTokenTypeTracker,
-  InitAuctionManagerV2,
-  StartAuction,
-} from '../../src/programs/metaplex';
-import { Auction } from '../../src/programs/auction';
-import { CreateTokenAccount, Transaction } from '../../src/programs/shared';
-import { FEE_PAYER, VAULT_PUBKEY } from '../utils';
+  AUCTION_EXTENDED_PUBKEY,
+  AUCTION_MANAGER_PUBKEY,
+  AUCTION_PUBKEY,
+  CURRENT_AUTHORITY_PUBKEY,
+  mockTransaction,
+  serializeConfig,
+  STORE_PUBKEY,
+} from '../utils';
+import { EndAuction } from '../../src/programs/metaplex/transactions/EndAuction';
+import BN from 'bn.js';
 
-describe.skip('Metaplex transactions', () => {
-  let connection: Connection;
-  let owner: Keypair;
-
-  jest.setTimeout(80000);
-
-  beforeAll(() => {
-    connection = new Connection('devnet');
-    owner = Keypair.generate();
-  });
-
-  test('setStore', async () => {
-    const storeId = await Store.getPDA(owner.publicKey);
-
-    const tx = new SetStore(
-      { feePayer: FEE_PAYER.publicKey },
-      {
-        admin: owner.publicKey,
-        store: storeId,
-        isPublic: true,
-      },
-    );
-
-    await sendAndConfirmTransaction(connection, tx, [FEE_PAYER, owner], {
-      commitment: 'confirmed',
+describe('Metaplex transactions', () => {
+  test('EndAuction(reveal = null)', async () => {
+    const data = new EndAuction(mockTransaction, {
+      auctionManager: AUCTION_MANAGER_PUBKEY,
+      auction: AUCTION_PUBKEY,
+      auctionExtended: AUCTION_EXTENDED_PUBKEY,
+      store: STORE_PUBKEY,
+      auctionManagerAuthority: CURRENT_AUTHORITY_PUBKEY,
+      reveal: null,
     });
+
+    const serializedData = data.serialize(serializeConfig);
+    expect(JSON.stringify(serializedData)).toMatchSnapshot();
   });
 
-  test('setWhitelistedCreator', async () => {
-    const storeId = await Store.getPDA(owner.publicKey);
-    const creator = owner.publicKey;
-    const whitelistedCreatorPDA = await WhitelistedCreator.getPDA(storeId, creator);
+  // TODO: find out how to correctly define schema for (u64, u64) Rust type
+  // test('EndAuction(reveal = BN[])', async () => {
+  //   const data = new EndAuction(mockTransaction, {
+  //     auctionManager: AUCTION_MANAGER_PUBKEY,
+  //     auction: AUCTION_PUBKEY,
+  //     auctionExtended: AUCTION_EXTENDED_PUBKEY,
+  //     store: STORE_PUBKEY,
+  //     auctionManagerAuthority: CURRENT_AUTHORITY_PUBKEY,
+  //     reveal: [new BN(1), new BN(1)],
+  //   });
 
-    const tx = new SetWhitelistedCreator(
-      { feePayer: FEE_PAYER.publicKey },
-      {
-        admin: owner.publicKey,
-        store: storeId,
-        whitelistedCreatorPDA,
-        creator,
-        activated: true,
-      },
-    );
-
-    await sendAndConfirmTransaction(connection, tx, [FEE_PAYER, owner], {
-      commitment: 'confirmed',
-    });
-  });
-
-  test('startAuction', async () => {
-    const storeId = await Store.getPDA(owner.publicKey);
-    const auctionPDA = await Auction.getPDA(VAULT_PUBKEY);
-    const auctionManagerPDA = await AuctionManager.getPDA(auctionPDA);
-
-    const tx = new StartAuction(
-      { feePayer: FEE_PAYER.publicKey },
-      {
-        store: storeId,
-        auction: auctionPDA,
-        auctionManager: auctionManagerPDA,
-        auctionManagerAuthority: owner.publicKey,
-      },
-    );
-
-    await sendAndConfirmTransaction(connection, tx, [FEE_PAYER, owner], {
-      commitment: 'confirmed',
-    });
-  });
-
-  test('initAuctionManagerV2', async () => {
-    const storeId = await Store.getPDA(owner.publicKey);
-    const auctionPDA = await Auction.getPDA(VAULT_PUBKEY);
-    const auctionManagerPDA = await AuctionManager.getPDA(auctionPDA);
-    const tokenTrackerPDA = await AuctionWinnerTokenTypeTracker.getPDA(auctionManagerPDA);
-
-    const paymentAccount = Keypair.generate();
-    const mintRent = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
-    const createTokenAccountTx = new CreateTokenAccount(
-      { feePayer: FEE_PAYER.publicKey },
-      {
-        newAccountPubkey: paymentAccount.publicKey,
-        lamports: mintRent,
-        mint: NATIVE_MINT,
-      },
-    );
-
-    const tx = new InitAuctionManagerV2(
-      { feePayer: FEE_PAYER.publicKey },
-      {
-        store: storeId,
-        vault: VAULT_PUBKEY,
-        auction: auctionPDA,
-        auctionManager: auctionManagerPDA,
-        auctionManagerAuthority: owner.publicKey,
-        acceptPaymentAccount: paymentAccount.publicKey,
-        tokenTracker: tokenTrackerPDA,
-        amountType: TupleNumericType.U8,
-        lengthType: TupleNumericType.U8,
-        maxRanges: new BN(10),
-      },
-    );
-
-    const txs = Transaction.fromCombined([createTokenAccountTx, tx]);
-
-    await sendAndConfirmTransaction(connection, txs, [FEE_PAYER, paymentAccount, owner], {
-      commitment: 'confirmed',
-    });
-  });
+  //   const serializedData = data.serialize(serializeConfig);
+  //   expect(JSON.stringify(serializedData)).toMatchSnapshot();
+  // });
 });
