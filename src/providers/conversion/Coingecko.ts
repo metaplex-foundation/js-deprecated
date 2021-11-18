@@ -1,11 +1,9 @@
-import { ConversionRateProvider, Currency } from './ConversionRateProvider';
+import { ConversionRateProvider, Currency, ConversionRatePair } from './ConversionRateProvider';
 import axios from 'axios';
 
 export class Coingecko implements ConversionRateProvider {
-  constructor() {}
-
   // this method translates currency strings to the format that coingecko requires
-  private static translateCurrency(currency: Currency): string {
+  static translateCurrency(currency: Currency): string {
     switch (currency) {
       case Currency.AR:
         return 'arweave';
@@ -28,7 +26,7 @@ export class Coingecko implements ConversionRateProvider {
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${fromIds}&vs_currencies=${toIds}`;
     const response = await axios(url);
     const data = await response.data;
-    return fromArray.reduce((previousPairs, fromCurrency) => {
+    return fromArray.reduce<ConversionRatePair[]>((previousPairs, fromCurrency) => {
       return [
         ...previousPairs,
         ...toArray.map((toCurrency) => ({
