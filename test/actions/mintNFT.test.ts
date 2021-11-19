@@ -1,6 +1,6 @@
 import { Keypair } from '@solana/web3.js';
-import axios from 'axios';
-import { Connection, NodeWallet, Wallet } from '../../src';
+import BN from 'bn.js';
+import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER } from '../utils';
 import { MasterEdition, Metadata } from '../../src/programs/metadata';
@@ -36,7 +36,7 @@ describe('minting an NFT', () => {
         connection,
         wallet,
         uri,
-        maxSupply: 0,
+        maxSupply: new BN(0),
       });
 
       const metadata = await Metadata.getPDA(mint.publicKey);
@@ -61,7 +61,7 @@ describe('minting an NFT', () => {
           connection,
           wallet,
           uri,
-          maxSupply: 0,
+          maxSupply: new BN(0),
         });
       } catch (e) {
         expect(e).not.toBeNull();
