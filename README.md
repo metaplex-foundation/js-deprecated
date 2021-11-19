@@ -72,11 +72,12 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] MintNewEditionFromMasterEditionViaToken
       - [ ] MintNewEditionFromMasterEditionViaVaultProxy
     - [ ] Actions
-      - [ ] Create
-      - [ ] Update
-      - [ ] Sign
+      - [X] Create
+      - [X] Update
+      - [X] Sign
       - [ ] Send
-      - [ ] Mint
+      - [X] Mint Master Edition
+      - [X] Mint Limited Edition from Master
       - [ ] Burn
   - [ ] Metaplex
     - [ ] Accounts
@@ -96,6 +97,7 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] RedeemBid
       - [ ] RedeemFullRightsTransferBid
       - [x] StartAuction
+      - [ ] EndAuction
       - [x] ClaimBid
       - [ ] EmptyPaymentAccount
       - [x] SetStore
@@ -107,7 +109,6 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] InitAuctionManagerV2
       - [ ] ValidateSafetyDepositBoxV2
       - [ ] RedeemParticipationBidV3
-      - [ ] EndAuction
       - [ ] SetStoreIndex
       - [ ] SetAuctionCache
     - [ ] Actions
@@ -119,13 +120,15 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] Bidder Meta
     - [ ] Instructions
       - [x] CancelBid
-      - [ ] CreateAuctionV2
-      - [ ] ClaimBid
-      - [ ] EndAuction
-      - [ ] StartAuction
+      - [x] CreateAuction
+      - [x] CreateAuctionV2
       - [x] SetAuthority
       - [x] PlaceBid
     - [ ] Actions (no standalone actions)
+      - [x] Cancel Bid
+      - [x] Place Bid
+      - [x] Redeem Bid
+      - [x] Instant Sale
   - [ ] Vault
     - [ ] Accounts
       - [x] Safety Deposit Box

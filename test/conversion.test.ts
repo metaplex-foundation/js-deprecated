@@ -128,5 +128,16 @@ describe('Conversion', () => {
       expect(result[3].to).toEqual(Currency.EUR);
       expect(result[3].rate).toEqual(175.69);
     });
+
+    test('translateCurrency test transformation', () => {
+      expect(Coingecko.translateCurrency(Currency.AR)).toBe('arweave');
+      expect(Coingecko.translateCurrency(Currency.SOL)).toBe('solana');
+      expect(Coingecko.translateCurrency(Currency.USD)).toBe('usd');
+      expect(Coingecko.translateCurrency(Currency.EUR)).toBe('eur');
+
+      expect(() => {
+        Coingecko.translateCurrency(null as unknown as Currency);
+      }).toThrowError();
+    });
   });
 });

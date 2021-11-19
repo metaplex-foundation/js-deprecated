@@ -216,10 +216,7 @@ export class Metadata extends Account<MetadataData> {
     ).flat();
   }
 
-  async getEdition(connection: Connection) {
-    const mint = this.data?.mint;
-    if (!mint) return;
-
+  static async getEdition(connection: Connection, mint: AnyPublicKey) {
     const pda = await Edition.getPDA(mint);
     const info = await Account.getInfo(connection, pda);
     const key = info?.data[0];

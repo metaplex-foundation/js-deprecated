@@ -1,3 +1,72 @@
+# [4.3.0](https://github.com/metaplex/js/compare/v4.2.1...v4.3.0) (2021-11-16)
+
+
+### Features
+
+* add create auction v2 transaction ([#62](https://github.com/metaplex/js/issues/62)) ([04bbba7](https://github.com/metaplex/js/commit/04bbba7a831bfc5e71ec5e5596f7fe659ad8664e))
+
+## [4.2.1](https://github.com/metaplex/js/compare/v4.2.0...v4.2.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* added missing metadata actions to index ([#58](https://github.com/metaplex/js/issues/58)) ([6c7b9f3](https://github.com/metaplex/js/commit/6c7b9f3f8e95298d68fb6771a81002058f35f3c0))
+* make max supply optional ([#59](https://github.com/metaplex/js/issues/59)) ([f64c5a2](https://github.com/metaplex/js/commit/f64c5a285ceaf9e0b20d12ea904b33de93fdc6b8))
+
+# [4.2.0](https://github.com/metaplex/js/compare/v4.1.0...v4.2.0) (2021-11-11)
+
+
+### Features
+
+* add instant sale action ([#57](https://github.com/metaplex/js/issues/57)) ([7011a90](https://github.com/metaplex/js/commit/7011a906e56c11382ce13e88af50a48ef25568a3))
+
+# [4.1.0](https://github.com/metaplex/js/compare/v4.0.0...v4.1.0) (2021-11-10)
+
+
+### Features
+
+* added new actions for metadata program ([#56](https://github.com/metaplex/js/issues/56)) ([a9208c9](https://github.com/metaplex/js/commit/a9208c976d32b0a64e498279a35146352432ff43))
+
+# [4.0.0](https://github.com/metaplex/js/compare/v3.5.0...v4.0.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* make getEdition a static method ([#53](https://github.com/metaplex/js/issues/53)) ([fd4ce52](https://github.com/metaplex/js/commit/fd4ce525d8816e9717d8c8ff4c0acdda5e8cfe8c))
+
+
+### BREAKING CHANGES
+
+* getEdition is now a Metadata's static method
+
+# [3.5.0](https://github.com/metaplex/js/compare/v3.4.1...v3.5.0) (2021-11-08)
+
+
+### Features
+
+* **actions:** add redeem and claim bid actions ([#55](https://github.com/metaplex/js/issues/55)) ([b4f13f3](https://github.com/metaplex/js/commit/b4f13f30292c7a6f1f2cb43d7cd4c3a002384c54))
+
+## [3.4.1](https://github.com/metaplex/js/compare/v3.4.0...v3.4.1) (2021-11-08)
+
+
+### Bug Fixes
+
+* fixed circular deps ([#54](https://github.com/metaplex/js/issues/54)) ([84a7272](https://github.com/metaplex/js/commit/84a7272349049da8fcc41d5036781ca5a77d852a))
+
+# [3.4.0](https://github.com/metaplex/js/compare/v3.3.0...v3.4.0) (2021-11-05)
+
+
+### Features
+
+* Mint NFT Action ([#51](https://github.com/metaplex/js/issues/51)) ([122d08c](https://github.com/metaplex/js/commit/122d08c0ed948dbc13740c78dc9819413c5c6527))
+
+# [3.3.0](https://github.com/metaplex/js/compare/v3.2.0...v3.3.0) (2021-11-05)
+
+
+### Features
+
+* **actions:** add place bid action  ([#52](https://github.com/metaplex/js/issues/52)) ([1db3e7d](https://github.com/metaplex/js/commit/1db3e7da6845fa03d188615e5d39fa6b38532e68))
+
 # [3.2.0](https://github.com/metaplex/js/compare/v3.1.1...v3.2.0) (2021-11-03)
 
 

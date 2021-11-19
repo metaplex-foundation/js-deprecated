@@ -1,4 +1,4 @@
-import { Borsh } from '@metaplex/utils';
+import { ParamsWithStore } from '@metaplex/types';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import {
   PublicKey,
@@ -6,84 +6,74 @@ import {
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
+import BN from 'bn.js';
 import { VaultInstructions } from '../VaultProgram';
 import { Transaction } from '../../../Transaction';
+import { NumberOfShareArgs } from '../accounts/Vault';
 import { VaultProgram } from '../VaultProgram';
 
-export class InitVaultArgs extends Borsh.Data<{ allowFurtherShareCreation: boolean }> {
-  static readonly SCHEMA = this.struct([
-    ['instruction', 'u8'],
-    ['allowFurtherShareCreation', 'u8'],
-  ]);
-
-  instruction = VaultInstructions.InitVault;
-  allowFurtherShareCreation = false;
-}
-
-type InitVaultParams = {
+type WithdrawSharesFromTreasuryParams = {
   vault: PublicKey;
+  destination: PublicKey;
+  fractionTreasury: PublicKey;
   vaultAuthority: PublicKey;
-  fractionalMint: PublicKey;
-  redeemTreasury: PublicKey;
-  fractionalTreasury: PublicKey;
-  pricingLookupAddress: PublicKey;
-  allowFurtherShareCreation: boolean;
+  transferAuthority: PublicKey;
+  numberOfShares: BN;
 };
 
-export class InitVault extends Transaction {
-  constructor(options: TransactionCtorFields, params: InitVaultParams) {
+export class WithdrawSharesFromTreasury extends Transaction {
+  constructor(
+    options: TransactionCtorFields,
+    params: ParamsWithStore<WithdrawSharesFromTreasuryParams>,
+  ) {
     super(options);
     const {
       vault,
       vaultAuthority,
-      fractionalMint,
-      redeemTreasury,
-      fractionalTreasury,
-      pricingLookupAddress,
-      allowFurtherShareCreation,
+      destination,
+      transferAuthority,
+      fractionTreasury,
+      numberOfShares,
     } = params;
 
-    const data = InitVaultArgs.serialize({ allowFurtherShareCreation });
+    const data = NumberOfShareArgs.serialize({
+      instruction: VaultInstructions.WithdrawSharesFromTreasury,
+      numberOfShares,
+    });
 
     this.add(
       new TransactionInstruction({
         keys: [
           {
-            pubkey: fractionalMint,
+            pubkey: destination,
             isSigner: false,
             isWritable: true,
           },
           {
-            pubkey: redeemTreasury,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: fractionalTreasury,
+            pubkey: fractionTreasury,
             isSigner: false,
             isWritable: true,
           },
           {
             pubkey: vault,
             isSigner: false,
-            isWritable: true,
+            isWritable: false,
+          },
+          {
+            pubkey: transferAuthority,
+            isSigner: false,
+            isWritable: false,
           },
           {
             pubkey: vaultAuthority,
             isSigner: false,
-            isWritable: false,
-          },
-          {
-            pubkey: pricingLookupAddress,
-            isSigner: false,
-            isWritable: false,
+            isWritable: true,
           },
           {
             pubkey: TOKEN_PROGRAM_ID,
             isSigner: false,
             isWritable: false,
           },
-
           {
             pubkey: SYSVAR_RENT_PUBKEY,
             isSigner: false,

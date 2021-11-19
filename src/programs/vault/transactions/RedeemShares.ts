@@ -10,46 +10,52 @@ import { VaultInstructions } from '../VaultProgram';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
 
-export class InitVaultArgs extends Borsh.Data<{ allowFurtherShareCreation: boolean }> {
-  static readonly SCHEMA = this.struct([
-    ['instruction', 'u8'],
-    ['allowFurtherShareCreation', 'u8'],
-  ]);
+export class RedeemSharesArgs extends Borsh.Data {
+  static readonly SCHEMA = this.struct([['instruction', 'u8']]);
 
-  instruction = VaultInstructions.InitVault;
-  allowFurtherShareCreation = false;
+  instruction = VaultInstructions.RedeemShares;
 }
 
-type InitVaultParams = {
-  vault: PublicKey;
-  vaultAuthority: PublicKey;
-  fractionalMint: PublicKey;
+type RedeemSharsParams = {
+  burnAuthority: PublicKey;
+  fractionMint: PublicKey;
+  outstandingSharesAccount: PublicKey;
+  proceedsAccount: PublicKey;
   redeemTreasury: PublicKey;
-  fractionalTreasury: PublicKey;
-  pricingLookupAddress: PublicKey;
-  allowFurtherShareCreation: boolean;
+  transferAuthority: PublicKey;
+  vault: PublicKey;
 };
 
-export class InitVault extends Transaction {
-  constructor(options: TransactionCtorFields, params: InitVaultParams) {
+export class RedeemShares extends Transaction {
+  constructor(options: TransactionCtorFields, params: RedeemSharsParams) {
     super(options);
     const {
       vault,
-      vaultAuthority,
-      fractionalMint,
+      burnAuthority,
+      fractionMint,
+      outstandingSharesAccount,
+      proceedsAccount,
       redeemTreasury,
-      fractionalTreasury,
-      pricingLookupAddress,
-      allowFurtherShareCreation,
+      transferAuthority,
     } = params;
 
-    const data = InitVaultArgs.serialize({ allowFurtherShareCreation });
+    const data = RedeemSharesArgs.serialize();
 
     this.add(
       new TransactionInstruction({
         keys: [
           {
-            pubkey: fractionalMint,
+            pubkey: outstandingSharesAccount,
+            isSigner: false,
+            isWritable: true,
+          },
+          {
+            pubkey: proceedsAccount,
+            isSigner: false,
+            isWritable: true,
+          },
+          {
+            pubkey: fractionMint,
             isSigner: false,
             isWritable: true,
           },
@@ -59,22 +65,18 @@ export class InitVault extends Transaction {
             isWritable: true,
           },
           {
-            pubkey: fractionalTreasury,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: vault,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: vaultAuthority,
+            pubkey: transferAuthority,
             isSigner: false,
             isWritable: false,
           },
+
           {
-            pubkey: pricingLookupAddress,
+            pubkey: burnAuthority,
+            isSigner: true,
+            isWritable: false,
+          },
+          {
+            pubkey: vault,
             isSigner: false,
             isWritable: false,
           },
@@ -83,7 +85,6 @@ export class InitVault extends Transaction {
             isSigner: false,
             isWritable: false,
           },
-
           {
             pubkey: SYSVAR_RENT_PUBKEY,
             isSigner: false,

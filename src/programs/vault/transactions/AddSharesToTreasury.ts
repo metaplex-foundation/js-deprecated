@@ -9,78 +9,56 @@ import {
 import BN from 'bn.js';
 import { VaultInstructions } from '../VaultProgram';
 import { Transaction } from '../../../Transaction';
-import { AmountArgs } from '../accounts/Vault';
+import { NumberOfShareArgs } from '../accounts/Vault';
 import { VaultProgram } from '../VaultProgram';
 
-type WithdrawTokenFromSafetyDepositBoxParams = {
+type AddSharesToTreasuryParams = {
   vault: PublicKey;
-  destination: PublicKey;
-  safetyDepositBox: PublicKey;
-  fractionMint: PublicKey;
+  source: PublicKey;
+  fractionTreasury: PublicKey;
   vaultAuthority: PublicKey;
   transferAuthority: PublicKey;
-  amount: BN;
+  numberOfShares: BN;
 };
 
-export class WithdrawTokenFromSafetyDepositBox extends Transaction {
-  constructor(
-    options: TransactionCtorFields,
-    params: ParamsWithStore<WithdrawTokenFromSafetyDepositBoxParams>,
-  ) {
+export class AddSharesToTreasury extends Transaction {
+  constructor(options: TransactionCtorFields, params: ParamsWithStore<AddSharesToTreasuryParams>) {
     super(options);
-    const {
-      vault,
-      vaultAuthority,
-      store,
-      destination,
-      fractionMint,
-      transferAuthority,
-      safetyDepositBox,
-      amount,
-    } = params;
+    const { vault, vaultAuthority, source, transferAuthority, fractionTreasury, numberOfShares } =
+      params;
 
-    const data = AmountArgs.serialize({
-      instruction: VaultInstructions.WithdrawTokenFromSafetyDepositBox,
-      amount,
+    const data = NumberOfShareArgs.serialize({
+      instruction: VaultInstructions.AddSharesToTreasury,
+      numberOfShares,
     });
 
     this.add(
       new TransactionInstruction({
         keys: [
           {
-            pubkey: destination,
+            pubkey: source,
             isSigner: false,
             isWritable: true,
           },
           {
-            pubkey: safetyDepositBox,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: store,
+            pubkey: fractionTreasury,
             isSigner: false,
             isWritable: true,
           },
           {
             pubkey: vault,
             isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: fractionMint,
-            isSigner: false,
-            isWritable: true,
-          },
-          {
-            pubkey: vaultAuthority,
-            isSigner: true,
             isWritable: false,
           },
           {
             pubkey: transferAuthority,
             isSigner: false,
             isWritable: false,
+          },
+          {
+            pubkey: vaultAuthority,
+            isSigner: false,
+            isWritable: true,
           },
           {
             pubkey: TOKEN_PROGRAM_ID,

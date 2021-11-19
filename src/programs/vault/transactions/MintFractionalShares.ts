@@ -1,3 +1,4 @@
+import { ParamsWithStore } from '@metaplex/types';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
 import BN from 'bn.js';
@@ -6,17 +7,17 @@ import { Transaction } from '../../../Transaction';
 import { NumberOfShareArgs } from '../accounts/Vault';
 import { VaultProgram } from '../VaultProgram';
 
-type ActivateVaultParams = {
+type MintFractionalSharesParams = {
   vault: PublicKey;
   fractionMint: PublicKey;
-  fractionTreasury: PublicKey;
   fractionMintAuthority: PublicKey;
+  fractionTreasury: PublicKey;
   vaultAuthority: PublicKey;
   numberOfShares: BN;
 };
 
-export class ActivateVault extends Transaction {
-  constructor(options: TransactionCtorFields, params: ActivateVaultParams) {
+export class MintFractionalShares extends Transaction {
+  constructor(options: TransactionCtorFields, params: ParamsWithStore<MintFractionalSharesParams>) {
     super(options);
     const {
       vault,
@@ -28,7 +29,7 @@ export class ActivateVault extends Transaction {
     } = params;
 
     const data = NumberOfShareArgs.serialize({
-      instruction: VaultInstructions.ActivateVault,
+      instruction: VaultInstructions.MintFractionalShares,
       numberOfShares,
     });
 
@@ -36,7 +37,7 @@ export class ActivateVault extends Transaction {
       new TransactionInstruction({
         keys: [
           {
-            pubkey: vault,
+            pubkey: fractionTreasury,
             isSigner: false,
             isWritable: true,
           },
@@ -46,9 +47,9 @@ export class ActivateVault extends Transaction {
             isWritable: true,
           },
           {
-            pubkey: fractionTreasury,
+            pubkey: vault,
             isSigner: false,
-            isWritable: true,
+            isWritable: false,
           },
           {
             pubkey: fractionMintAuthority,
@@ -57,7 +58,7 @@ export class ActivateVault extends Transaction {
           },
           {
             pubkey: vaultAuthority,
-            isSigner: true,
+            isSigner: false,
             isWritable: false,
           },
           {

@@ -10,6 +10,7 @@ import BN from 'bn.js';
 import { AmountArgs } from '../accounts/Vault';
 import { Transaction } from '../../../Transaction';
 import { VaultProgram } from '../VaultProgram';
+import { VaultInstructions } from '../VaultProgram';
 
 type AddTokenToInactiveVaultParams = {
   vault: PublicKey;
@@ -36,7 +37,10 @@ export class AddTokenToInactiveVault extends Transaction {
       amount,
     } = params;
 
-    const data = AmountArgs.serialize({ instruction: 1, amount });
+    const data = AmountArgs.serialize({
+      instruction: VaultInstructions.AddTokenToInactiveVault,
+      amount,
+    });
 
     this.add(
       new TransactionInstruction({

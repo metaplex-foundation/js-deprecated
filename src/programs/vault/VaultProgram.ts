@@ -9,6 +9,20 @@ export enum VaultKey {
   ExternalPriceAccountV1 = 2,
 }
 
+export enum VaultInstructions {
+  InitVault,
+  AddTokenToInactiveVault,
+  ActivateVault,
+  CombineVault,
+  RedeemShares,
+  WithdrawTokenFromSafetyDepositBox,
+  MintFractionalShares,
+  WithdrawSharesFromTreasury,
+  AddSharesToTreasury,
+  UpdateExternalPriceAccount,
+  SetVaultAuthority,
+}
+
 export class VaultProgram extends Program {
   static readonly PREFIX = 'vault';
   static readonly PUBKEY = new PublicKey(config.programs.vault);

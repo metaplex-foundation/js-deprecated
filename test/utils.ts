@@ -1,4 +1,4 @@
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
 
 // Devnet fee payer
 export const FEE_PAYER = Keypair.fromSecretKey(
@@ -24,3 +24,71 @@ export const PACKSET_PUBKEY = new PublicKey('AN1bTGLCLSoSTJMeBPa7KGRDF5BpbfvD7oA
 export const PACKCARD_PUBKEY = new PublicKey('BVrBhek71ZDDPQ8tYucBiEKxYmmtQLioF3eJJnhH6md4');
 export const PACKVOUCHER_PUBKEY = new PublicKey('Ah6ngnNfhzKFfMPtiK5BeQ4mF5Nzwv1bwtbAEgMYH6Dp');
 export const PROVING_PROCESS_PUBKEY = new PublicKey('HCzXvi3L1xdkFp5jafadFGzbirua9U4r4ePiXvcqH81R');
+
+export const VAULT_AUTHORITY_PUBKEY = new PublicKey('AHsj4FffgTUYUVDjwBRGmiAsJcpWxX3YXZB8qsuew79t');
+export const FRACTIONAL_MINT_PUBKEY = new PublicKey('1Qyhk9Pm1XktCN8RptQrwe9KnQLmiD7E58LpvqcnSV8');
+export const REDEEM_TREASURY_PUBKEY = new PublicKey('vkXyVgeQaivApFsUXLMcQcVK7FGzkhAyR73FJ5YGnnb');
+export const FRACTIONAL_TREASURY_PUBKEY = new PublicKey(
+  '5nxC9KnUSqr5dNQoPN7xhKfmzS48znM3zfNqcgdKYXrh',
+);
+export const PRICING_LOOKUP_ADDRESS_PUBKEY = new PublicKey(
+  '7csPZBkT87N7x7aVrALjLBeDjCs7vcymazXVxoS3fmSf',
+);
+export const FRACTION_MINT_PUBKEY = new PublicKey('BjrKGZgGL7sqv5aAUxp6ZafsWGKku9UZcMioQqASSaFB');
+export const FRACTION_TREASURY_PUBKEY = new PublicKey(
+  '3SZUEd9qtoKCyLW8uT8z25k7kZnMmwtdLQYjQAYRZHRp',
+);
+export const FRACTION_MINT_AUTHORITY_PUBKEY = new PublicKey(
+  '693Dn6MCsBYS4SkpSAXdhEvWNDooUHyF8KvvniEy4aBM',
+);
+export const TOKEN_MINT_PUBKEY = new PublicKey('8epm7eTwoEpw36QF1puxkzsRzkVp45paRXnohbPemjmK');
+export const TOKEN_ACCOUNT_PUBKEY = new PublicKey('4mpzrMQo8wgBtUHDVZLPeR9i58mbHVFNT9ef8sSzUohS');
+export const TOKEN_STORE_ACCOUNT_PUBKEY = new PublicKey(
+  'B8ZH2ndZk1ueJvu56UNThAdjGXkfs1PyC5DwupWbwfZ3',
+);
+export const TRANSFER_AUTHORITY_PUBKEY = new PublicKey(
+  '8azYDQNycrRkv2r7amatTy3dyD6RrSw3zZsJvymzWE3E',
+);
+export const SAFETY_DEPOSIT_BOX_PUBKEY = new PublicKey(
+  '7pgXQDqVpiuj7TqbJKn9bW7ipg8U2uG5kY7kXNdNiTQd',
+);
+export const OUTSTANDING_SHARE_TOKEN_ACCOUNT_PUBKEY = new PublicKey(
+  '5Q9THrE74FsopHjASfj7RLqR36RgYbKhD1shoPoDDCCZ',
+);
+export const OUTSTANDING_SHARES_ACCOUNT_PUBKEY = new PublicKey(
+  '4Q2A27cS5DihPnerndsFZ6MxSTzjzfsjuQtS2hV3VXTT',
+);
+export const BURN_AUTHORITY_PUBKEY = new PublicKey('4d4xRorridzBRApmoprSaB74Tgv4TN7TqhqfUeQB2dvw');
+export const NEW_VAULT_AUTHORITY_PUBKEY = new PublicKey(
+  'Hi4wFQcmHKioVKvsL3NeYy9gANkZF9RQ9ZvTU7FdHP9s',
+);
+export const EXTERNAL_PRICE_ACCOUNT_PUBKEY = new PublicKey(
+  '78qz3gehg9YqktdaYt6o56DSUPFQ41tLMACHpnFjdYdS',
+);
+export const PAYING_TOKEN_ACCOUNT_PUBKEY = new PublicKey(
+  '8e6FHYEx7rfv1weRKrerjwuDzVn89LSjDsfXZcvWYDYW',
+);
+export const CURRENT_AUTHORITY_PUBKEY = new PublicKey(
+  'EyBYD5b1A2xQAHJ8nUn11nHY8VrPV3Scg4mXZyjCB61f',
+);
+export const NEW_AUTHORITY_PUBKEY = new PublicKey('5jF6nAQ5GTK8rsdzW8hGCEsWjY9YCV2jXCwZ854BPsWz');
+export const RECENT_ISH_BLOCKHASH = '9qb2wMGnvBgVdp2dhJdeo5hgko9nLHxXg7GqXPgAFYCU';
+export const PROCEEDS_ACCOUNT_PUBKEY = new PublicKey(
+  'GvJVHbk8pEzHwaeHeaoUrnBbsaUcDHHRVjKqP15UcShf',
+);
+export const SOURCE_PUBKEY = new PublicKey('4CkQJBxhU8EZ2UjhigbtdaPbpTe6mqf811fipYBFbSYN');
+export const DESTINATION_PUBKEY = new PublicKey('CZXESU6tu9m4YDs2wfQFbXmjbaDtJKBgurgYzGmeoArh');
+
+export const mockTransaction: TransactionCtorFields = {
+  feePayer: new PublicKey('7J6QvJGCB22vDvYB33ikrWCXRBRsFY74ntAArSK4KJUn'),
+  recentBlockhash: RECENT_ISH_BLOCKHASH,
+};
+export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
+
+export async function pause(ms: number) {
+  await new Promise((response) =>
+    setTimeout(() => {
+      response(0);
+    }, ms),
+  );
+}

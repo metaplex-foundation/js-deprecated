@@ -13,9 +13,6 @@ export type ConversionRatePair = {
   rate: number;
 };
 
-export abstract class ConversionRateProvider {
-  getRate: (
-    from: Currency | Currency[],
-    to: Currency | Currency[],
-  ) => Promise<ConversionRatePair[]>;
+export interface ConversionRateProvider {
+  getRate(from: Currency | Currency[], to: Currency | Currency[]): Promise<ConversionRatePair[]>;
 }

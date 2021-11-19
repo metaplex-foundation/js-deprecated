@@ -12,58 +12,38 @@ import { Transaction } from '../../../Transaction';
 import { MetadataProgram } from '../../metadata';
 import { VaultProgram } from '../../vault';
 import { MetaplexProgram } from '../MetaplexProgram';
+import { ProxyCallAddress, RedeemUnusedWinningConfigItemsAsAuctioneerArgs } from './RedeemBid';
 
-export class RedeemBidArgs extends Borsh.Data {
+export class RedeemFullRightsTransferBidArgs extends Borsh.Data {
   static readonly SCHEMA = this.struct([['instruction', 'u8']]);
 
-  instruction = 2;
+  instruction = 3;
 }
 
-export enum ProxyCallAddress {
-  RedeemBid = 0,
-  RedeemFullRightsTransferBid = 1,
-}
-
-export class RedeemUnusedWinningConfigItemsAsAuctioneerArgs extends Borsh.Data<{
-  winningConfigItemIndex: number;
-  proxyCall: ProxyCallAddress;
-}> {
-  static readonly SCHEMA = this.struct([
-    ['instruction', 'u8'],
-    ['winningConfigItemIndex', 'u8'],
-    ['proxyCall', 'u8'],
-  ]);
-
-  instruction = 12;
-  winningConfigItemIndex: number;
-  proxyCall: ProxyCallAddress;
-}
-
-type RedeemBidParams = {
+type RedeemFullRightsTransferBidParams = {
   vault: PublicKey;
   auction: PublicKey;
   auctionManager: PublicKey;
   bidRedemption: PublicKey;
-  bidderMeta: PublicKey;
+  bidMetadata: PublicKey;
   safetyDepositTokenStore: PublicKey;
   destination: PublicKey;
   safetyDeposit: PublicKey;
   fractionMint: PublicKey;
   bidder: PublicKey;
-  isPrintingType: boolean;
   safetyDepositConfig: PublicKey;
   auctionExtended: PublicKey;
   transferAuthority: PublicKey;
-  masterEdition?: PublicKey;
-  reservationList?: PublicKey;
-  // If this is an auctioneer trying to reclaim a specific winning index, pass it here,
-  // and this will instead call the proxy route instead of the real one, wrapping the original
-  // redemption call in an override call that forces the winning index if the auctioneer is authorized.
+  masterMetadata: PublicKey;
+  newAuthority: PublicKey;
   auctioneerReclaimIndex?: number;
 };
 
-export class RedeemBid extends Transaction {
-  constructor(options: TransactionCtorFields, params: ParamsWithStore<RedeemBidParams>) {
+export class RedeemFullRightsTransferBid extends Transaction {
+  constructor(
+    options: TransactionCtorFields,
+    params: ParamsWithStore<RedeemFullRightsTransferBidParams>,
+  ) {
     super(options);
     const { feePayer } = options;
     const {
@@ -73,26 +53,25 @@ export class RedeemBid extends Transaction {
       auctionExtended,
       auctionManager,
       bidRedemption,
-      bidderMeta: bidMetadata,
+      bidMetadata,
       safetyDepositTokenStore,
       destination,
       safetyDeposit,
       fractionMint,
       bidder,
-      isPrintingType,
       safetyDepositConfig,
       transferAuthority,
-      masterEdition,
-      reservationList,
+      masterMetadata,
+      newAuthority,
       auctioneerReclaimIndex,
     } = params;
 
     const data = auctioneerReclaimIndex
       ? RedeemUnusedWinningConfigItemsAsAuctioneerArgs.serialize({
           winningConfigItemIndex: auctioneerReclaimIndex,
-          proxyCall: ProxyCallAddress.RedeemBid,
+          proxyCall: ProxyCallAddress.RedeemFullRightsTransferBid,
         })
-      : RedeemBidArgs.serialize();
+      : RedeemFullRightsTransferBidArgs.serialize();
 
     this.add(
       new TransactionInstruction({
@@ -183,6 +162,16 @@ export class RedeemBid extends Transaction {
             isWritable: false,
           },
           {
+            pubkey: masterMetadata,
+            isSigner: false,
+            isWritable: true,
+          },
+          {
+            pubkey: newAuthority,
+            isSigner: false,
+            isWritable: false,
+          },
+          {
             pubkey: transferAuthority,
             isSigner: false,
             isWritable: false,
@@ -197,20 +186,6 @@ export class RedeemBid extends Transaction {
             isSigner: false,
             isWritable: false,
           },
-          ...(isPrintingType && masterEdition && reservationList
-            ? [
-                {
-                  pubkey: masterEdition,
-                  isSigner: false,
-                  isWritable: true,
-                },
-                {
-                  pubkey: reservationList,
-                  isSigner: false,
-                  isWritable: true,
-                },
-              ]
-            : []),
         ],
         programId: MetaplexProgram.PUBKEY,
         data,
