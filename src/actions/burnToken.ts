@@ -12,6 +12,8 @@ interface IBurnTokenParams {
   mint: PublicKey;
   amount: number | u64;
   owner?: PublicKey;
+  // close token account after
+  close?: boolean;
 }
 
 interface IBurnTokenResponse {
@@ -25,6 +27,7 @@ export const burnToken = async ({
   mint,
   amount,
   owner,
+  close = true,
 }: IBurnTokenParams): Promise<IBurnTokenResponse> => {
   const tx = new Transaction({ feePayer: wallet.publicKey }).add(
     Token.createBurnInstruction(
@@ -36,6 +39,18 @@ export const burnToken = async ({
       amount,
     ),
   );
+
+  if (close) {
+    tx.add(
+      Token.createCloseAccountInstruction(
+        TOKEN_PROGRAM_ID,
+        token,
+        wallet.publicKey,
+        owner ?? wallet.publicKey,
+        [],
+      ),
+    );
+  }
 
   const txId = await sendTransaction({ connection, wallet, txs: [tx] });
 
