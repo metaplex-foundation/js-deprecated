@@ -24,10 +24,17 @@ export const burnToken = async ({
   token,
   mint,
   amount,
-  owner
+  owner,
 }: IBurnTokenParams): Promise<IBurnTokenResponse> => {
   const tx = new Transaction({ feePayer: wallet.publicKey }).add(
-    Token.createBurnInstruction(TOKEN_PROGRAM_ID, mint, token, owner ?? wallet.publicKey, [], amount),
+    Token.createBurnInstruction(
+      TOKEN_PROGRAM_ID,
+      mint,
+      token,
+      owner ?? wallet.publicKey,
+      [],
+      amount,
+    ),
   );
 
   const txId = await sendTransaction({ connection, wallet, txs: [tx] });
