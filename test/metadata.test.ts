@@ -23,7 +23,7 @@ describe('Metadata', () => {
       });
 
       expect(metadata[0].data.key).toBe(MetadataKey.MetadataV1);
-    });
+    }, 10000);
   });
 
   describe('Master edition', () => {
@@ -32,6 +32,6 @@ describe('Metadata', () => {
       const editions = await masterEdition.getEditions(connection);
 
       expect(editions[0].data.parent).toEqual(MASTER_EDITION_PUBKEY.toString());
-    });
+    }, 10000);
   });
 });
