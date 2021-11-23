@@ -2,6 +2,7 @@ import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/error
 import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
 import { Borsh } from '@metaplex/utils';
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import BN from 'bn.js';
 import bs58 from 'bs58';
 import { Buffer } from 'buffer';
 import { config } from '../../../config';
@@ -214,6 +215,24 @@ export class Metadata extends Account<MetadataData> {
         accountsWithAmount.map(({ mint }) => Metadata.findMany(connection, { mint })),
       )
     ).flat();
+  }
+
+  static async findDataByOwner(
+    connection: Connection,
+    owner: AnyPublicKey,
+  ): Promise<MetadataData[]> {
+    const accounts = await TokenAccount.getTokenAccountsByOwner(connection, owner);
+
+    const metadataPdaLookups = accounts.reduce((memo, { data }) => {
+      // Only include tokens where amount equal to 1.
+      // Note: This is not the same as mint supply.
+      // NFTs by definition have supply of 1, but an account balance > 1 implies a mint supply > 1.
+      return data.amount?.eq(new BN(1)) ? [...memo, Metadata.getPDA(data.mint)] : memo;
+    }, []);
+
+    const metadataAddresses = await Promise.all(metadataPdaLookups);
+    const tokenInfo = await Account.getInfos(connection, metadataAddresses);
+    return Array.from(tokenInfo.values()).map((m) => MetadataData.deserialize(m.data));
   }
 
   static async getEdition(connection: Connection, mint: AnyPublicKey) {
