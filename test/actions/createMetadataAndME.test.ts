@@ -8,8 +8,6 @@ import { createMasterEdition } from '../../src/actions/createMasterEdition';
 import BN from 'bn.js';
 import { uri } from './shared';
 
-jest.setTimeout(150000); //this one takes particularly long
-
 // NOTE: testing the two together because latter effectively requires former
 describe('creatomg metadata and master edition PDAs', () => {
   const connection = new Connection('devnet');
@@ -74,5 +72,5 @@ describe('creatomg metadata and master edition PDAs', () => {
     const editionInfo = await Account.getInfo(connection, edition);
     const deserializedEditionData = new MasterEdition(edition, editionInfo).data;
     expect(deserializedEditionData.maxSupply.toString(10)).toEqual('100');
-  });
+  }, 150000);
 });
