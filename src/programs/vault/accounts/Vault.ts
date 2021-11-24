@@ -105,6 +105,10 @@ export class VaultData extends Borsh.Data<Args> {
 }
 
 export class Vault extends Account<VaultData> {
+  static MAX_VAULT_SIZE = 1 + 32 + 32 + 32 + 32 + 1 + 32 + 1 + 32 + 1 + 1 + 8;
+  static MAX_EXTERNAL_ACCOUNT_SIZE = 1 + 8 + 32 + 1;
+  static VAULT_PREFIX = 'vault';
+
   constructor(pubkey: AnyPublicKey, info: AccountInfo<Buffer>) {
     super(pubkey, info);
 
