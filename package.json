@@ -39,6 +39,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@metaplex/arweave-cost": "^1.0.4",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.30.2",
     "@types/bs58": "^4.0.1",
@@ -65,6 +66,7 @@
     "@types/node": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.30.0",
+    "@web-std/file": "^3.0.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
