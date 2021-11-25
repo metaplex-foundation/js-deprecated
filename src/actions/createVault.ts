@@ -6,6 +6,7 @@ import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
 import { AccountLayout, MintLayout, NATIVE_MINT } from '@solana/spl-token';
 import { CreateMint, CreateTokenAccount, Transaction } from '../programs';
 import { sendTransaction } from '.';
+import { TransactionsBatch } from 'src/utils/transactions-batch';
 
 interface CreateVaultParams {
   connection: Connection;
@@ -40,6 +41,8 @@ export const createVault = async ({
 
   const vaultAuthority = await Vault.getPDA(new PublicKey(VaultProgram.PUBKEY));
 
+  const txBatch = new TransactionsBatch({ transactions: [] });
+
   const fractionalMint = Keypair.generate();
   const fractionalMintTx = new CreateMint(
     { feePayer: wallet.publicKey },
@@ -48,6 +51,8 @@ export const createVault = async ({
       lamports: mintRent,
     },
   );
+  txBatch.addTransaction(fractionalMintTx);
+  txBatch.addSigner(fractionalMint);
 
   const redeemTreasury = Keypair.generate();
   const redeemTreasuryTx = new CreateTokenAccount(
@@ -58,6 +63,8 @@ export const createVault = async ({
       mint: priceMint,
     },
   );
+  txBatch.addTransaction(redeemTreasuryTx);
+  txBatch.addSigner(redeemTreasury);
 
   const fractionTreasury = Keypair.generate();
   const fractionTreasuryTx = new CreateTokenAccount(
@@ -68,6 +75,8 @@ export const createVault = async ({
       mint: priceMint,
     },
   );
+  txBatch.addTransaction(fractionTreasuryTx);
+  txBatch.addSigner(fractionTreasury);
 
   const uninitializedVaultTx = new Transaction().add(
     SystemProgram.createAccount({
@@ -78,6 +87,7 @@ export const createVault = async ({
       programId: VaultProgram.PUBKEY,
     }),
   );
+  txBatch.addTransaction(uninitializedVaultTx);
 
   const initVaultTx = new InitVault(
     { feePayer: wallet.publicKey },
@@ -91,17 +101,12 @@ export const createVault = async ({
       allowFurtherShareCreation: true,
     },
   );
+  txBatch.addTransaction(initVaultTx);
 
   const txId = await sendTransaction({
     connection,
-    signers: [],
-    txs: [
-      fractionalMintTx,
-      redeemTreasuryTx,
-      fractionTreasuryTx,
-      uninitializedVaultTx,
-      initVaultTx,
-    ],
+    signers: txBatch.signers,
+    txs: txBatch.transactions,
     wallet,
   });
 
