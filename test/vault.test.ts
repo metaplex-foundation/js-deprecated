@@ -1,12 +1,12 @@
 import { Connection } from '../src';
-import { VAULT_PUBKEY } from './utils';
+import { NETWORK, VAULT_PUBKEY } from './utils';
 import { Vault, VaultKey } from '../src/programs/vault';
 
 describe('Vault', () => {
   let connection: Connection;
 
   beforeAll(() => {
-    connection = new Connection('devnet');
+    connection = new Connection(NETWORK);
   });
 
   describe('Vault', () => {

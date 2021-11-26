@@ -1,16 +1,16 @@
+import BN from 'bn.js';
 import { Keypair } from '@solana/web3.js';
-import { Account, Connection, NodeWallet } from '../../src';
-import { FEE_PAYER, pause } from '../utils';
-import { Creator, MasterEdition, Metadata, MetadataDataData } from '../../src/programs/metadata';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { Account, Connection, NodeWallet } from '../../src';
+import { FEE_PAYER, NETWORK, pause } from '../utils';
+import { Creator, MasterEdition, Metadata, MetadataDataData } from '../../src/programs/metadata';
 import { createMetadata } from '../../src/actions/createMetadata';
 import { createMasterEdition } from '../../src/actions/createMasterEdition';
-import BN from 'bn.js';
 import { uri } from './shared';
 
 // NOTE: testing the two together because latter effectively requires former
 describe('creatomg metadata and master edition PDAs', () => {
-  const connection = new Connection('devnet');
+  const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
   let mint: Keypair;
 

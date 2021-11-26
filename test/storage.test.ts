@@ -4,9 +4,10 @@ import * as fs from 'fs';
 import FormData from 'form-data';
 
 import { ArweaveStorage, ArweaveUploadResult, ConversionRatePair, Currency } from '../src';
+import { NETWORK } from './utils';
 
 const UPLOAD_ENDPOINT = 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
-const ENV = 'devnet';
+const ENV = NETWORK;
 
 const EXAMPLE_SUCCESSFUL_RESPONSE: ArweaveUploadResult = {
   messages: [

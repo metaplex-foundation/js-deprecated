@@ -17,7 +17,7 @@ import {
   MintTo,
   Transaction,
 } from '../../src/programs/shared';
-import { FEE_PAYER } from '../utils';
+import { FEE_PAYER, NETWORK } from '../utils';
 
 describe.skip('Metaplex transactions', () => {
   let connection: Connection;
@@ -27,7 +27,7 @@ describe.skip('Metaplex transactions', () => {
   jest.setTimeout(80000);
 
   beforeAll(() => {
-    connection = new Connection('devnet');
+    connection = new Connection(NETWORK);
     owner = Keypair.generate();
     mint = Keypair.generate();
   });

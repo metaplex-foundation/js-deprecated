@@ -4,6 +4,7 @@ import {
   AUCTION_EXTENDED_PUBKEY,
   AUCTION_MANAGER_PUBKEY,
   AUCTION_PUBKEY,
+  NETWORK,
   VAULT_PUBKEY,
 } from './utils';
 
@@ -11,7 +12,7 @@ describe('Auction', () => {
   let connection: Connection;
 
   beforeAll(() => {
-    connection = new Connection('devnet');
+    connection = new Connection(NETWORK);
   });
 
   describe('Auction', () => {
