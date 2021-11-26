@@ -16,7 +16,7 @@ import {
 } from '../../src/programs/metaplex';
 import { Auction } from '../../src/programs/auction';
 import { CreateTokenAccount, Transaction } from '../../src/programs/shared';
-import { FEE_PAYER, VAULT_PUBKEY } from '../utils';
+import { FEE_PAYER, NETWORK, VAULT_PUBKEY } from '../utils';
 
 describe.skip('Metaplex transactions', () => {
   let connection: Connection;
@@ -25,7 +25,7 @@ describe.skip('Metaplex transactions', () => {
   jest.setTimeout(80000);
 
   beforeAll(() => {
-    connection = new Connection('devnet');
+    connection = new Connection(NETWORK);
     owner = Keypair.generate();
   });
 

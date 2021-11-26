@@ -1,7 +1,7 @@
 import { Keypair } from '@solana/web3.js';
-import { Connection, NodeWallet, Wallet } from '../../src';
+import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
-import { FEE_PAYER, pause } from '../utils';
+import { FEE_PAYER, NETWORK, pause } from '../utils';
 import { MasterEdition, Metadata } from '../../src/programs/metadata';
 import { mintEditionFromMaster } from '../../src/actions/mintEditionFromMaster';
 import { mockAxios200, uri } from './shared';
@@ -10,7 +10,7 @@ jest.mock('axios');
 jest.setTimeout(100000);
 
 describe('minting a limited edition from master', () => {
-  const connection = new Connection('devnet');
+  const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
   let mint: Keypair;
 

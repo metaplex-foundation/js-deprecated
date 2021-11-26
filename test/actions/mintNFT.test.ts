@@ -1,15 +1,14 @@
 import { Keypair } from '@solana/web3.js';
-import axios from 'axios';
-import { Connection, NodeWallet, Wallet } from '../../src';
+import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
-import { FEE_PAYER } from '../utils';
+import { FEE_PAYER, NETWORK } from '../utils';
 import { MasterEdition, Metadata } from '../../src/programs/metadata';
 import { mockAxios200, mockAxios404, uri } from './shared';
 
 jest.mock('axios');
 
 describe('minting an NFT', () => {
-  const connection = new Connection('devnet');
+  const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
   let mint: Keypair;
 

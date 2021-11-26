@@ -1,5 +1,7 @@
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
 
+export const NETWORK = 'devnet';
+
 // Devnet fee payer
 export const FEE_PAYER = Keypair.fromSecretKey(
   new Uint8Array([
