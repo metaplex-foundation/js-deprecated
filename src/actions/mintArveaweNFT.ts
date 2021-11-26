@@ -40,7 +40,8 @@ export function getAssetCostInfo(files: Map<string, Buffer>) {
 }
 
 export function createFilePack(metadata: MetadataJson, WebFile = File): File {
-  const filedata = {
+ const { attributes, name, symbol, description, seller_fee_basis_points, image, external_url, properties: { files, category, creators } = metadata;
+  const filedata = { attributes: attributes?.length ? metadata.attributes : undefined, name, symbol, description, seller_fee_basis_points, image, external_url, properties: { ... } }
     animation_url: undefined,
     attributes: metadata.attributes?.length ? metadata.attributes : undefined,
 
