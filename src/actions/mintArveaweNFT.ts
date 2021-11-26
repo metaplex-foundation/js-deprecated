@@ -1,7 +1,5 @@
 import BN from 'bn.js';
-import { calculate } from '@metaplex/arweave-cost';
-import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import crypto from 'crypto';
+import { PublicKey } from '@solana/web3.js';
 import { Connection } from '../Connection';
 import { MetadataJson } from '../types';
 import { Wallet } from '../wallet';
@@ -12,6 +10,15 @@ import { Metadata, Creator, MetadataDataData, CreateMetadata } from '../programs
 import { sendTransaction } from './transactions';
 import { updateMetadata } from './updateMetadata';
 import { createMasterEdition } from './createMasterEdition';
+import { config } from '../config';
+import { getFileHash } from '../utils/crypto';
+import {
+  createFilePack,
+  getFileAndMetadataCostInfo,
+  METADATA_FILE_NAME,
+} from '../utils/arweave-cost';
+
+const EMPTY_URI = ' '.repeat(64);
 
 export enum ENftProgress {
   none,
@@ -26,92 +33,33 @@ export enum ENftProgress {
   signing_token_transaction,
 }
 
-export async function convertFile2Hash(file: File): Promise<Buffer> {
-  const hashSum = crypto.createHash('sha256');
-  const data = await file.text();
-  hashSum.update(data);
-  const hex = hashSum.digest('hex');
-  return Buffer.from(hex);
+const ARWEAVE_WALLET = new PublicKey(config.arweaveWalletForFiles);
+
+export interface IPayForFilesParams {
+  wallet: Wallet;
+  file: File;
+  metadata: MetadataJson;
 }
 
-export function getAssetCostInfo(files: Map<string, Buffer>) {
-  const sizes = Array.from(files.values()).map((f) => f.byteLength);
-  return calculate(sizes);
+export interface IPayForFilesResult {
+  files: Map<string, File>;
+  payForFilesTx: PayForFiles;
 }
-
-export function createFilePack(metadata: MetadataJson, WebFile = File): File {
- const { attributes, name, symbol, description, seller_fee_basis_points, image, external_url, properties: { files, category, creators } = metadata;
-  const filedata = { attributes: attributes?.length ? metadata.attributes : undefined, name, symbol, description, seller_fee_basis_points, image, external_url, properties: { ... } }
-    animation_url: undefined,
-    attributes: metadata.attributes?.length ? metadata.attributes : undefined,
-
-    name: metadata.name,
-    symbol: metadata.symbol,
-    description: metadata.description,
-    seller_fee_basis_points: metadata.seller_fee_basis_points,
-
-    image: metadata.image,
-    external_url: metadata.external_url,
-    properties: {
-      files: metadata.properties.files,
-      category: metadata.properties.category,
-      creators: metadata.properties.creators.map(({ address, share }) => ({
-        address,
-        share,
-      })),
-    },
-  };
-
-  return new WebFile([JSON.stringify(filedata)], 'metadata.json');
-}
-
-export async function getCostInfo(
-  file: File,
-  metadata: MetadataJson,
-  fileMetadata = createFilePack(metadata),
-) {
-  const [dataFile, dataMetadata] = await Promise.all([
-    file.arrayBuffer().then((d) => Buffer.from(d)),
-    fileMetadata.arrayBuffer().then((d) => Buffer.from(d)),
-  ]);
-  const files = new Map<string, Buffer>();
-  files.set(file.name, dataFile);
-  files.set(fileMetadata.name, dataMetadata);
-  return getAssetCostInfo(files);
-}
-export async function getCost(
-  file: File,
-  metadata: MetadataJson,
-  fileMetadata = createFilePack(metadata),
-) {
-  const calcInfo = await getCostInfo(file, metadata, fileMetadata);
-  return calcInfo.solana * LAMPORTS_PER_SOL;
-}
-
-const ARWEAVE_WALLET = new PublicKey('6FKvsq4ydWFci6nGq9ckbjYMtnmaqAoatz5c9XWjiDuS');
 
 export async function payForFiles(
-  {
-    file,
-    metadata,
-    wallet: w,
-  }: {
-    wallet: Wallet;
-    file: File;
-    metadata: MetadataJson;
-  },
-  WebFile = File,
-) {
-  const fileMetadata = createFilePack(metadata, WebFile);
+  { file, metadata, wallet: w }: IPayForFilesParams,
+  WebFile: typeof File = File,
+): Promise<IPayForFilesResult> {
+  const fileMetadata = createFilePack(metadata, METADATA_FILE_NAME, WebFile);
   const [hashFile, hashMetadata] = await Promise.all([
-    convertFile2Hash(file),
-    convertFile2Hash(fileMetadata),
+    getFileHash(file),
+    getFileHash(fileMetadata),
   ]);
   const files = new Map<string, File>();
   files.set(file.name, file);
   files.set(fileMetadata.name, fileMetadata);
 
-  const lamports = await getCost(file, metadata, fileMetadata);
+  const { lamports } = await getFileAndMetadataCostInfo(file, metadata, fileMetadata);
 
   const payForFilesTx = new PayForFiles(
     {
@@ -134,7 +82,17 @@ export interface MintArveaweNFTResponse {
   arweaveResult: ArweaveUploadResult;
 }
 
-export async function mintArveaweNFT(
+export interface IMintArweaveParams {
+  connection: Connection;
+  wallet: Wallet;
+  storage: ArweaveStorage;
+  file: File;
+  metadata: MetadataJson;
+  maxSupply: number;
+  updateProgress?: (status: ENftProgress) => void;
+}
+
+export async function mintArweaveNFT(
   {
     connection,
     wallet,
@@ -142,20 +100,12 @@ export async function mintArveaweNFT(
     metadata,
     maxSupply,
     storage,
-    progress = () => {},
-  }: {
-    connection: Connection;
-    wallet: Wallet;
-    storage: ArweaveStorage;
-    file: File;
-    metadata: MetadataJson;
-    maxSupply: number;
-    progress?: (status: ENftProgress) => void;
-  },
-  WebFile = File,
+    updateProgress = () => {},
+  }: IMintArweaveParams,
+  WebFile: typeof File = File,
 ): Promise<MintArveaweNFTResponse> {
   try {
-    progress(ENftProgress.minting);
+    updateProgress(ENftProgress.minting);
 
     const { payForFilesTx, files } = await payForFiles(
       {
@@ -175,7 +125,7 @@ export async function mintArveaweNFT(
     const metadataData = new MetadataDataData({
       name: metadata.name,
       symbol: metadata.symbol,
-      uri: ' '.repeat(64),
+      uri: EMPTY_URI,
       sellerFeeBasisPoints: metadata.seller_fee_basis_points,
       creators,
     });
@@ -191,7 +141,7 @@ export async function mintArveaweNFT(
         metadataData,
       },
     );
-    progress(ENftProgress.preparing_assets);
+    updateProgress(ENftProgress.preparing_assets);
 
     const txid = await sendTransaction({
       connection,
@@ -206,26 +156,25 @@ export async function mintArveaweNFT(
       ],
     });
 
-    progress(ENftProgress.signing_metadata_transaction);
+    updateProgress(ENftProgress.signing_metadata_transaction);
 
-    try {
-      await connection.confirmTransaction(txid, 'max');
-    } catch {}
-    progress(ENftProgress.sending_transaction_to_solana);
+    await connection.confirmTransaction(txid, 'max');
+
+    updateProgress(ENftProgress.sending_transaction_to_solana);
 
     // Force wait for max confirmations
     // await connection.confirmTransaction(txid, 'max');
     await connection.getParsedConfirmedTransaction(txid, 'confirmed');
-    progress(ENftProgress.waiting_for_initial_confirmation);
+    updateProgress(ENftProgress.waiting_for_initial_confirmation);
 
     const arweaveResult = await storage.upload(
       files as unknown as Map<string, Buffer>, // TODO: probably we need to update ArweaveStorage interface
       mint.publicKey.toBase58(),
       txid,
     );
-    progress(ENftProgress.waiting_for_final_confirmation);
+    updateProgress(ENftProgress.waiting_for_final_confirmation);
 
-    const metadataFile = arweaveResult.messages?.find((m) => m.filename === 'manifest.json');
+    const metadataFile = arweaveResult.messages?.find((m) => m.filename === METADATA_FILE_NAME);
 
     if (metadataFile?.transactionId) {
       const metadataData = new MetadataDataData({
@@ -236,7 +185,7 @@ export async function mintArveaweNFT(
         sellerFeeBasisPoints: metadata.seller_fee_basis_points,
       });
 
-      progress(ENftProgress.uploading_to_arweave);
+      updateProgress(ENftProgress.uploading_to_arweave);
 
       await updateMetadata({
         connection,
@@ -246,7 +195,7 @@ export async function mintArveaweNFT(
         newUpdateAuthority: undefined,
       });
 
-      progress(ENftProgress.updating_metadata);
+      updateProgress(ENftProgress.updating_metadata);
 
       await createMasterEdition({
         connection,
@@ -257,11 +206,11 @@ export async function mintArveaweNFT(
         maxSupply: maxSupply ? new BN(maxSupply) : undefined,
       });
 
-      progress(ENftProgress.signing_token_transaction);
+      updateProgress(ENftProgress.signing_token_transaction);
     }
     return { arweaveResult, txId: txid, mint: mint.publicKey, metadata: metadataPDA };
   } catch (err) {
-    progress(ENftProgress.none);
+    updateProgress(ENftProgress.none);
     throw err;
   }
 }

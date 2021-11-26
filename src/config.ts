@@ -1,6 +1,7 @@
 // TODO: need to be able to overwrite dynamically
 export const config = {
   arweaveWallet: 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm',
+  arweaveWalletForFiles: '6FKvsq4ydWFci6nGq9ckbjYMtnmaqAoatz5c9XWjiDuS',
   programs: {
     // Metaplex
     auction: 'auctxRXPeJoc4817jDhf4HbjnhEcr1cCXenosMhK5R8',
