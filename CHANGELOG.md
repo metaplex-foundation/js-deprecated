@@ -1,3 +1,14 @@
+# [4.4.0](https://github.com/metaplex/js/compare/v4.3.0...v4.4.0) (2021-11-26)
+
+
+### Features
+
+* add `Metadata.findDataByOwner` ([#68](https://github.com/metaplex/js/issues/68)) ([248b61b](https://github.com/metaplex/js/commit/248b61baf89a69b88f9a461e32b1cbd54a9b0a18))
+* add burn token action ([#72](https://github.com/metaplex/js/issues/72)) ([3bd2381](https://github.com/metaplex/js/commit/3bd2381f846468e2a5d309a31aef7ef639d3da84))
+* add end auction transaction ([#64](https://github.com/metaplex/js/issues/64)) ([02e7cb3](https://github.com/metaplex/js/commit/02e7cb3d43372e0ef82ba6f5f59e054588c37035))
+* expose action.shared.prepareTokenAccountAndMintTx ([#74](https://github.com/metaplex/js/issues/74)) ([546fc1c](https://github.com/metaplex/js/commit/546fc1c4cd07900f2f7b5738110f8f61adc954be))
+* refactoring coingecko + add test for translateCurrency ([#65](https://github.com/metaplex/js/issues/65)) ([0dd4b4a](https://github.com/metaplex/js/commit/0dd4b4aae26cc58e40a5e78e829e48dfca511b7c))
+
 # [4.3.0](https://github.com/metaplex/js/compare/v4.2.1...v4.3.0) (2021-11-16)
 
 
