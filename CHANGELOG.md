@@ -1,3 +1,10 @@
+## [4.4.2](https://github.com/metaplex/js/compare/v4.4.1...v4.4.2) (2021-11-29)
+
+
+### Bug Fixes
+
+* restore externalPriceAccount argument in UpdateExternalPriceAccount instruction ([#76](https://github.com/metaplex/js/issues/76)) ([823e141](https://github.com/metaplex/js/commit/823e14148f4b4630862cba0b5fdef4a7a8cb7ed6))
+
 ## [4.4.1](https://github.com/metaplex/js/compare/v4.4.0...v4.4.1) (2021-11-26)
 
 # [4.4.0](https://github.com/metaplex/js/compare/v4.3.0...v4.4.0) (2021-11-26)
