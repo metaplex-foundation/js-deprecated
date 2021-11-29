@@ -42,7 +42,7 @@ import {
   WithdrawTokenFromSafetyDepositBox,
 } from '../../src/programs/vault/transactions';
 import BN from 'bn.js';
-import { VaultKey } from '../../src/programs/vault';
+import { ExternalPriceAccountData } from '../../src/programs/vault';
 
 describe('Vault transactions', () => {
   test('InitVault', async () => {
@@ -168,12 +168,11 @@ describe('Vault transactions', () => {
   test('UpdateExternalPriceAccount', async () => {
     const data = new UpdateExternalPriceAccount(mockTransaction, {
       externalPriceAccount: EXTERNAL_PRICE_ACCOUNT_PUBKEY,
-      externalPriceAccountData: {
+      externalPriceAccountData: new ExternalPriceAccountData({
         allowedToCombine: false,
-        key: VaultKey.ExternalPriceAccountV1,
         priceMint: '5nxC9KnUSqr5dNQoPN7xhKfmzS48znM3zfNqcgdKYXrh',
         pricePerShare: new BN(1),
-      },
+      }),
       store: STORE_PUBKEY,
     });
 
