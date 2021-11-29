@@ -1,10 +1,10 @@
 import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
-import { ActivateVault, CombineVault, InitVault, Vault, VaultProgram } from 'src/programs/vault';
-import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
-import { AccountLayout, MintLayout, NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { CreateMint, CreateTokenAccount, Transaction } from '../programs';
+import { ActivateVault, CombineVault, Vault, VaultProgram } from 'src/programs/vault';
+import { Keypair, PublicKey } from '@solana/web3.js';
+import { AccountLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { CreateTokenAccount, Transaction } from '../programs';
 import { sendTransaction } from '.';
 import BN from 'bn.js';
 import { TransactionsBatch } from 'src/utils/transactions-batch';
