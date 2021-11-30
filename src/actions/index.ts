@@ -2,6 +2,7 @@ export * from './transactions';
 export * from './initStore';
 export * from './mintNFT';
 export * from './mintEditionFromMaster';
+export * from './createVault';
 export * from './createMetadata';
 export * from './createMasterEdition';
 export * from './signMetadata';
