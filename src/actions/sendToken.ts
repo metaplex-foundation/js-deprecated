@@ -37,29 +37,25 @@ export const sendToken = async ({
     mint,
     destination,
   );
+  const transactionCtorFields = {
+    feePayer: wallet.publicKey,
+  };
 
   try {
     // check if the account exists
     await Account.load(connection, destAta);
   } catch {
     txs.push(
-      new CreateAssociatedTokenAccount(
-        {
-          feePayer: wallet.publicKey,
-        },
-        {
-          associatedTokenAddress: destAta,
-          splTokenMintAddress: mint,
-          walletAddress: destination,
-        },
-      ),
+      new CreateAssociatedTokenAccount(transactionCtorFields, {
+        associatedTokenAddress: destAta,
+        splTokenMintAddress: mint,
+        walletAddress: destination,
+      }),
     );
   }
 
   txs.push(
-    new Transaction({
-      feePayer: wallet.publicKey,
-    }).add(
+    new Transaction(transactionCtorFields).add(
       Token.createTransferInstruction(
         TOKEN_PROGRAM_ID,
         source,
