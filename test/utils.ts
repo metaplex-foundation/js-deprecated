@@ -81,6 +81,10 @@ export const PROCEEDS_ACCOUNT_PUBKEY = new PublicKey(
 export const SOURCE_PUBKEY = new PublicKey('4CkQJBxhU8EZ2UjhigbtdaPbpTe6mqf811fipYBFbSYN');
 export const DESTINATION_PUBKEY = new PublicKey('CZXESU6tu9m4YDs2wfQFbXmjbaDtJKBgurgYzGmeoArh');
 
+export const VAULT_EXTENRNAL_PRICE_ACCOUNT = new PublicKey(
+  '4FB1P1tewZsXq7FbrSDqkQw319FfWMA4Go2DG3Rdt39K',
+);
+
 export const mockTransaction: TransactionCtorFields = {
   feePayer: new PublicKey('7J6QvJGCB22vDvYB33ikrWCXRBRsFY74ntAArSK4KJUn'),
   recentBlockhash: RECENT_ISH_BLOCKHASH,

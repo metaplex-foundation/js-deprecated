@@ -18,7 +18,7 @@ interface CreateVaultParams {
 interface CreateVaultResponse {
   txId;
   vault: PublicKey;
-  fractionalMint: PublicKey;
+  fractionMint: PublicKey;
   redeemTreasury: PublicKey;
   fractionTreasury: PublicKey;
 }
@@ -39,22 +39,22 @@ export const createVault = async ({
 
   const vault = Keypair.generate();
 
-  const vaultAuthority = await Vault.getPDA(new PublicKey(VaultProgram.PUBKEY));
+  const vaultAuthority = await Vault.getPDA(vault.publicKey);
 
   const txBatch = new TransactionsBatch({ transactions: [] });
 
-  const fractionalMint = Keypair.generate();
-  const fractionalMintTx = new CreateMint(
+  const fractionMint = Keypair.generate();
+  const fractionMintTx = new CreateMint(
     { feePayer: wallet.publicKey },
     {
-      newAccountPubkey: fractionalMint.publicKey,
+      newAccountPubkey: fractionMint.publicKey,
       lamports: mintRent,
       owner: vaultAuthority,
       freezeAuthority: vaultAuthority,
     },
   );
-  txBatch.addTransaction(fractionalMintTx);
-  txBatch.addSigner(fractionalMint);
+  txBatch.addTransaction(fractionMintTx);
+  txBatch.addSigner(fractionMint);
 
   const redeemTreasury = Keypair.generate();
   const redeemTreasuryTx = new CreateTokenAccount(
@@ -75,7 +75,7 @@ export const createVault = async ({
     {
       newAccountPubkey: fractionTreasury.publicKey,
       lamports: accountRent,
-      mint: priceMint,
+      mint: fractionMint.publicKey,
       owner: vaultAuthority,
     },
   );
@@ -92,6 +92,7 @@ export const createVault = async ({
     }),
   );
   txBatch.addTransaction(uninitializedVaultTx);
+  txBatch.addSigner(vault);
 
   const initVaultTx = new InitVault(
     { feePayer: wallet.publicKey },
@@ -101,12 +102,11 @@ export const createVault = async ({
       fractionalTreasury: fractionTreasury.publicKey,
       pricingLookupAddress: externalPriceAccount,
       redeemTreasury: redeemTreasury.publicKey,
-      fractionalMint: fractionalMint.publicKey,
+      fractionalMint: fractionMint.publicKey,
       allowFurtherShareCreation: true,
     },
   );
   txBatch.addTransaction(initVaultTx);
-  txBatch.addSigner(vault);
 
   const txId = await sendTransaction({
     connection,
@@ -118,7 +118,7 @@ export const createVault = async ({
   return {
     txId,
     vault: vault.publicKey,
-    fractionalMint: fractionalMint.publicKey,
+    fractionMint: fractionMint.publicKey,
     redeemTreasury: redeemTreasury.publicKey,
     fractionTreasury: fractionTreasury.publicKey,
   };

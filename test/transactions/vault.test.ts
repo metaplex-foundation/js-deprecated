@@ -43,6 +43,7 @@ import {
 } from '../../src/programs/vault/transactions';
 import BN from 'bn.js';
 import { VaultKey } from '../../src/programs/vault';
+import { NATIVE_MINT } from '@solana/spl-token';
 
 describe('Vault transactions', () => {
   test('InitVault', async () => {
@@ -171,7 +172,7 @@ describe('Vault transactions', () => {
       externalPriceAccountData: {
         allowedToCombine: false,
         key: VaultKey.ExternalPriceAccountV1,
-        priceMint: '5nxC9KnUSqr5dNQoPN7xhKfmzS48znM3zfNqcgdKYXrh',
+        priceMint: NATIVE_MINT.toString(),
         pricePerShare: new BN(1),
       },
       store: STORE_PUBKEY,
