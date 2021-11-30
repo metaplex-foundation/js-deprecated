@@ -14,4 +14,5 @@ export * from './redeemBid';
 export * from './claimBid';
 export * from './instantSale';
 export * from './burnToken';
+export * from './setVaultAndAuctionAuthorities';
 export * from './shared';

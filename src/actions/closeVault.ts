@@ -1,13 +1,13 @@
 import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
-import { ActivateVault, CombineVault, Vault, VaultProgram } from 'src/programs/vault';
+import { ActivateVault, CombineVault, Vault, VaultProgram } from '../programs/vault';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { AccountLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { CreateTokenAccount, Transaction } from '../programs';
 import { sendTransaction } from '.';
 import BN from 'bn.js';
-import { TransactionsBatch } from 'src/utils/transactions-batch';
+import { TransactionsBatch } from '../utils/transactions-batch';
 
 interface CloseVaultParams {
   connection: Connection;

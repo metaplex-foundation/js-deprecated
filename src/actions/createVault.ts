@@ -1,12 +1,12 @@
 import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
-import { InitVault, Vault, VaultProgram } from 'src/programs/vault';
+import { InitVault, Vault, VaultProgram } from '../programs/vault';
 import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
 import { AccountLayout, MintLayout, NATIVE_MINT } from '@solana/spl-token';
 import { CreateMint, CreateTokenAccount, Transaction } from '../programs';
 import { sendTransaction } from '.';
-import { TransactionsBatch } from 'src/utils/transactions-batch';
+import { TransactionsBatch } from '../utils/transactions-batch';
 
 interface CreateVaultParams {
   connection: Connection;
@@ -49,6 +49,8 @@ export const createVault = async ({
     {
       newAccountPubkey: fractionalMint.publicKey,
       lamports: mintRent,
+      owner: vaultAuthority,
+      freezeAuthority: vaultAuthority,
     },
   );
   txBatch.addTransaction(fractionalMintTx);
@@ -61,6 +63,7 @@ export const createVault = async ({
       newAccountPubkey: redeemTreasury.publicKey,
       lamports: accountRent,
       mint: priceMint,
+      owner: vaultAuthority,
     },
   );
   txBatch.addTransaction(redeemTreasuryTx);
@@ -73,6 +76,7 @@ export const createVault = async ({
       newAccountPubkey: fractionTreasury.publicKey,
       lamports: accountRent,
       mint: priceMint,
+      owner: vaultAuthority,
     },
   );
   txBatch.addTransaction(fractionTreasuryTx);
@@ -93,7 +97,7 @@ export const createVault = async ({
     { feePayer: wallet.publicKey },
     {
       vault: vault.publicKey,
-      vaultAuthority: vaultAuthority,
+      vaultAuthority: wallet.publicKey,
       fractionalTreasury: fractionTreasury.publicKey,
       pricingLookupAddress: externalPriceAccount,
       redeemTreasury: redeemTreasury.publicKey,
@@ -102,6 +106,7 @@ export const createVault = async ({
     },
   );
   txBatch.addTransaction(initVaultTx);
+  txBatch.addSigner(vault);
 
   const txId = await sendTransaction({
     connection,

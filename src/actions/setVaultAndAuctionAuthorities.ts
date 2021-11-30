@@ -1,11 +1,11 @@
 import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
-import { SetVaultAuthority } from 'src/programs/vault';
+import { SetVaultAuthority } from '../programs/vault';
 import { PublicKey } from '@solana/web3.js';
 import { sendTransaction } from '.';
-import { TransactionsBatch } from 'src/utils/transactions-batch';
-import { SetAuctionAuthority } from 'src/programs/auction';
+import { TransactionsBatch } from '../utils/transactions-batch';
+import { SetAuctionAuthority } from '../programs/auction';
 
 interface SetVaultAndAuctionAuthoritiesParams {
   connection: Connection;
