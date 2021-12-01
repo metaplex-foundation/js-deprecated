@@ -1,3 +1,11 @@
+# [4.5.0](https://github.com/metaplex/js/compare/v4.4.2...v4.5.0) (2021-12-01)
+
+
+### Features
+
+* add send token action ([#81](https://github.com/metaplex/js/issues/81)) ([b5f9d7c](https://github.com/metaplex/js/commit/b5f9d7c0e46e9a8b0891c147540cac5dfdbe2e82))
+* create vault + test ([#82](https://github.com/metaplex/js/issues/82)) ([c9d5524](https://github.com/metaplex/js/commit/c9d5524dd63f1826dbca584fdb408db9cab1e0a1))
+
 ## [4.4.2](https://github.com/metaplex/js/compare/v4.4.1...v4.4.2) (2021-11-29)
 
 
