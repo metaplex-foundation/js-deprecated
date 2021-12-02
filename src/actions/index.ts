@@ -4,6 +4,7 @@ export * from './mintNFT';
 export * from './mintEditionFromMaster';
 export * from './closeVault';
 export * from './createVault';
+export * from './createExternalPriceAccount';
 export * from './createMetadata';
 export * from './createMasterEdition';
 export * from './signMetadata';
