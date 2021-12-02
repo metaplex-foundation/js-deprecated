@@ -11,7 +11,7 @@ import BN from 'bn.js';
 import { AuctionProgram } from '../AuctionProgram';
 import { Transaction } from '../../../Transaction';
 import { PriceFloor } from '../accounts/Auction';
-import { Args as CreateAuctionArgsType, CreateAuctionArgs, WinnerLimit } from './CreateAuction';
+import { Args as CreateAuctionArgsType, WinnerLimit } from './CreateAuction';
 
 type Args = CreateAuctionArgsType & {
   instantSalePrice: BN | null;
@@ -33,6 +33,8 @@ export class CreateAuctionV2Args extends Borsh.Data<Args> {
       ['priceFloor', PriceFloor],
       ['tickSize', { kind: 'option', type: 'u64' }],
       ['gapTickSizePercentage', { kind: 'option', type: 'u8' }],
+      ['instantSalePrice', { kind: 'option', type: 'u64' }],
+      ['name', { kind: 'option', type: [32] }],
     ]),
   ]);
 
