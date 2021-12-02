@@ -35,7 +35,6 @@ type RedeemPrintingV2BidParams = {
   safetyDepositTokenStore: PublicKey;
   destination: PublicKey;
   safetyDeposit: PublicKey;
-  fractionMint: PublicKey;
   bidder: PublicKey;
   safetyDepositConfig: PublicKey;
   auctionExtended: PublicKey;
@@ -46,6 +45,8 @@ type RedeemPrintingV2BidParams = {
   masterEdition: PublicKey;
   newMint: PublicKey;
   editionMark: PublicKey;
+  winIndex: BN;
+  editionOffset: BN;
 };
 
 export class RedeemPrintingV2Bid extends Transaction {
@@ -72,9 +73,11 @@ export class RedeemPrintingV2Bid extends Transaction {
       masterEdition,
       newMint,
       editionMark,
+      winIndex,
+      editionOffset,
     } = params;
 
-    const data = RedeemPrintingV2BidArgs.serialize();
+    const data = RedeemPrintingV2BidArgs.serialize({ winIndex, editionOffset });
 
     this.add(
       new TransactionInstruction({
@@ -172,17 +175,17 @@ export class RedeemPrintingV2Bid extends Transaction {
           {
             pubkey: newMetadata,
             isSigner: false,
-            isWritable: false,
+            isWritable: true,
           },
           {
             pubkey: newEdition,
             isSigner: false,
-            isWritable: false,
+            isWritable: true,
           },
           {
             pubkey: masterEdition,
             isSigner: false,
-            isWritable: false,
+            isWritable: true,
           },
           {
             pubkey: newMint,
