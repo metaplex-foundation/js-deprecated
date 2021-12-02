@@ -8,9 +8,6 @@ describe('closing a Vault', () => {
   const connection = new Connection('devnet');
   const wallet = new NodeWallet(FEE_PAYER);
 
-  // console.log(FEE_PAYER.publicKey.toString());
-  jest.setTimeout(60000);
-
   describe('success', () => {
     test('closes vault', async () => {
       let vault;
@@ -24,7 +21,7 @@ describe('closing a Vault', () => {
       await pause(20000);
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
-      expect(vault.data.state).toEqual(VaultState.Active);
+      expect(vault.data.state).toEqual(VaultState.Inactive);
 
       await closeVault({
         connection,
@@ -39,6 +36,6 @@ describe('closing a Vault', () => {
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
       expect(vault.data.state).toEqual(VaultState.Combined);
-    });
+    }, 60000);
   });
 });

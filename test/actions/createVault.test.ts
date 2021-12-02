@@ -8,8 +8,6 @@ describe('creating a Vault', () => {
   const connection = new Connection('devnet');
   const wallet = new NodeWallet(FEE_PAYER);
 
-  jest.setTimeout(30000);
-
   describe('success', () => {
     test('generates vault', async () => {
       const vaultResponse = await createVault({
@@ -22,7 +20,7 @@ describe('creating a Vault', () => {
       await pause(20000);
       const vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
-      expect(vault.data.state).toEqual(VaultState.Active);
-    });
+      expect(vault.data.state).toEqual(VaultState.Inactive);
+    }, 30000);
   });
 });
