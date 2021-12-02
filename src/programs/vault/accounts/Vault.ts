@@ -15,7 +15,7 @@ export class AmountArgs extends Borsh.Data<{
 }> {
   static readonly SCHEMA = this.struct([
     ['instruction', 'u8'],
-    ['amount', 'u8'],
+    ['amount', 'u64'],
   ]);
 
   instruction: number;
