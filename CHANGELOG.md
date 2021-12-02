@@ -1,3 +1,10 @@
+## [4.5.1](https://github.com/metaplex/js/compare/v4.5.0...v4.5.1) (2021-12-02)
+
+
+### Bug Fixes
+
+* vault scheme ([#87](https://github.com/metaplex/js/issues/87)) ([5194774](https://github.com/metaplex/js/commit/519477484a5e05d7c7f7a9cd44a3556d3d0825c9))
+
 # [4.5.0](https://github.com/metaplex/js/compare/v4.4.2...v4.5.0) (2021-12-01)
 
 
