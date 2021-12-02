@@ -26,9 +26,8 @@ describe('closing a Vault', () => {
       await closeVault({
         connection,
         wallet,
-        ...vaultResponse,
+        vault: vaultResponse.vault,
         priceMint: NATIVE_MINT,
-        externalPriceAccount: VAULT_EXTENRNAL_PRICE_ACCOUNT,
       });
 
       await pause(20000);

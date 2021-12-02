@@ -13,11 +13,7 @@ interface CloseVaultParams {
   connection: Connection;
   wallet: Wallet;
   vault: PublicKey;
-  fractionMint: PublicKey;
-  fractionTreasury: PublicKey;
-  redeemTreasury: PublicKey;
   priceMint: PublicKey;
-  externalPriceAccount: PublicKey;
 }
 
 interface CloseVaultResponse {
@@ -30,11 +26,7 @@ export const closeVault = async ({
   connection,
   wallet,
   vault,
-  fractionMint,
-  fractionTreasury,
-  redeemTreasury,
   priceMint,
-  externalPriceAccount,
 }: CloseVaultParams): Promise<CloseVaultResponse> => {
   const accountRent = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
 
@@ -44,11 +36,20 @@ export const closeVault = async ({
 
   const txOptions = { feePayer: wallet.publicKey };
 
+  const {
+    data: { fractionMint, fractionTreasury, redeemTreasury, pricingLookupAddress },
+  } = await Vault.load(connection, vault);
+
+  const fractionMintKey = new PublicKey(fractionMint);
+  const fractionTreasuryKey = new PublicKey(fractionTreasury);
+  const redeemTreasuryKey = new PublicKey(redeemTreasury);
+  const pricingLookupAddressKey = new PublicKey(pricingLookupAddress);
+
   const activateVaultTx = new ActivateVault(txOptions, {
     vault,
     numberOfShares: new BN(0),
-    fractionMint,
-    fractionTreasury,
+    fractionMint: fractionMintKey,
+    fractionTreasury: fractionTreasuryKey,
     fractionMintAuthority,
     vaultAuthority: wallet.publicKey,
   });
@@ -58,7 +59,7 @@ export const closeVault = async ({
   const outstandingShareAccountTx = new CreateTokenAccount(txOptions, {
     newAccountPubkey: outstandingShareAccount.publicKey,
     lamports: accountRent,
-    mint: fractionMint,
+    mint: fractionMintKey,
     owner: wallet.publicKey,
   });
   txBatch.addTransaction(outstandingShareAccountTx);
@@ -96,11 +97,11 @@ export const closeVault = async ({
     vault,
     outstandingShareTokenAccount: outstandingShareAccount.publicKey,
     payingTokenAccount: payingTokenAccount.publicKey,
-    fractionMint,
-    fractionTreasury,
-    redeemTreasury,
+    fractionMint: fractionMintKey,
+    fractionTreasury: fractionTreasuryKey,
+    redeemTreasury: redeemTreasuryKey,
     burnAuthority: fractionMintAuthority,
-    externalPriceAccount,
+    externalPriceAccount: pricingLookupAddressKey,
     transferAuthority: transferAuthority.publicKey,
     vaultAuthority: wallet.publicKey,
     newVaultAuthority: wallet.publicKey,
