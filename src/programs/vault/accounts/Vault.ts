@@ -15,7 +15,7 @@ export class AmountArgs extends Borsh.Data<{
 }> {
   static readonly SCHEMA = this.struct([
     ['instruction', 'u8'],
-    ['amount', 'u8'],
+    ['amount', 'u64'],
   ]);
 
   instruction: number;
@@ -28,7 +28,7 @@ export class NumberOfShareArgs extends Borsh.Data<{
 }> {
   static readonly SCHEMA = this.struct([
     ['instruction', 'u8'],
-    ['numberOfShares', 'u8'],
+    ['numberOfShares', 'u64'],
   ]);
 
   instruction: number;
