@@ -21,7 +21,6 @@ import {
   SOURCE_PUBKEY,
   STORE_PUBKEY,
   TOKEN_ACCOUNT_PUBKEY,
-  TOKEN_MINT_PUBKEY,
   TOKEN_STORE_ACCOUNT_PUBKEY,
   TRANSFER_AUTHORITY_PUBKEY,
   VAULT_AUTHORITY_PUBKEY,
@@ -78,7 +77,6 @@ describe('Vault transactions', () => {
     const data = new AddTokenToInactiveVault(mockTransaction, {
       vault: VAULT_PUBKEY,
       vaultAuthority: VAULT_AUTHORITY_PUBKEY,
-      tokenMint: TOKEN_MINT_PUBKEY,
       tokenAccount: TOKEN_ACCOUNT_PUBKEY,
       tokenStoreAccount: TOKEN_STORE_ACCOUNT_PUBKEY,
       transferAuthority: TRANSFER_AUTHORITY_PUBKEY,
