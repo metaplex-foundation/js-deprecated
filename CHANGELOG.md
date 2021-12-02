@@ -1,3 +1,15 @@
+# [4.6.0](https://github.com/metaplex/js/compare/v4.5.1...v4.6.0) (2021-12-02)
+
+
+### Bug Fixes
+
+* createAuctionV2 scheme ([#88](https://github.com/metaplex/js/issues/88)) ([ac808ad](https://github.com/metaplex/js/commit/ac808ad5be123db9a6b62687b3acd867d07f85fa))
+
+
+### Features
+
+* close vault action ([#86](https://github.com/metaplex/js/issues/86)) ([e2f8c43](https://github.com/metaplex/js/commit/e2f8c43fa396d4cb7ecec27cac26547bd59580e5))
+
 ## [4.5.1](https://github.com/metaplex/js/compare/v4.5.0...v4.5.1) (2021-12-02)
 
 
