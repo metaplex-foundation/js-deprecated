@@ -1,11 +1,11 @@
 import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
-import { ActivateVault, CombineVault, Vault, VaultProgram } from '../programs/vault';
+import { ActivateVault, CombineVault, Vault } from '../programs/vault';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { AccountLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { CreateTokenAccount, Transaction } from '../programs';
-import { sendTransaction } from '.';
+import { sendTransaction } from '../actions/transactions';
 import BN from 'bn.js';
 import { TransactionsBatch } from '../utils/transactions-batch';
 
@@ -76,7 +76,7 @@ export const closeVault = async ({
 
   const transferAuthority = Keypair.generate();
 
-  const createApproveTx = (account) =>
+  const createApproveTx = (account: Keypair) =>
     new Transaction().add(
       Token.createApproveInstruction(
         TOKEN_PROGRAM_ID,

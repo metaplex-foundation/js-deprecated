@@ -2,10 +2,7 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { Connection, NodeWallet } from '../../src';
 import { createVault } from '../../src/actions';
 import { FEE_PAYER, pause, VAULT_EXTENRNAL_PRICE_ACCOUNT } from '../utils';
-import { mockAxios200 } from './shared';
-import { Vault } from '../../src/programs/vault';
-
-jest.mock('axios');
+import { Vault, VaultState } from '../../src/programs/vault';
 
 describe('creating a Vault', () => {
   const connection = new Connection('devnet');
@@ -14,10 +11,6 @@ describe('creating a Vault', () => {
   jest.setTimeout(30000);
 
   describe('success', () => {
-    beforeEach(() => {
-      mockAxios200(wallet);
-    });
-
     test('generates vault', async () => {
       const vaultResponse = await createVault({
         connection,
@@ -29,7 +22,7 @@ describe('creating a Vault', () => {
       await pause(20000);
       const vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
-      expect(vault.data.state).toEqual(0);
+      expect(vault.data.state).toEqual(VaultState.Active);
     });
   });
 });

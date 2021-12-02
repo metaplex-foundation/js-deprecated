@@ -2,10 +2,7 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { Connection, NodeWallet } from '../../src';
 import { createVault, closeVault } from '../../src/actions';
 import { FEE_PAYER, pause, VAULT_EXTENRNAL_PRICE_ACCOUNT } from '../utils';
-import { mockAxios200 } from './shared';
-import { Vault } from '../../src/programs/vault';
-
-jest.mock('axios');
+import { Vault, VaultState } from '../../src/programs/vault';
 
 describe('closing a Vault', () => {
   const connection = new Connection('devnet');
@@ -15,10 +12,6 @@ describe('closing a Vault', () => {
   jest.setTimeout(60000);
 
   describe('success', () => {
-    beforeEach(() => {
-      mockAxios200(wallet);
-    });
-
     test('closes vault', async () => {
       let vault;
       const vaultResponse = await createVault({
@@ -31,9 +24,9 @@ describe('closing a Vault', () => {
       await pause(20000);
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
-      expect(vault.data.state).toEqual(0);
+      expect(vault.data.state).toEqual(VaultState.Active);
 
-      closeVault({
+      await closeVault({
         connection,
         wallet,
         ...vaultResponse,
@@ -45,7 +38,7 @@ describe('closing a Vault', () => {
 
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
-      expect(vault.data.state).toEqual(2);
+      expect(vault.data.state).toEqual(VaultState.Combined);
     });
   });
 });
