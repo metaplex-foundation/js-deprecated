@@ -1,15 +1,16 @@
 import { NATIVE_MINT } from '@solana/spl-token';
 import { Connection, NodeWallet } from '../../src';
-import { createVault } from '../../src/actions';
+import { createVault, closeVault } from '../../src/actions';
 import { FEE_PAYER, pause, VAULT_EXTENRNAL_PRICE_ACCOUNT } from '../utils';
 import { Vault, VaultState } from '../../src/programs/vault';
 
-describe('creating a Vault', () => {
+describe('closing a Vault', () => {
   const connection = new Connection('devnet');
   const wallet = new NodeWallet(FEE_PAYER);
 
   describe('success', () => {
-    test('generates vault', async () => {
+    test('closes vault', async () => {
+      let vault;
       const vaultResponse = await createVault({
         connection,
         wallet,
@@ -18,9 +19,22 @@ describe('creating a Vault', () => {
       });
 
       await pause(20000);
-      const vault = await Vault.load(connection, vaultResponse.vault);
+      vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
       expect(vault.data.state).toEqual(VaultState.Inactive);
-    }, 30000);
+
+      await closeVault({
+        connection,
+        wallet,
+        vault: vaultResponse.vault,
+        priceMint: NATIVE_MINT,
+      });
+
+      await pause(20000);
+
+      vault = await Vault.load(connection, vaultResponse.vault);
+      expect(vault).toHaveProperty('data');
+      expect(vault.data.state).toEqual(VaultState.Combined);
+    }, 60000);
   });
 });

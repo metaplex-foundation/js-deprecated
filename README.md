@@ -134,19 +134,24 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [x] Safety Deposit Box
       - [x] Vault
       - [x] External Price
-    - [ ] Instructions
+    - [x] Instructions
       - [x] InitVault
       - [x] AddTokenToInactiveVault
       - [x] ActivateVault
       - [x] CombineVault
-      - [ ] RedeemShares
+      - [x] RedeemShares
       - [x] WithdrawTokenFromSafetyDepositBox
-      - [ ] MintFractionalShares
-      - [ ] WithdrawSharesFromTreasury
-      - [ ] AddSharesToTreasury
+      - [x] MintFractionalShares
+      - [x] WithdrawSharesFromTreasury
+      - [x] AddSharesToTreasury
       - [x] UpdateExternalPriceAccount
       - [x] SetAuthority
     - [ ] Actions
+      - [x] CreateVault
+      - [x] CloseVault
+      - [ ] AddTokensToVault
+      - [ ] SetVaultAndAuctionAuthorities
+      - [ ] UnwindVault
   - [ ] Candy Machine
     - [ ] Accounts
       - [ ] Candy Machine

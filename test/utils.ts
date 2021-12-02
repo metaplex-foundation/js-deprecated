@@ -82,7 +82,7 @@ export const SOURCE_PUBKEY = new PublicKey('4CkQJBxhU8EZ2UjhigbtdaPbpTe6mqf811fi
 export const DESTINATION_PUBKEY = new PublicKey('CZXESU6tu9m4YDs2wfQFbXmjbaDtJKBgurgYzGmeoArh');
 
 export const VAULT_EXTENRNAL_PRICE_ACCOUNT = new PublicKey(
-  '4FB1P1tewZsXq7FbrSDqkQw319FfWMA4Go2DG3Rdt39K',
+  '58S2MNcuS79ncBc5xi1T8jdS98jcXJbXqM5UvGvgmwcr',
 );
 
 export const mockTransaction: TransactionCtorFields = {
