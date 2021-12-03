@@ -234,7 +234,7 @@ export const getRedeemPrintingV2BidTransactions = async ({
 };
 
 export function getEditionOffset(winIndex: number) {
-  let offset = new BN(1);
+  const offset = new BN(1);
   // NOTE: not sure if this the right way to calculate it
   return offset.add(new BN(winIndex));
 }

@@ -85,6 +85,15 @@ export const mockTransaction: TransactionCtorFields = {
   feePayer: new PublicKey('7J6QvJGCB22vDvYB33ikrWCXRBRsFY74ntAArSK4KJUn'),
   recentBlockhash: RECENT_ISH_BLOCKHASH,
 };
+export const BID_METADATA_PUBKEY = new PublicKey('CZkFeERacU42qjGTPyjamS13fNtz7y1wYLu5jyLpN1WL');
+export const BID_REDEMPTION_PUBKEY = new PublicKey('4CkQJBxhU8EZ1UjhfgbtdaPbpTe6mqf811fipYBFbSYN');
+export const SAFETY_DEPOSIT_TOKEN_STORE_PUBKEY = new PublicKey('4CkQJBxhU8EZ1UjhfgbtdaPbpTe6mqf811fipYBFbSNM');
+export const SAFETY_DEPOSIT_CONFIG_PUBKEY = new PublicKey('4CkBUBxhU8EZ1UjhfgbtdaPbpTe6mqf811fipYBFbSNM');
+export const NEW_EDITION_PUBKEY = new PublicKey('4CkBUBxhU8EZ1UjhfgbtdaPbpTe6mqf822fipYBFbSNM');
+export const NEW_METADATA_PUBKEY = new PublicKey('5jF6nAQ5GTK8rsdzW8hGCEsWjY9YCV2jXCwZ111BPsWz');
+export const EDITION_MARK_PUBKEY = new PublicKey('78qz3gehg9YqktdaYt6o71DSUPFQ41tLMACHpnFjdYdS');
+export const PRIZE_TRACKING_TICKET_PUBKEY = new PublicKey('78qz3gehg9YqktdaYt6o99DSUPFQ41tLMACHpnFjdYdS');
+
 export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
 
 export async function pause(ms: number) {
