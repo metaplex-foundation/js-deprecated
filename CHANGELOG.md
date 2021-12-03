@@ -1,3 +1,10 @@
+# [4.7.0](https://github.com/metaplex/js/compare/v4.6.0...v4.7.0) (2021-12-03)
+
+
+### Features
+
+* create external pricing account action ([#89](https://github.com/metaplex/js/issues/89)) ([5d16fc7](https://github.com/metaplex/js/commit/5d16fc71bb0630ef06e01e25652808d285ac85f7))
+
 # [4.6.0](https://github.com/metaplex/js/compare/v4.5.1...v4.6.0) (2021-12-02)
 
 
