@@ -149,6 +149,7 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
     - [ ] Actions
       - [x] CreateVault
       - [x] CloseVault
+      - [x] CreateExternalPriceAccount
       - [ ] AddTokensToVault
       - [ ] SetVaultAndAuctionAuthorities
       - [ ] UnwindVault
