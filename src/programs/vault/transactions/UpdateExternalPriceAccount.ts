@@ -1,4 +1,3 @@
-import { ParamsWithStore } from '@metaplex/types';
 import { Borsh } from '@metaplex/utils';
 import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
 import { VaultInstructions } from '../VaultProgram';
@@ -27,10 +26,7 @@ type UpdateExternalPriceAccountParams = {
 };
 
 export class UpdateExternalPriceAccount extends Transaction {
-  constructor(
-    options: TransactionCtorFields,
-    params: ParamsWithStore<UpdateExternalPriceAccountParams>,
-  ) {
+  constructor(options: TransactionCtorFields, params: UpdateExternalPriceAccountParams) {
     super(options);
     const { externalPriceAccount, externalPriceAccountData } = params;
 

@@ -171,7 +171,6 @@ describe('Vault transactions', () => {
         priceMint: '5nxC9KnUSqr5dNQoPN7xhKfmzS48znM3zfNqcgdKYXrh',
         pricePerShare: new BN(1),
       }),
-      store: STORE_PUBKEY,
     });
 
     const serializedData = data.serialize(serializeConfig);
