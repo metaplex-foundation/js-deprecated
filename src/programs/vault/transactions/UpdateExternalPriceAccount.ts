@@ -1,4 +1,3 @@
-import { ParamsWithStore } from '@metaplex/types';
 import { Borsh } from '@metaplex/utils';
 import { PublicKey, TransactionCtorFields, TransactionInstruction } from '@solana/web3.js';
 import { VaultInstructions } from '../VaultProgram';
