@@ -16,6 +16,9 @@ export enum MetaplexKey {
   AuctionManagerV2 = 10,
   BidRedemptionTicketV2 = 11,
   AuctionWinnerTokenTypeTrackerV1 = 12,
+  StoreIndexerV1 = 13,
+  AuctionCacheV1 = 14,
+  StoreConfigV1 = 15,
 }
 
 export class MetaplexProgram extends Program {
