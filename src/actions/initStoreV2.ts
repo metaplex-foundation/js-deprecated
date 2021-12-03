@@ -8,7 +8,7 @@ interface IInitStoreV2Params {
   connection: Connection;
   wallet: Wallet;
   isPublic?: boolean;
-  settingsUri: string;
+  settingsUri?: string | null;
 }
 
 interface IInitStoreV2Response {
@@ -20,7 +20,7 @@ interface IInitStoreV2Response {
 export const initStoreV2 = async ({
   connection,
   wallet,
-  settingsUri,
+  settingsUri = null,
   isPublic = true,
 }: IInitStoreV2Params): Promise<IInitStoreV2Response> => {
   const storeId = await Store.getPDA(wallet.publicKey);

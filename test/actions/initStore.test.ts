@@ -43,4 +43,18 @@ describe('init Store', () => {
       storeId,
     });
   });
+
+  test('creates store with initStoreV2 without storeV2', async () => {
+    const storeResponse = await initStoreV2({
+      connection,
+      wallet,
+      isPublic: false,
+    });
+
+    const storeId = await Store.getPDA(wallet.publicKey);
+
+    expect(storeResponse).toMatchObject({
+      storeId,
+    });
+  });
 });

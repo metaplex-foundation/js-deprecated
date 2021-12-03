@@ -14,7 +14,7 @@ import { AuctionProgram } from '../../auction';
 import { MetaplexProgram } from '../MetaplexProgram';
 import { ParamsWithStore } from '@metaplex/types';
 
-export class SetStoreV2Args extends Borsh.Data<{ public: boolean; settingsUri: string }> {
+export class SetStoreV2Args extends Borsh.Data<{ public: boolean; settingsUri: string | null }> {
   static readonly SCHEMA = this.struct([
     ['instruction', 'u8'],
     ['public', 'u8'],
@@ -23,14 +23,14 @@ export class SetStoreV2Args extends Borsh.Data<{ public: boolean; settingsUri: s
 
   instruction = 23;
   public: boolean;
-  settingsUri: string;
+  settingsUri: string | null;
 }
 
 type SetStoreV2Params = {
   admin: PublicKey;
   config: PublicKey;
   isPublic: boolean;
-  settingsUri: string;
+  settingsUri: string | null;
 };
 
 export class SetStoreV2 extends Transaction {

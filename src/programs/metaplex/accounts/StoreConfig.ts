@@ -1,5 +1,5 @@
 import { ERROR_INVALID_ACCOUNT_DATA, ERROR_INVALID_OWNER } from '@metaplex/errors';
-import { AnyPublicKey, StringPublicKey } from '@metaplex/types';
+import { AnyPublicKey } from '@metaplex/types';
 import { Borsh } from '@metaplex/utils';
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { Buffer } from 'buffer';
@@ -12,7 +12,7 @@ type Args = {
 export class StoreConfigData extends Borsh.Data<Args> {
   static readonly SCHEMA = this.struct([
     ['key', 'u8'],
-    ['settingsUri', 'string'],
+    ['settingsUri', { kind: 'option', type: 'string' }],
   ]);
 
   key: MetaplexKey = MetaplexKey.StoreConfigV1;
