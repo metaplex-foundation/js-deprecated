@@ -18,7 +18,7 @@ export class SetStoreV2Args extends Borsh.Data<{ public: boolean; settingsUri: s
   static readonly SCHEMA = this.struct([
     ['instruction', 'u8'],
     ['public', 'u8'],
-    ['settingsUri', 'string'],
+    ['settingsUri', { kind: 'option', type: 'string' }],
   ]);
 
   instruction = 23;
