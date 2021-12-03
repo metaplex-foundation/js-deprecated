@@ -7,8 +7,6 @@ describe('creating a Vault', () => {
   const connection = new Connection('devnet');
   const wallet = new NodeWallet(FEE_PAYER);
 
-  console.log(FEE_PAYER.publicKey.toString());
-
   describe('success', () => {
     test('generates vault', async () => {
       const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
