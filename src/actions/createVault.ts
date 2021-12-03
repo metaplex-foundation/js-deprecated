@@ -5,7 +5,7 @@ import { InitVault, Vault, VaultProgram } from '../programs/vault';
 import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
 import { AccountLayout, MintLayout, NATIVE_MINT } from '@solana/spl-token';
 import { CreateMint, CreateTokenAccount, Transaction } from '../programs';
-import { sendTransaction } from '.';
+import { sendTransaction } from '../actions/transactions';
 import { TransactionsBatch } from '../utils/transactions-batch';
 
 interface CreateVaultParams {

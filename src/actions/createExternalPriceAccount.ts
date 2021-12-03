@@ -41,7 +41,7 @@ export const createExternalPriceAccount = async ({
 
   const externalPriceAccountData = new ExternalPriceAccountData({
     pricePerShare: new BN(0),
-    priceMint: NATIVE_MINT.toString(),
+    priceMint: NATIVE_MINT.toBase58(),
     allowedToCombine: true,
   });
 
@@ -60,7 +60,6 @@ export const createExternalPriceAccount = async ({
   const updateEPA = new UpdateExternalPriceAccount(txOptions, {
     externalPriceAccount: externalPriceAccount.publicKey,
     externalPriceAccountData,
-    store: wallet.publicKey,
   });
   txBatch.addTransaction(updateEPA);
 

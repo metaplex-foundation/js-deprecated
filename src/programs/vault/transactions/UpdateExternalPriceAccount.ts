@@ -27,10 +27,7 @@ type UpdateExternalPriceAccountParams = {
 };
 
 export class UpdateExternalPriceAccount extends Transaction {
-  constructor(
-    options: TransactionCtorFields,
-    params: ParamsWithStore<UpdateExternalPriceAccountParams>,
-  ) {
+  constructor(options: TransactionCtorFields, params: UpdateExternalPriceAccountParams) {
     super(options);
     const { externalPriceAccount, externalPriceAccountData } = params;
 
