@@ -47,6 +47,7 @@ export class StoreConfig extends Account<StoreConfigData> {
     return MetaplexProgram.findProgramAddress([
       Buffer.from(MetaplexProgram.PREFIX),
       MetaplexProgram.PUBKEY.toBuffer(),
+      Buffer.from(MetaplexProgram.CONFIG),
       new PublicKey(store).toBuffer(),
     ]);
   }
