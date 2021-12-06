@@ -1,3 +1,10 @@
+# [4.9.0](https://github.com/metaplex/js/compare/v4.8.0...v4.9.0) (2021-12-06)
+
+
+### Features
+
+* add redeem printing v2 action and update instant sale ([#91](https://github.com/metaplex/js/issues/91)) ([fd4a3b3](https://github.com/metaplex/js/commit/fd4a3b376ec94d8626ac84c54f4f4b3d45c37a11))
+
 # [4.8.0](https://github.com/metaplex/js/compare/v4.7.0...v4.8.0) (2021-12-06)
 
 
