@@ -3,19 +3,23 @@ import { PublicKey } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
-import { Auction, AuctionExtended, BidderMetadata } from '../programs/auction';
+import { Auction, AuctionExtended, BidderMetadata } from '@metaplex-foundation/mpl-auction';
 import { TransactionsBatch } from '../utils/transactions-batch';
-import { AuctionManager, PrizeTrackingTicket, SafetyDepositConfig } from '../programs/metaplex';
-import { Vault } from '../programs/vault';
+import {
+  AuctionManager,
+  PrizeTrackingTicket,
+  SafetyDepositConfig,
+} from '@metaplex-foundation/mpl-metaplex';
+import { Vault } from '@metaplex-foundation/mpl-token-vault';
 import {
   Edition,
   EditionMarker,
   MasterEdition,
   Metadata,
   UpdatePrimarySaleHappenedViaToken,
-} from '../programs/metadata';
+} from '@metaplex-foundation/mpl-token-metadata';
 import { prepareTokenAccountAndMintTx } from './shared';
-import { RedeemPrintingV2Bid } from '../programs/metaplex/transactions/RedeemPrintingV2Bid';
+import { RedeemPrintingV2Bid } from '@metaplex-foundation/mpl-metaplex';
 import { getBidRedemptionPDA } from './redeemFullRightsTransferBid';
 
 interface IRedeemBidParams {

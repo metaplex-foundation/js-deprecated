@@ -1,6 +1,6 @@
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import { Wallet } from '../wallet';
-import { Metadata, SignMetadata } from '../programs/metadata';
+import { Metadata, SignMetadata } from '@metaplex-foundation/mpl-token-metadata';
 import { sendTransaction } from './transactions';
 
 interface SignMetadataParams {

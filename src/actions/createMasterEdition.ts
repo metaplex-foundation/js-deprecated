@@ -1,6 +1,10 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { Wallet } from '../wallet';
-import { CreateMasterEdition, MasterEdition, Metadata } from '../programs/metadata';
+import {
+  CreateMasterEdition,
+  MasterEdition,
+  Metadata,
+} from '@metaplex-foundation/mpl-token-metadata';
 import { sendTransaction } from './transactions';
 import BN from 'bn.js';
 

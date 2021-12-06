@@ -1,4 +1,4 @@
-import { Transaction } from '../../../Transaction';
+import { Transaction } from '@metaplex-foundation/mpl-core';
 import {
   PublicKey,
   SystemProgram,

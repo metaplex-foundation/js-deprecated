@@ -3,17 +3,20 @@ import { AccountLayout } from '@solana/spl-token';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
-import { AuctionExtended, BidderMetadata } from '../programs/auction';
+import { AuctionExtended, BidderMetadata } from '@metaplex-foundation/mpl-auction';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import {
   AuctionManager,
   MetaplexProgram,
   RedeemFullRightsTransferBid,
   SafetyDepositConfig,
-} from '../programs/metaplex';
+} from '@metaplex-foundation/mpl-metaplex';
 import { CreateTokenAccount } from '../programs';
-import { Vault } from '../programs/vault';
-import { Metadata, UpdatePrimarySaleHappenedViaToken } from '../programs/metadata';
+import { Vault } from '@metaplex-foundation/mpl-token-vault';
+import {
+  Metadata,
+  UpdatePrimarySaleHappenedViaToken,
+} from '@metaplex-foundation/mpl-token-metadata';
 
 interface IRedeemBidParams {
   connection: Connection;
