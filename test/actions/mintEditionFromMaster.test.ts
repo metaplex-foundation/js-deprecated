@@ -2,7 +2,7 @@ import { Keypair } from '@solana/web3.js';
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER, NETWORK, pause } from '../utils';
-import { MasterEdition, Metadata } from '../../src/programs/metadata';
+import { MasterEdition, Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { mintEditionFromMaster } from '../../src/actions/mintEditionFromMaster';
 import { mockAxios200, uri } from './shared';
 

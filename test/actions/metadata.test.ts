@@ -10,14 +10,10 @@ import {
   UpdateMetadata,
   MasterEdition,
   CreateMasterEdition,
-} from '../../src/programs/metadata';
-import {
-  CreateMint,
-  CreateAssociatedTokenAccount,
-  MintTo,
-  Transaction,
-} from '../../src/programs/shared';
+} from '@metaplex-foundation/mpl-token-metadata';
+import { CreateMint, CreateAssociatedTokenAccount, MintTo } from '../../src/programs/shared';
 import { FEE_PAYER, NETWORK } from '../utils';
+import { Transaction } from '@metaplex-foundation/mpl-core';
 
 describe.skip('Metaplex transactions', () => {
   let connection: Connection;

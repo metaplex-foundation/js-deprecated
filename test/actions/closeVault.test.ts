@@ -2,7 +2,7 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { Connection, NodeWallet } from '../../src';
 import { createVault, closeVault, createExternalPriceAccount } from '../../src/actions';
 import { FEE_PAYER, pause } from '../utils';
-import { Vault, VaultState } from '../../src/programs/vault';
+import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
 describe('closing a Vault', () => {
   const connection = new Connection('devnet');

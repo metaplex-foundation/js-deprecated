@@ -1,11 +1,11 @@
 import { Keypair } from '@solana/web3.js';
-import axios from 'axios';
-import { Account, Connection, NodeWallet } from '../../src';
+import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER, NETWORK, pause } from '../utils';
-import { Creator, Metadata, MetadataDataData } from '../../src/programs/metadata';
+import { Creator, Metadata, MetadataDataData } from '@metaplex-foundation/mpl-token-metadata';
 import { updateMetadata } from '../../src/actions/updateMetadata';
 import { mockAxios200, uri } from './shared';
+import { Account } from '@metaplex-foundation/mpl-core';
 
 jest.mock('axios');
 jest.setTimeout(100000);

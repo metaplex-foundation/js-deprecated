@@ -1,12 +1,18 @@
 import BN from 'bn.js';
 import { Keypair } from '@solana/web3.js';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Account, Connection, NodeWallet } from '../../src';
+import { Connection, NodeWallet } from '../../src';
 import { FEE_PAYER, NETWORK, pause } from '../utils';
-import { Creator, MasterEdition, Metadata, MetadataDataData } from '../../src/programs/metadata';
+import {
+  Creator,
+  MasterEdition,
+  Metadata,
+  MetadataDataData,
+} from '@metaplex-foundation/mpl-token-metadata';
 import { createMetadata } from '../../src/actions/createMetadata';
 import { createMasterEdition } from '../../src/actions/createMasterEdition';
 import { uri } from './shared';
+import { Account } from '@metaplex-foundation/mpl-core';
 
 // NOTE: testing the two together because latter effectively requires former
 describe('creatomg metadata and master edition PDAs', () => {

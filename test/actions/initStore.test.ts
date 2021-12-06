@@ -2,7 +2,7 @@ import { Keypair } from '@solana/web3.js';
 import { Connection, NodeWallet } from '../../src';
 import { initStore, initStoreV2 } from '../../src/actions';
 import { FEE_PAYER, NETWORK } from '../utils';
-import { Store } from '../../src/programs/metaplex';
+import { Store } from '@metaplex-foundation/mpl-metaplex';
 import { uri } from './shared';
 
 describe('init Store', () => {
