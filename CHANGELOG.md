@@ -1,3 +1,10 @@
+# [4.8.0](https://github.com/metaplex/js/compare/v4.7.0...v4.8.0) (2021-12-06)
+
+
+### Features
+
+* setStoreV2 with StoreConfig ([#90](https://github.com/metaplex/js/issues/90)) ([0cea78d](https://github.com/metaplex/js/commit/0cea78db85092a21ca80e5b84e1c392e56ccb2d9))
+
 # [4.7.0](https://github.com/metaplex/js/compare/v4.6.0...v4.7.0) (2021-12-03)
 
 
