@@ -54,7 +54,7 @@ export const redeemFullRightsTransferBid = async ({
   const metadata = await Metadata.getPDA(tokenMint);
   ////
 
-  const txBatch = await getRedeemFullRightsTransferBidTransactions({
+  const txBatch = await getRedeemFRTBidTransactions({
     accountRentExempt,
     tokenMint,
     bidder,
@@ -103,7 +103,7 @@ interface IRedeemBidTransactionsParams {
   metadata: PublicKey;
 }
 
-export const getRedeemFullRightsTransferBidTransactions = async ({
+export const getRedeemFRTBidTransactions = async ({
   accountRentExempt,
   bidder,
   tokenMint,

@@ -29,6 +29,31 @@ interface IRedeemBidResponse {
   txId: string;
 }
 
+interface IRedeemBidTransactionsParams {
+  bidder: PublicKey;
+  bidderPotToken?: PublicKey;
+  bidderMeta: PublicKey;
+  auction: PublicKey;
+  auctionExtended: PublicKey;
+  destination: PublicKey;
+  vault: PublicKey;
+  store: PublicKey;
+  auctionManager: PublicKey;
+  bidRedemption: PublicKey;
+  safetyDepositTokenStore: PublicKey;
+  safetyDeposit: PublicKey;
+  safetyDepositConfig: PublicKey;
+  metadata: PublicKey;
+  newMint: PublicKey;
+  newMetadata: PublicKey;
+  newEdition: PublicKey;
+  masterEdition: PublicKey;
+  editionMarker: PublicKey;
+  prizeTrackingTicket: PublicKey;
+  winIndex: BN;
+  editionOffset: BN;
+}
+
 export const redeemPrintingV2Bid = async ({
   connection,
   wallet,
@@ -70,7 +95,7 @@ export const redeemPrintingV2Bid = async ({
   const prizeTrackingTicketPDA = await PrizeTrackingTicket.getPDA(auctionManagerPDA, originalMint);
 
   let prizeTrackingTicket: PrizeTrackingTicket;
-  // first time we do redeem this account doesn't exist yet
+  // this account doesn't exist when we do redeem for the first time
   try {
     prizeTrackingTicket = await PrizeTrackingTicket.load(connection, prizeTrackingTicketPDA);
   } catch (e) {
@@ -134,31 +159,6 @@ export const redeemPrintingV2Bid = async ({
 
   return { txId };
 };
-
-interface IRedeemBidTransactionsParams {
-  bidder: PublicKey;
-  bidderPotToken?: PublicKey;
-  bidderMeta: PublicKey;
-  auction: PublicKey;
-  auctionExtended: PublicKey;
-  destination: PublicKey;
-  vault: PublicKey;
-  store: PublicKey;
-  auctionManager: PublicKey;
-  bidRedemption: PublicKey;
-  safetyDepositTokenStore: PublicKey;
-  safetyDeposit: PublicKey;
-  safetyDepositConfig: PublicKey;
-  metadata: PublicKey;
-  newMint: PublicKey;
-  newMetadata: PublicKey;
-  newEdition: PublicKey;
-  masterEdition: PublicKey;
-  editionMarker: PublicKey;
-  prizeTrackingTicket: PublicKey;
-  winIndex: BN;
-  editionOffset: BN;
-}
 
 export const getRedeemPrintingV2BidTransactions = async ({
   bidder,

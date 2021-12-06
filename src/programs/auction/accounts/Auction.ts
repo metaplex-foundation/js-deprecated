@@ -82,9 +82,8 @@ export class BidState extends Borsh.Data<BidStateArgs> {
     if (index !== -1) {
       const zeroBased = this.bids.length - index - 1;
       return zeroBased < this.max.toNumber() ? zeroBased : null;
-    } else {
-      return null;
     }
+    return null;
   }
 }
 
