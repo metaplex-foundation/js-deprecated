@@ -740,10 +740,10 @@
     "@solana/web3.js" "^1.31.0"
     bs58 "^4.0.1"
 
-"@metaplex-foundation/mpl-metaplex@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-metaplex/-/mpl-metaplex-0.0.2.tgz#5de9dba8e9d13f95eeeceb573398298a8565297d"
-  integrity sha512-ieefenBfpwzhz7OdV5ql8TJvQ8M5CqNc75JmjaNZb5f53mHSVjDOaZeezkLqSY7EoSNf8WR4/IM4ipYx7wUQdg==
+"@metaplex-foundation/mpl-metaplex@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-metaplex/-/mpl-metaplex-0.0.3.tgz#d784050931ca59c550f710b842d9a027b566d080"
+  integrity sha512-xVm270O1qFset2ufmGHWwxFY/FmVSHOtehPmFXHXm3BuGf5PEOqUldIJc/NRAvAB0vz90RCPM7ErFlV/3Yferw==
   dependencies:
     "@metaplex-foundation/mpl-auction" "^0.0.2"
     "@metaplex-foundation/mpl-core" "^0.0.2"
