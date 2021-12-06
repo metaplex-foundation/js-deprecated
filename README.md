@@ -95,7 +95,8 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
       - [ ] Original Authority Lookup
     - [ ] Instructions
       - [x] RedeemBid
-      - [ ] RedeemFullRightsTransferBid
+      - [x] RedeemFullRightsTransferBid
+      - [x] RedeemPrintingV2Bid
       - [x] StartAuction
       - [ ] EndAuction
       - [x] ClaimBid
@@ -127,7 +128,8 @@ const rates = await new Coingecko().getRate([Currency.AR, Currency.SOL], Currenc
     - [ ] Actions (no standalone actions)
       - [x] Cancel Bid
       - [x] Place Bid
-      - [x] Redeem Bid
+      - [x] Redeem Full Rights Transfer Bid
+      - [x] Redeem Printing V2 Bid
       - [x] Instant Sale
   - [ ] Vault
     - [ ] Accounts

@@ -5,9 +5,21 @@ import {
   Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { CreateAssociatedTokenAccount, CreateMint, MintTo } from '../../programs';
+import { CreateAssociatedTokenAccount, CreateMint, MintTo, Transaction } from '../../programs';
 
-export async function prepareTokenAccountAndMintTx(connection: Connection, owner: PublicKey) {
+interface MintTxs {
+  mint: Keypair;
+  // recipient ATA
+  recipient: PublicKey;
+  createMintTx: Transaction;
+  createAssociatedTokenAccountTx: Transaction;
+  mintToTx: Transaction;
+}
+
+export async function prepareTokenAccountAndMintTx(
+  connection: Connection,
+  owner: PublicKey,
+): Promise<MintTxs> {
   const mint = Keypair.generate();
   const mintRent = await connection.getMinimumBalanceForRentExemption(MintLayout.span);
   const createMintTx = new CreateMint(
@@ -42,5 +54,5 @@ export async function prepareTokenAccountAndMintTx(connection: Connection, owner
     },
   );
 
-  return { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx };
+  return { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx, recipient };
 }

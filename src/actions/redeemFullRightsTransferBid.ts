@@ -26,7 +26,7 @@ interface IRedeemBidResponse {
   txId: string;
 }
 
-export const redeemBid = async ({
+export const redeemFullRightsTransferBid = async ({
   connection,
   wallet,
   store,
@@ -54,7 +54,7 @@ export const redeemBid = async ({
   const metadata = await Metadata.getPDA(tokenMint);
   ////
 
-  const txBatch = await getRedeemBidTransactions({
+  const txBatch = await getRedeemFRTBidTransactions({
     accountRentExempt,
     tokenMint,
     bidder,
@@ -103,7 +103,7 @@ interface IRedeemBidTransactionsParams {
   metadata: PublicKey;
 }
 
-export const getRedeemBidTransactions = async ({
+export const getRedeemFRTBidTransactions = async ({
   accountRentExempt,
   bidder,
   tokenMint,
