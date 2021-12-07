@@ -34,6 +34,9 @@
     "prettier": "npx prettier \"{src,test}/**/*.ts\" --check",
     "fix:prettier": "yarn prettier --write",
     "fix": "yarn fix:lint && yarn fix:prettier",
+    "test:build": "./test/setup/build",
+    "test:init": "DEBUG='mp:setup:(error|info|debug)' npx esr ./test/setup/init.ts",
+    "test:all": "yarn test:build && yarn test:init && yarn test",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky install"
@@ -79,6 +82,8 @@
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.30.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
+    "esbuild": "^0.14.2",
+    "esbuild-runner": "^2.2.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",

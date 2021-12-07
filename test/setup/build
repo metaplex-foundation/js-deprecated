@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+ROOT=$(pwd)
+echo "$ROOT"
+
+echo START ...
+cd test
+
+wget --quiet https://github.com/metaplex-foundation/metaplex/archive/refs/heads/master.zip
+unzip master.zip "metaplex-master/rust/*" -d .
+rm -rf rust
+mv -f metaplex-master/rust .
+rm master.zip
+rm -rf metaplex-master
+
+programs=(
+  auction/program
+  token-metadata/program
+  token-vault/program
+  metaplex/program
+)
+
+for prog in "${programs[@]}"; do
+  echo "Building $prog"  
+  cd "$ROOT/test/rust/$prog"
+  echo PWD: 
+  pwd
+
+  cargo build-bpf
+done

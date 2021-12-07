@@ -1,6 +1,10 @@
+import debug from 'debug';
+import path from 'path';
+import { readFileSync } from 'fs';
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
 
 export const NETWORK = 'devnet';
+export const LOCAL = 'http://localhost:8899';
 
 // Devnet fee payer
 export const FEE_PAYER = Keypair.fromSecretKey(
@@ -104,6 +108,29 @@ export const PRIZE_TRACKING_TICKET_PUBKEY = new PublicKey(
   '78qz3gehg9YqktdaYt6o99DSUPFQ41tLMACHpnFjdYdS',
 );
 
+export const logTrace = debug('mp:setup:trace');
+export const ledgerDir = './test/metaplex-tests-ledger';
+
+export const TEST_CREATOR = '2noq8fVotDZm55ZRb7upVgKSXC5E4RH2hEHcRtNpPjGM';
+export const STORE_OWNER = 'A15Y2eoMNGeX4516TYTaaMErwabCrf9AB9mrzFohdQJz';
+export const CREATOR_ALICE = 'GaVtHDjxYeAThQjgrLPJ88sKCm9P9KC9ixJppzCVzZJ';
+export const CREATOR_BOB = '4xa5SRzvEBr5z1rd9WNNXjRx1oDfkNob1coy1hUk4kyy';
+
+export const projectRoot = path.resolve(__dirname, '..', '..');
+
+export const rustDir = path.join(projectRoot, 'test', 'rust');
+export const solanaConfigPath = path.join(__dirname, '..', 'config', 'solana-validator.yml');
+export const testCreatorKeypairPath = path.resolve(
+  'test',
+  'setup',
+  'keypairs',
+  'test-creator.json',
+);
+
+export const logError = debug('mp:setup:error');
+export const logInfo = debug('mp:setup:info');
+export const logDebug = debug('mp:setup:debug');
+
 export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
 
 export async function pause(ms: number) {
@@ -112,4 +139,17 @@ export async function pause(ms: number) {
       response(0);
     }, ms),
   );
+}
+
+export function getUserKeyPairFromFile(keyPairPath) {
+  const keypairDataString = readFileSync(path.resolve(keyPairPath), {
+    encoding: 'utf-8',
+  });
+
+  const keypairData = keypairDataString
+    .substring(1, keypairDataString.length - 1)
+    .split(',')
+    .map((item) => +item);
+
+  return Keypair.fromSecretKey(new Uint8Array(keypairData));
 }
