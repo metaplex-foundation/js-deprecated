@@ -3,6 +3,10 @@ name: Pull Request
 on:
   pull_request:
 
+env:
+  SOLANA_VERSION: 1.8.5
+  RUST_TOOLCHAIN: stable
+
 jobs:
   release:
     name: Pull Request
@@ -17,8 +21,21 @@ jobs:
         node-version: 14.17.0
         registry-url: 'https://registry.npmjs.org'
     - name: Install dependencies
-      run: yarn install --immutable
+      run: |
+        npm install -g yarn
+        yarn install --immutable
     - name: Lint
       run: yarn lint && yarn prettier
+
+    - name: Install Solana
+      uses: ./.github/actions/install-solana
+      with:
+        solana_version: ${{ env.SOLANA_VERSION }}
+
+    - name: Install Rust
+      uses: ./.github/actions/install-rust
+      with:
+       toolchain: ${{ env.RUST_TOOLCHAIN }}
+        
     - name: Test
-      run: yarn test
+      run: yarn test:all
