@@ -1,12 +1,11 @@
-import { getUserKeyPairFromFile, testCreatorKeypairPath } from '../utils';
+import { getUserKeyPairFromFile, LOCAL_NETWORK, testCreatorKeypairPath } from '../utils';
 import { Connection, NodeWallet } from '../../src';
 import { createExternalPriceAccount } from '../../src/actions';
-import { LOCAL } from '../utils';
 
 describe('creating an external price account', () => {
   describe('success', () => {
     test('creates EPA', async () => {
-      const connection = new Connection(LOCAL);
+      const connection = new Connection(LOCAL_NETWORK);
       const payer = getUserKeyPairFromFile(testCreatorKeypairPath);
       const wallet = new NodeWallet(payer);
 

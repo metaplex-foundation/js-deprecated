@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
 
 export const NETWORK = 'devnet';
-export const LOCAL = 'http://localhost:8899';
+export const LOCAL_NETWORK = 'http://localhost:8899';
 
 // Devnet fee payer
 export const FEE_PAYER = Keypair.fromSecretKey(

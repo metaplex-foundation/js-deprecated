@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { LOCAL, projectRoot, testCreatorKeypairPath } from '../utils';
+import { LOCAL_NETWORK, projectRoot, testCreatorKeypairPath } from '../utils';
 import { PUBKEY_TO_LABEL } from './keys';
 
 const keypairPath = testCreatorKeypairPath;
@@ -12,7 +12,7 @@ const labels = Object.entries(PUBKEY_TO_LABEL)
   .join('\n  ');
 
 const config = `---
-json_rpc_url: ${LOCAL}
+json_rpc_url: ${LOCAL_NETWORK}
 websocket_url: ""
 keypair_path: ${keypairPath}
 address_labels:
