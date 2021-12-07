@@ -12,14 +12,7 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "module": "commonjs",
-    "paths": {
-      "@metaplex/utils": ["./src/utils"],
-      "@metaplex/types": ["./src/types"],
-      "@metaplex/errors": ["./src/errors"],
-    },
-    "plugins": [
-      { "transform": "@zerollup/ts-transform-paths" }
-    ]
+    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
   },
   "include": ["./src"],
   "exclude": ["node_modules", "dist", "build", "lib"]

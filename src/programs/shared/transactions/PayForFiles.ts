@@ -1,11 +1,11 @@
-import { Transaction } from '../../../Transaction';
+import { Transaction } from '@metaplex-foundation/mpl-core';
 import {
   PublicKey,
   SystemProgram,
   TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
-import { config } from '../../../config';
+import { config } from '@metaplex-foundation/mpl-core';
 import { Buffer } from 'buffer';
 
 type PayForFilesParams = {

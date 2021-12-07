@@ -6,10 +6,10 @@ import {
   Vault,
   VaultProgram,
   UpdateExternalPriceAccount,
-} from '../programs/vault';
+} from '@metaplex-foundation/mpl-token-vault';
 import { Keypair, PublicKey, SystemProgram, TransactionCtorFields } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
-import { Transaction } from '../programs';
+import { Transaction } from '@metaplex-foundation/mpl-core';
 import { sendTransaction } from '../actions/transactions';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import BN from 'bn.js';

@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { TupleNumericType } from '@metaplex/utils';
+import { TupleNumericType, Transaction } from '@metaplex-foundation/mpl-core';
 import { AccountLayout, NATIVE_MINT } from '@solana/spl-token';
 import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
 import BN from 'bn.js';
@@ -13,9 +13,9 @@ import {
   AuctionWinnerTokenTypeTracker,
   InitAuctionManagerV2,
   StartAuction,
-} from '../../src/programs/metaplex';
-import { Auction } from '../../src/programs/auction';
-import { CreateTokenAccount, Transaction } from '../../src/programs/shared';
+} from '@metaplex-foundation/mpl-metaplex';
+import { Auction } from '@metaplex-foundation/mpl-auction';
+import { CreateTokenAccount } from '../../src/programs/shared';
 import { FEE_PAYER, NETWORK, VAULT_PUBKEY } from '../utils';
 
 describe.skip('Metaplex transactions', () => {

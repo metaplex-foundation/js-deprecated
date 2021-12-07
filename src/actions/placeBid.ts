@@ -4,11 +4,17 @@ import { AccountLayout, NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
-import { AuctionExtended, BidderMetadata, BidderPot, PlaceBid } from '../programs/auction';
+import {
+  AuctionExtended,
+  BidderMetadata,
+  BidderPot,
+  PlaceBid,
+} from '@metaplex-foundation/mpl-auction';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import { getCancelBidTransactions } from './cancelBid';
-import { AuctionManager } from '../programs/metaplex';
-import { CreateTokenAccount, Transaction } from '../programs';
+import { AuctionManager } from '@metaplex-foundation/mpl-metaplex';
+import { Transaction } from '@metaplex-foundation/mpl-core';
+import { CreateTokenAccount } from '../programs';
 
 interface IPlaceBidParams {
   connection: Connection;

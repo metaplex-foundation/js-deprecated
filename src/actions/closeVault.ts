@@ -1,13 +1,14 @@
 import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
-import { ActivateVault, CombineVault, Vault } from '../programs/vault';
+import { ActivateVault, CombineVault, Vault } from '@metaplex-foundation/mpl-token-vault';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { AccountLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { CreateTokenAccount, Transaction } from '../programs';
+import { CreateTokenAccount } from '../programs';
 import { sendTransaction } from '../actions/transactions';
 import BN from 'bn.js';
 import { TransactionsBatch } from '../utils/transactions-batch';
+import { Transaction } from '@metaplex-foundation/mpl-core';
 
 interface CloseVaultParams {
   connection: Connection;

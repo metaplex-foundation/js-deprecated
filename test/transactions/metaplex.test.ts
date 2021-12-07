@@ -22,8 +22,7 @@ import {
   TOKEN_MINT_PUBKEY,
   VAULT_PUBKEY,
 } from '../utils';
-import { EndAuction } from '../../src/programs/metaplex/transactions/EndAuction';
-import { RedeemPrintingV2Bid } from '../../src/programs/metaplex/transactions/RedeemPrintingV2Bid';
+import { EndAuction, RedeemPrintingV2Bid } from '@metaplex-foundation/mpl-metaplex';
 import BN from 'bn.js';
 
 describe('Metaplex transactions', () => {

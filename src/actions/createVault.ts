@@ -1,10 +1,11 @@
 import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
-import { InitVault, Vault, VaultProgram } from '../programs/vault';
+import { Transaction } from '@metaplex-foundation/mpl-core';
+import { InitVault, Vault, VaultProgram } from '@metaplex-foundation/mpl-token-vault';
 import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
 import { AccountLayout, MintLayout, NATIVE_MINT } from '@solana/spl-token';
-import { CreateMint, CreateTokenAccount, Transaction } from '../programs';
+import { CreateMint, CreateTokenAccount } from '../programs';
 import { sendTransaction } from '../actions/transactions';
 import { TransactionsBatch } from '../utils/transactions-batch';
 

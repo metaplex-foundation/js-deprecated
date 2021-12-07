@@ -13,15 +13,13 @@ import {
 import {
   CreateAuctionV2,
   CreateAuctionV2Args,
-} from '../../src/programs/auction/transactions/CreateAuctionV2';
-import {
   CreateAuction,
   CreateAuctionArgs,
   PriceFloor,
   PriceFloorType,
   WinnerLimit,
   WinnerLimitType,
-} from '../../src/programs/auction';
+} from '@metaplex-foundation/mpl-auction';
 
 describe('Auction transactions', () => {
   test('CreateAuction', async () => {

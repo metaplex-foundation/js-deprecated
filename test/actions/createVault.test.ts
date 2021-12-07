@@ -1,7 +1,7 @@
 import { Connection, NodeWallet } from '../../src';
 import { createVault, createExternalPriceAccount } from '../../src/actions';
 import { FEE_PAYER, pause } from '../utils';
-import { Vault, VaultState } from '../../src/programs/vault';
+import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
 describe('creating a Vault', () => {
   const connection = new Connection('devnet');

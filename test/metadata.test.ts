@@ -1,6 +1,6 @@
 import { Connection } from '../src';
 import { MASTER_EDITION_PUBKEY, METADATA_PUBKEY, NETWORK, STORE_OWNER_PUBKEY } from './utils';
-import { Metadata, MetadataKey, MasterEdition } from '../src/programs/metadata';
+import { Metadata, MetadataKey, MasterEdition } from '@metaplex-foundation/mpl-token-metadata';
 
 describe('Metadata', () => {
   let connection: Connection;

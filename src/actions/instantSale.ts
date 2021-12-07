@@ -2,13 +2,17 @@ import { PublicKey } from '@solana/web3.js';
 import retry from 'async-retry';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
-import { AuctionExtended } from '../programs/auction';
-import { AuctionManager, SafetyDepositConfig, WinningConfigType } from '../programs/metaplex';
+import { AuctionExtended } from '@metaplex-foundation/mpl-auction';
+import {
+  AuctionManager,
+  SafetyDepositConfig,
+  WinningConfigType,
+} from '@metaplex-foundation/mpl-metaplex';
 import { placeBid } from './placeBid';
 import { claimBid } from './claimBid';
-import { Vault } from '../programs/vault/accounts/Vault';
+import { Vault } from '@metaplex-foundation/mpl-token-vault';
 import { redeemFullRightsTransferBid } from './redeemFullRightsTransferBid';
-import { Account } from '../Account';
+import { Account } from '@metaplex-foundation/mpl-core';
 import { redeemPrintingV2Bid } from './redeemPrintingV2Bid';
 
 interface IInstantSaleParams {

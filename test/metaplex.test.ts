@@ -1,8 +1,13 @@
 import { jest } from '@jest/globals';
 import { Keypair } from '@solana/web3.js';
 import { Connection } from '../src';
-import { Auction } from '../src/programs/auction';
-import { Store, MetaplexKey, AuctionManager, PayoutTicket } from '../src/programs/metaplex';
+import { Auction } from '@metaplex-foundation/mpl-auction';
+import {
+  Store,
+  MetaplexKey,
+  AuctionManager,
+  PayoutTicket,
+} from '@metaplex-foundation/mpl-metaplex';
 import {
   AUCTION_MANAGER_PUBKEY,
   AUCTION_PUBKEY,

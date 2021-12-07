@@ -32,6 +32,7 @@ import {
   AddSharesToTreasury,
   AddTokenToInactiveVault,
   CombineVault,
+  ExternalPriceAccountData,
   InitVault,
   MintFractionalShares,
   RedeemShares,
@@ -39,9 +40,8 @@ import {
   UpdateExternalPriceAccount,
   WithdrawSharesFromTreasury,
   WithdrawTokenFromSafetyDepositBox,
-} from '../../src/programs/vault/transactions';
+} from '@metaplex-foundation/mpl-token-vault';
 import BN from 'bn.js';
-import { ExternalPriceAccountData } from '../../src/programs/vault';
 
 describe('Vault transactions', () => {
   test('InitVault', async () => {

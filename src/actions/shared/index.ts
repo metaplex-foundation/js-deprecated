@@ -5,7 +5,8 @@ import {
   Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { CreateAssociatedTokenAccount, CreateMint, MintTo, Transaction } from '../../programs';
+import { Transaction } from '@metaplex-foundation/mpl-core';
+import { CreateAssociatedTokenAccount, CreateMint, MintTo } from '../../programs';
 
 interface MintTxs {
   mint: Keypair;
