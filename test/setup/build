@@ -4,14 +4,19 @@ ROOT=$(pwd)
 echo "$ROOT"
 
 echo START ...
-cd test
+cd test || exit
 
-wget --quiet https://github.com/metaplex-foundation/metaplex/archive/refs/heads/master.zip
-unzip master.zip "metaplex-master/rust/*" -d .
+wget --quiet https://github.com/metaplex-foundation/metaplex-program-library/archive/refs/heads/master.zip
+unzip master.zip 
 rm -rf rust
-mv -f metaplex-master/rust .
+mkdir rust
+mv -f metaplex-program-library-master/auction rust
+mv -f metaplex-program-library-master/metaplex rust
+mv -f metaplex-program-library-master/token-metadata rust
+mv -f metaplex-program-library-master/token-vault rust
+mv -f metaplex-program-library-master/Cargo.toml rust
+rm -rf metaplex-program-library-master
 rm master.zip
-rm -rf metaplex-master
 
 programs=(
   auction/program
@@ -22,7 +27,7 @@ programs=(
 
 for prog in "${programs[@]}"; do
   echo "Building $prog"  
-  cd "$ROOT/test/rust/$prog"
+  cd "$ROOT/test/rust/$prog" || exit
   echo PWD: 
   pwd
 

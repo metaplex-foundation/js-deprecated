@@ -15,7 +15,7 @@ import {
   solanaConfigPath,
   rustDir,
 } from '../utils';
-import { config } from 'src/config';
+import { PUBLIC_KEYS } from '../setup/keys';
 import path from 'path';
 
 const localDeployDir = path.join(rustDir, 'target', 'deploy');
@@ -25,17 +25,17 @@ function localDeployPath(programName: string) {
 }
 
 const programs: Record<string, string> = {
-  metadata: localDeployPath('metaplex_token_metadata'),
-  vault: localDeployPath('metaplex_token_vault'),
-  auction: localDeployPath('metaplex_auction'),
-  metaplex: localDeployPath('metaplex'),
+  metadata: localDeployPath('mpl_token_metadata'),
+  vault: localDeployPath('mpl_token_vault'),
+  auction: localDeployPath('mpl_auction'),
+  metaplex: localDeployPath('mpl_metaplex'),
 };
 
 const programIds = {
-  metadata: config.programs.metadata,
-  vault: config.programs.vault,
-  auction: config.programs.auction,
-  metaplex: config.programs.metaplex,
+  metadata: PUBLIC_KEYS['prog:metaplex'],
+  vault: PUBLIC_KEYS['prog:token_vault'],
+  auction: PUBLIC_KEYS['prog:auction'],
+  metaplex: PUBLIC_KEYS['prog:metaplex'],
 };
 
 async function main() {
