@@ -73,14 +73,19 @@ export const instantSale = async ({
 
   // NOTE: it's divided into several transactions since transaction size is restricted
   if (hasWinner) {
-    if (winningConfigType === WinningConfigType.FullRightsTransfer) {
-      const { txId } = await redeemFullRightsTransferBid({ connection, wallet, store, auction });
-      txIds.push(txId);
-    } else if (winningConfigType === WinningConfigType.PrintingV2) {
-      const { txId } = await redeemPrintingV2Bid({ connection, wallet, store, auction });
-      txIds.push(txId);
-    } else {
-      throw new Error(`${winningConfigType} winning type isn't supported yet`);
+    switch (winningConfigType) {
+      case WinningConfigType.FullRightsTransfer: {
+        const { txId } = await redeemFullRightsTransferBid({ connection, wallet, store, auction });
+        txIds.push(txId);
+        break;
+      }
+      case WinningConfigType.PrintingV2: {
+        const { txId } = await redeemPrintingV2Bid({ connection, wallet, store, auction });
+        txIds.push(txId);
+        break;
+      }
+      default:
+        throw new Error(`${winningConfigType} winning type isn't supported yet`);
     }
 
     const { txId: claimBidTxId } = await claimBid({

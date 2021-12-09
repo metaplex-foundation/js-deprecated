@@ -121,11 +121,11 @@ export const redeemParticipationBidV3 = async ({
     );
   }
 
-  const { authority, createApproveTx, createRevokeTx } = createApproveTxs(
-    tokenPaymentAccount,
-    bidder,
-    fixedPrice.toNumber(),
-  );
+  const { authority, createApproveTx, createRevokeTx } = createApproveTxs({
+    account: tokenPaymentAccount,
+    owner: bidder,
+    amount: fixedPrice.toNumber(),
+  });
   txMainBatch.addTransaction(createApproveTx);
   txMainBatch.addAfterTransaction(createRevokeTx);
   txMainBatch.addSigner(authority);

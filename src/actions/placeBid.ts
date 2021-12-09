@@ -106,7 +106,11 @@ export const placeBid = async ({
     authority: transferAuthority,
     createApproveTx,
     createRevokeTx,
-  } = createApproveTxs(payingAccount.publicKey, bidder, amount.toNumber());
+  } = createApproveTxs({
+    account: payingAccount.publicKey,
+    owner: bidder,
+    amount: amount.toNumber(),
+  });
   txBatch.addTransaction(createApproveTx);
   txBatch.addAfterTransaction(createRevokeTx);
   txBatch.addSigner(transferAuthority);
