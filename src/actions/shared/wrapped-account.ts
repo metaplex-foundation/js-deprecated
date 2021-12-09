@@ -12,7 +12,7 @@ interface WrappedAccountTxs {
 export async function createWrappedAccountTxs(
   connection: Connection,
   owner: PublicKey,
-  amount: number = 0,
+  amount = 0,
 ): Promise<WrappedAccountTxs> {
   const account = Keypair.generate();
   const accountRentExempt = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);

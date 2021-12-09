@@ -12,7 +12,7 @@ import {
 import { Wallet } from '../wallet';
 import { sendTransaction } from './transactions';
 import { lookup } from '../utils/metadata';
-import { prepareTokenAccountAndMintTx } from './shared';
+import { prepareTokenAccountAndMintTxs } from './shared';
 
 interface MintNFTParams {
   connection: Connection;
@@ -35,7 +35,7 @@ export const mintNFT = async ({
   maxSupply,
 }: MintNFTParams): Promise<MintNFTResponse> => {
   const { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx } =
-    await prepareTokenAccountAndMintTx(connection, wallet.publicKey);
+    await prepareTokenAccountAndMintTxs(connection, wallet.publicKey);
 
   const metadataPDA = await Metadata.getPDA(mint.publicKey);
   const editionPDA = await MasterEdition.getPDA(mint.publicKey);

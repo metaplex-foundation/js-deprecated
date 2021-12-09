@@ -1,6 +1,6 @@
 import BN from 'bn.js';
-import { Keypair, PublicKey } from '@solana/web3.js';
-import { AccountLayout, NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { Commitment, Keypair, PublicKey } from '@solana/web3.js';
+import { AccountLayout } from '@solana/spl-token';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
@@ -10,11 +10,11 @@ import {
   BidderPot,
   PlaceBid,
 } from '@metaplex-foundation/mpl-auction';
+import { AuctionManager } from '@metaplex-foundation/mpl-metaplex';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import { getCancelBidTransactions } from './cancelBid';
-import { AuctionManager } from '@metaplex-foundation/mpl-metaplex';
-import { Transaction } from '@metaplex-foundation/mpl-core';
 import { CreateTokenAccount } from '../programs';
+import { createApproveTxs, createWrappedAccountTxs } from './shared';
 
 interface IPlaceBidParams {
   connection: Connection;
@@ -23,6 +23,7 @@ interface IPlaceBidParams {
   bidderPotToken?: PublicKey;
   // amount in lamports
   amount: BN;
+  commitment?: Commitment;
 }
 
 interface IPlaceBidResponse {
@@ -37,6 +38,7 @@ export const placeBid = async ({
   amount,
   auction,
   bidderPotToken,
+  commitment,
 }: IPlaceBidParams): Promise<IPlaceBidResponse> => {
   // get data for transactions
   const bidder = wallet.publicKey;
@@ -89,48 +91,24 @@ export const placeBid = async ({
   }
 
   // create paying account
-  const payingAccount = Keypair.generate();
-  const createTokenAccountTransaction = new CreateTokenAccount(
-    { feePayer: bidder },
-    {
-      newAccountPubkey: payingAccount.publicKey,
-      // TODO: find out why we put such amount of lamports
-      lamports: amount.toNumber() + accountRentExempt * 3,
-      mint: NATIVE_MINT,
-    },
-  );
-  const closeTokenAccountTransaction = new Transaction().add(
-    Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      payingAccount.publicKey,
-      bidder,
-      bidder,
-      [],
-    ),
-  );
-  txBatch.addTransaction(createTokenAccountTransaction);
-  txBatch.addAfterTransaction(closeTokenAccountTransaction);
+  const {
+    account: payingAccount,
+    createTokenAccountTx,
+    closeTokenAccountTx,
+  } = await createWrappedAccountTxs(connection, bidder, amount.toNumber() + accountRentExempt * 2);
+  txBatch.addTransaction(createTokenAccountTx);
+  txBatch.addAfterTransaction(closeTokenAccountTx);
   txBatch.addSigner(payingAccount);
   ////
 
   // transfer authority
-  const transferAuthority = Keypair.generate();
-  const createApproveTransaction = new Transaction().add(
-    Token.createApproveInstruction(
-      TOKEN_PROGRAM_ID,
-      payingAccount.publicKey,
-      transferAuthority.publicKey,
-      bidder,
-      [],
-      amount.toNumber(),
-    ),
-  );
-  txBatch.addTransaction(createApproveTransaction);
-
-  const createRevokeTransaction = new Transaction().add(
-    Token.createRevokeInstruction(TOKEN_PROGRAM_ID, payingAccount.publicKey, bidder, []),
-  );
-  txBatch.addAfterTransaction(createRevokeTransaction);
+  const {
+    authority: transferAuthority,
+    createApproveTx,
+    createRevokeTx,
+  } = createApproveTxs(payingAccount.publicKey, bidder, amount.toNumber());
+  txBatch.addTransaction(createApproveTx);
+  txBatch.addAfterTransaction(createRevokeTx);
   txBatch.addSigner(transferAuthority);
   ////
 
@@ -159,6 +137,9 @@ export const placeBid = async ({
     wallet,
     txs: txBatch.toTransactions(),
     signers: txBatch.signers,
+    options: {
+      ...(commitment && { commitment }),
+    },
   });
 
   return { txId, bidderPotToken, bidderMeta };

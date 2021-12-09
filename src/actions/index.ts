@@ -14,6 +14,7 @@ export * from './cancelBid';
 export * from './placeBid';
 export * from './redeemFullRightsTransferBid';
 export * from './redeemPrintingV2Bid';
+export * from './redeemParticipationBidV3';
 export * from './claimBid';
 export * from './instantSale';
 export * from './burnToken';

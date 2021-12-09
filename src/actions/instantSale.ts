@@ -2,7 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 import retry from 'async-retry';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
-import { AuctionExtended } from '@metaplex-foundation/mpl-auction';
+import { Auction, AuctionExtended } from '@metaplex-foundation/mpl-auction';
 import {
   AuctionManager,
   SafetyDepositConfig,
@@ -12,8 +12,12 @@ import { placeBid } from './placeBid';
 import { claimBid } from './claimBid';
 import { Vault } from '@metaplex-foundation/mpl-token-vault';
 import { redeemFullRightsTransferBid } from './redeemFullRightsTransferBid';
-import { Account } from '@metaplex-foundation/mpl-core';
 import { redeemPrintingV2Bid } from './redeemPrintingV2Bid';
+import {
+  isEligibleForParticipationPrize,
+  redeemParticipationBidV3,
+} from './redeemParticipationBidV3';
+import { cancelBid } from './cancelBid';
 
 interface IInstantSaleParams {
   connection: Connection;
@@ -23,7 +27,7 @@ interface IInstantSaleParams {
 }
 
 interface IInstantSaleResponse {
-  txIds: string[];
+  txId: string[];
 }
 
 export const instantSale = async ({
@@ -47,59 +51,57 @@ export const instantSale = async ({
     safetyDepositBox.pubkey,
   );
   const {
-    data: { winningConfigType },
+    data: { winningConfigType, participationConfig },
   } = await SafetyDepositConfig.load(connection, safetyDepositConfigPDA);
   ////
 
-  const {
-    txId: placeBidTxId,
-    bidderPotToken,
-    bidderMeta,
-  } = await placeBid({
+  const { txId: placeBidTxId, bidderPotToken } = await placeBid({
     connection,
     wallet,
     amount: instantSalePrice,
     auction,
+    // wait for all accounts to be created
+    commitment: 'finalized',
   });
   txIds.push(placeBidTxId);
 
-  // workaround to wait for bidderMeta to be created
-  await retry(async (bail) => {
-    await Account.getInfo(connection, bidderMeta);
-  });
+  const {
+    data: { bidState },
+  } = await Auction.load(connection, auction);
+  const winIndex = bidState.getWinnerIndex(wallet.publicKey.toBase58());
+  const hasWinner = winIndex !== null;
 
-  // NOTE: it's divided into 3 transactions since transaction size is restricted
-  switch (winningConfigType) {
-    case WinningConfigType.FullRightsTransfer:
-      const { txId: redeemFullRightsTransferBidTxId } = await redeemFullRightsTransferBid({
-        connection,
-        wallet,
-        store,
-        auction,
-      });
-      txIds.push(redeemFullRightsTransferBidTxId);
-      break;
-    case WinningConfigType.PrintingV2:
-      const { txId: redeemPrintingV2BidTxId } = await redeemPrintingV2Bid({
-        connection,
-        wallet,
-        store,
-        auction,
-      });
-      txIds.push(redeemPrintingV2BidTxId);
-      break;
-    default:
+  // NOTE: it's divided into several transactions since transaction size is restricted
+  if (hasWinner) {
+    if (winningConfigType === WinningConfigType.FullRightsTransfer) {
+      const { txId } = await redeemFullRightsTransferBid({ connection, wallet, store, auction });
+      txIds.push(txId);
+    } else if (winningConfigType === WinningConfigType.PrintingV2) {
+      const { txId } = await redeemPrintingV2Bid({ connection, wallet, store, auction });
+      txIds.push(txId);
+    } else {
       throw new Error(`${winningConfigType} winning type isn't supported yet`);
+    }
+
+    const { txId: claimBidTxId } = await claimBid({
+      connection,
+      wallet,
+      store,
+      auction,
+      bidderPotToken,
+    });
+    txIds.push(claimBidTxId);
+  } else {
+    // if user didn't win, user must have a bid we can refund before we check for open editions
+    const { txId } = await cancelBid({ connection, wallet, auction, bidderPotToken });
+    txIds.push(txId);
   }
 
-  const { txId: claimBidTxId } = await claimBid({
-    connection,
-    wallet,
-    store,
-    auction,
-    bidderPotToken,
-  });
-  txIds.push(claimBidTxId);
+  const hasWonParticipationPrize = isEligibleForParticipationPrize(winIndex, participationConfig);
+  if (hasWonParticipationPrize) {
+    const { txId } = await redeemParticipationBidV3({ connection, wallet, store, auction });
+    txIds.push(...txId);
+  }
 
-  return { txIds: [placeBidTxId] };
+  return { txId: txIds };
 };

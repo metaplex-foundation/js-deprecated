@@ -18,8 +18,8 @@ import {
   Metadata,
   UpdatePrimarySaleHappenedViaToken,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { prepareTokenAccountAndMintTx } from './shared';
 import { RedeemPrintingV2Bid } from '@metaplex-foundation/mpl-metaplex';
+import { prepareTokenAccountAndMintTxs } from './shared';
 import { getBidRedemptionPDA } from './redeemFullRightsTransferBid';
 
 interface IRedeemBidParams {
@@ -86,7 +86,7 @@ export const redeemPrintingV2Bid = async ({
   ////
 
   const { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx, recipient } =
-    await prepareTokenAccountAndMintTx(connection, wallet.publicKey);
+    await prepareTokenAccountAndMintTxs(connection, wallet.publicKey);
 
   const newMint = mint.publicKey;
   const newMetadataPDA = await Metadata.getPDA(newMint);
