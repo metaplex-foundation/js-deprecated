@@ -34,7 +34,7 @@
     "prettier": "npx prettier \"{src,test}/**/*.ts\" --check",
     "fix:prettier": "yarn prettier --write",
     "fix": "yarn fix:lint && yarn fix:prettier",
-    "test:build": "./test/setup/build",
+    "test:build": "esr ./test/setup/build.ts",
     "test:init": "DEBUG='mp:setup:(error|info|debug)' npx esr ./test/setup/init.ts",
     "test:all": "yarn test:build && yarn test:init && yarn test",
     "test": "jest",

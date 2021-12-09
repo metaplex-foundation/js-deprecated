@@ -9,13 +9,10 @@ import {
   ledgerDir,
   pause,
   TEST_CREATOR,
-  STORE_OWNER,
-  CREATOR_ALICE,
-  CREATOR_BOB,
   solanaConfigPath,
   rustDir,
 } from '../utils';
-import { PUBLIC_KEYS } from '../setup/keys';
+import { PUBLIC_KEYS } from '../utils';
 import path from 'path';
 
 const localDeployDir = path.join(rustDir, 'target', 'deploy');
@@ -85,24 +82,6 @@ async function main() {
   logDebug(`key: ${key}`);
   const testCreator = execSync(`solana -C ${solanaConfigPath} account ${key}`);
   logDebug(`Test Creator Account Info ${testCreator}`);
-
-  // -----------------
-  // Store Owner
-  // -----------------
-  logInfo('Funding the Store Owner');
-  execSync(`solana transfer -C ${solanaConfigPath} --allow-unfunded-recipient ${STORE_OWNER} 2000`);
-  const storeOwner = execSync(`solana --config ${solanaConfigPath} account ${STORE_OWNER}`);
-  logDebug(`Store Owner Account Info ${storeOwner}`);
-
-  logInfo('Funding the Creator Alice');
-  execSync(`solana transfer -C ${solanaConfigPath} --allow-unfunded-recipient ${CREATOR_ALICE} 20`);
-  const creatorAlice = execSync(`solana --config ${solanaConfigPath} account ${CREATOR_ALICE}`);
-  logDebug(`Creator Alice Account Info ${creatorAlice}`);
-
-  logInfo('Funding the Creator Bob');
-  execSync(`solana transfer -C ${solanaConfigPath} --allow-unfunded-recipient ${CREATOR_BOB} 20`);
-  const creatorBob = execSync(`solana --config ${solanaConfigPath} account ${CREATOR_BOB}`);
-  logDebug(`Creator Bob Account Info ${creatorBob}`);
 
   logInfo('Done');
 }

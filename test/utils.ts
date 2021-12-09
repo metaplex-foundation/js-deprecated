@@ -108,16 +108,11 @@ export const PRIZE_TRACKING_TICKET_PUBKEY = new PublicKey(
   '78qz3gehg9YqktdaYt6o99DSUPFQ41tLMACHpnFjdYdS',
 );
 
+export const TEST_CREATOR = '2noq8fVotDZm55ZRb7upVgKSXC5E4RH2hEHcRtNpPjGM';
+
 export const logTrace = debug('mp:setup:trace');
 export const ledgerDir = './test/metaplex-tests-ledger';
-
-export const TEST_CREATOR = '2noq8fVotDZm55ZRb7upVgKSXC5E4RH2hEHcRtNpPjGM';
-export const STORE_OWNER = 'A15Y2eoMNGeX4516TYTaaMErwabCrf9AB9mrzFohdQJz';
-export const CREATOR_ALICE = 'GaVtHDjxYeAThQjgrLPJ88sKCm9P9KC9ixJppzCVzZJ';
-export const CREATOR_BOB = '4xa5SRzvEBr5z1rd9WNNXjRx1oDfkNob1coy1hUk4kyy';
-
 export const projectRoot = path.resolve(__dirname, '..', '..');
-
 export const rustDir = path.join(projectRoot, 'test', 'rust');
 export const solanaConfigPath = path.join(__dirname, '..', 'config', 'solana-validator.yml');
 export const testCreatorKeypairPath = path.resolve(
@@ -132,6 +127,15 @@ export const logInfo = debug('mp:setup:info');
 export const logDebug = debug('mp:setup:debug');
 
 export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
+
+export const PUBLIC_KEYS = {
+  'prog:token_metadata': 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
+  'prog:token_vault': 'vau1zxA2LbssAUEF7Gpw91zMM1LvXrvpzJtmZ58rPsn',
+  'prog:auction': 'auctxRXPeJoc4817jDhf4HbjnhEcr1cCXenosMhK5R8',
+  'prog:metaplex': 'p1exdMJcjVao65QdewkaZRUnU6VPSXhus9n2GzWfh98',
+  'prog:nft_packs': 'packFeFNZzMfD9aVWL7QbGz1WcU7R9zpf6pvNsw2BLu',
+  'acc:test_creator': '2noq8fVotDZm55ZRb7upVgKSXC5E4RH2hEHcRtNpPjGM',
+} as const;
 
 export async function pause(ms: number) {
   await new Promise((response) =>
