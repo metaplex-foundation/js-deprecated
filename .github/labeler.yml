@@ -1,5 +1,5 @@
-# https://github.com/marketplace/actions/labeler
+# https://github.com/marketplace/actions/auto-labeler
 
-# Add 'SDK: JS' label to all Pull Requests
-'SDK: JS':
-- '**/*'
+labels:
+  'SDK: JS':
+  - '.*'
