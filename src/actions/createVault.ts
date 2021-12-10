@@ -3,7 +3,7 @@ import { Wallet } from '../wallet';
 
 import { Transaction } from '@metaplex-foundation/mpl-core';
 import { InitVault, Vault, VaultProgram } from '@metaplex-foundation/mpl-token-vault';
-import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
+import { Keypair, PublicKey, SystemProgram, TransactionSignature } from '@solana/web3.js';
 import { AccountLayout, MintLayout, NATIVE_MINT } from '@solana/spl-token';
 import { CreateMint, CreateTokenAccount } from '../programs';
 import { sendTransaction } from '../actions/transactions';
@@ -17,7 +17,7 @@ interface CreateVaultParams {
 }
 
 interface CreateVaultResponse {
-  txId;
+  txId: TransactionSignature;
   vault: PublicKey;
   fractionMint: PublicKey;
   redeemTreasury: PublicKey;

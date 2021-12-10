@@ -7,7 +7,7 @@ import {
   VaultProgram,
   UpdateExternalPriceAccount,
 } from '@metaplex-foundation/mpl-token-vault';
-import { Keypair, PublicKey, SystemProgram, TransactionCtorFields } from '@solana/web3.js';
+import { Keypair, PublicKey, SystemProgram, TransactionCtorFields, TransactionSignature } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 import { sendTransaction } from '../actions/transactions';
@@ -20,7 +20,7 @@ interface CreateExternalPriceAccountParams {
 }
 
 interface CreateExternalPriceAccountResponse {
-  txId;
+  txId: TransactionSignature;
   externalPriceAccount: PublicKey;
   priceMint: PublicKey;
 }

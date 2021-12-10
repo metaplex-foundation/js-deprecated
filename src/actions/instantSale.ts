@@ -1,5 +1,4 @@
-import { PublicKey } from '@solana/web3.js';
-import retry from 'async-retry';
+import { PublicKey, TransactionSignature } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { Auction, AuctionExtended } from '@metaplex-foundation/mpl-auction';
@@ -27,7 +26,7 @@ interface IInstantSaleParams {
 }
 
 interface IInstantSaleResponse {
-  txId: string[];
+  txIds: TransactionSignature[];
 }
 
 export const instantSale = async ({
@@ -104,9 +103,9 @@ export const instantSale = async ({
 
   const hasWonParticipationPrize = isEligibleForParticipationPrize(winIndex, participationConfig);
   if (hasWonParticipationPrize) {
-    const { txId } = await redeemParticipationBidV3({ connection, wallet, store, auction });
-    txIds.push(...txId);
+    const { txIds } = await redeemParticipationBidV3({ connection, wallet, store, auction });
+    txIds.push(...txIds);
   }
 
-  return { txId: txIds };
+  return { txIds: txIds };
 };

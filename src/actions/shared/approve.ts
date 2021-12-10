@@ -2,18 +2,20 @@ import { Token, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token';
 import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
 
 interface CreateApproveParams {
-  authority?: Keypair;
+  authority: Keypair;
   account: PublicKey;
   owner: PublicKey;
   amount: number | u64;
 }
 
-export function createApproveTxs({
-  authority = Keypair.generate(),
-  account,
-  owner,
-  amount,
-}: CreateApproveParams) {
+export function createApproveTxs(args: Optional<CreateApproveParams, 'authority'>) {
+  const {
+    authority = Keypair.generate(),
+    account,
+    owner,
+    amount,
+  } = args;
+
   const createApproveTx = new Transaction().add(
     Token.createApproveInstruction(
       TOKEN_PROGRAM_ID,

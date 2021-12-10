@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-import { Commitment, Keypair, PublicKey } from '@solana/web3.js';
+import { Commitment, Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
 import { AccountLayout } from '@solana/spl-token';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
@@ -27,7 +27,7 @@ interface IPlaceBidParams {
 }
 
 interface IPlaceBidResponse {
-  txId: string;
+  txId: TransactionSignature;
   bidderPotToken: PublicKey;
   bidderMeta: PublicKey;
 }
@@ -141,9 +141,7 @@ export const placeBid = async ({
     wallet,
     txs: txBatch.toTransactions(),
     signers: txBatch.signers,
-    options: {
-      ...(commitment && { commitment }),
-    },
+    options: { commitment },
   });
 
   return { txId, bidderPotToken, bidderMeta };

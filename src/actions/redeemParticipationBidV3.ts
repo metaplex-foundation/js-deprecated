@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, TransactionSignature } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
@@ -31,15 +31,15 @@ import {
   UpdatePrimarySaleHappenedViaToken,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-interface IRedeemBidParams {
+interface IRedeemParticipationBidV3Params {
   connection: Connection;
   wallet: Wallet;
   auction: PublicKey;
   store: PublicKey;
 }
 
-interface IRedeemBidResponse {
-  txId: string[];
+interface IRedeemParticipationBidV3Response {
+  txIds: TransactionSignature[];
 }
 
 export const redeemParticipationBidV3 = async ({
@@ -47,11 +47,10 @@ export const redeemParticipationBidV3 = async ({
   wallet,
   store,
   auction,
-}: IRedeemBidParams): Promise<IRedeemBidResponse> => {
+}: IRedeemParticipationBidV3Params): Promise<IRedeemParticipationBidV3Response> => {
   const txInitBatch = new TransactionsBatch({ transactions: [] });
   const txMainBatch = new TransactionsBatch({ transactions: [] });
 
-  // get data for transactions
   const bidder = wallet.publicKey;
   const {
     data: { bidState, tokenMint: auctionTokenMint },
@@ -76,7 +75,6 @@ export const redeemParticipationBidV3 = async ({
     },
   } = await SafetyDepositConfig.load(connection, safetyDepositConfigPDA);
   const acceptPaymentAccount = new PublicKey(manager.data.acceptPayment);
-  ////
 
   const { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx, recipient } =
     await prepareTokenAccountAndMintTxs(connection, wallet.publicKey);
@@ -130,7 +128,6 @@ export const redeemParticipationBidV3 = async ({
   txMainBatch.addAfterTransaction(createRevokeTx);
   txMainBatch.addSigner(authority);
 
-  // create redeem bid
   const redeemParticipationBidV3Tx = new RedeemParticipationBidV3(
     { feePayer: bidder },
     {
@@ -160,9 +157,7 @@ export const redeemParticipationBidV3 = async ({
     },
   );
   txMainBatch.addTransaction(redeemParticipationBidV3Tx);
-  ////
 
-  // update primary sale happened via token
   const updatePrimarySaleHappenedViaTokenTx = new UpdatePrimarySaleHappenedViaToken(
     { feePayer: bidder },
     {
@@ -172,7 +167,6 @@ export const redeemParticipationBidV3 = async ({
     },
   );
   txMainBatch.addTransaction(updatePrimarySaleHappenedViaTokenTx);
-  //
 
   const initTxId = await sendTransaction({
     connection,
@@ -191,7 +185,7 @@ export const redeemParticipationBidV3 = async ({
     signers: txMainBatch.signers,
   });
 
-  return { txId: [initTxId, mainTxId] };
+  return { txIds: [initTxId, mainTxId] };
 };
 
 export function isEligibleForParticipationPrize(

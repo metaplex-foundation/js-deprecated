@@ -12,7 +12,8 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "module": "commonjs",
-    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
+    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }],
+    "typeRoots": ["src/typings"]
   },
   "include": ["./src"],
   "exclude": ["node_modules", "dist", "build", "lib"]
