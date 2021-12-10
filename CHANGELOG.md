@@ -1,3 +1,10 @@
+# [4.10.0](https://github.com/metaplex/js/compare/v4.9.0...v4.10.0) (2021-12-10)
+
+
+### Features
+
+* add redeem participation bid action ([#98](https://github.com/metaplex/js/issues/98)) ([bbb50b7](https://github.com/metaplex/js/commit/bbb50b7a726e4eda599eda26cdaf8275db49ac3e))
+
 # [4.9.0](https://github.com/metaplex/js/compare/v4.8.0...v4.9.0) (2021-12-06)
 
 
