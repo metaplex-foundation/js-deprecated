@@ -18,8 +18,8 @@ import {
   Metadata,
   UpdatePrimarySaleHappenedViaToken,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { prepareTokenAccountAndMintTx } from './shared';
 import { RedeemPrintingV2Bid } from '@metaplex-foundation/mpl-metaplex';
+import { prepareTokenAccountAndMintTxs } from './shared';
 import { getBidRedemptionPDA } from './redeemFullRightsTransferBid';
 
 interface IRedeemBidParams {
@@ -64,7 +64,6 @@ export const redeemPrintingV2Bid = async ({
   store,
   auction,
 }: IRedeemBidParams): Promise<IRedeemBidResponse> => {
-  // get data for transactions
   const bidder = wallet.publicKey;
   const {
     data: { bidState },
@@ -83,10 +82,9 @@ export const redeemPrintingV2Bid = async ({
     auctionManagerPDA,
     safetyDepositBox.pubkey,
   );
-  ////
 
   const { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx, recipient } =
-    await prepareTokenAccountAndMintTx(connection, wallet.publicKey);
+    await prepareTokenAccountAndMintTxs(connection, wallet.publicKey);
 
   const newMint = mint.publicKey;
   const newMetadataPDA = await Metadata.getPDA(newMint);
@@ -191,7 +189,6 @@ export const getRedeemPrintingV2BidTransactions = async ({
 }: IRedeemBidTransactionsParams) => {
   const txBatch = new TransactionsBatch({ transactions: [] });
 
-  // create redeem bid
   const redeemPrintingV2BidTx = new RedeemPrintingV2Bid(
     { feePayer: bidder },
     {
@@ -220,9 +217,7 @@ export const getRedeemPrintingV2BidTransactions = async ({
     },
   );
   txBatch.addTransaction(redeemPrintingV2BidTx);
-  ////
 
-  // update primary sale happened via token
   const updatePrimarySaleHappenedViaTokenTx = new UpdatePrimarySaleHappenedViaToken(
     { feePayer: bidder },
     {
@@ -232,7 +227,6 @@ export const getRedeemPrintingV2BidTransactions = async ({
     },
   );
   txBatch.addTransaction(updatePrimarySaleHappenedViaTokenTx);
-  ////
 
   return txBatch;
 };

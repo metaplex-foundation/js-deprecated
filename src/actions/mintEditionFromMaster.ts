@@ -10,7 +10,7 @@ import {
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Account } from '@metaplex-foundation/mpl-core';
 import BN from 'bn.js';
-import { prepareTokenAccountAndMintTx } from './shared';
+import { prepareTokenAccountAndMintTxs } from './shared';
 import { sendTransaction } from './transactions';
 
 interface MintEditionFromMasterParams {
@@ -39,7 +39,7 @@ export const mintEditionFromMaster = async (
   const editionValue = masterData.supply.add(new BN(1));
 
   const { mint, createMintTx, createAssociatedTokenAccountTx, mintToTx } =
-    await prepareTokenAccountAndMintTx(connection, wallet.publicKey);
+    await prepareTokenAccountAndMintTxs(connection, wallet.publicKey);
 
   const tokenAccount = await Token.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,

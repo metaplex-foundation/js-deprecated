@@ -2,7 +2,7 @@ import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
 import { ActivateVault, CombineVault, Vault } from '@metaplex-foundation/mpl-token-vault';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
 import { AccountLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { CreateTokenAccount } from '../programs';
 import { sendTransaction } from '../actions/transactions';
@@ -18,7 +18,7 @@ interface CloseVaultParams {
 }
 
 interface CloseVaultResponse {
-  txId;
+  txId: TransactionSignature;
 }
 
 // This command "closes" the vault, by activating & combining it in one go, handing it over to the auction manager

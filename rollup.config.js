@@ -5,6 +5,11 @@ import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { terser } from 'rollup-plugin-terser';
+import * as pkg from './package.json';
+
+const external = [
+  ...Object.keys(pkg.peerDependencies || {}),
+];
 
 const input = 'src/index.ts';
 
@@ -34,8 +39,7 @@ const config = ({ browser, format } = { browser: false }) => {
     plugins: plugins({ browser }),
     // Default external, can be overrided
     external: [
-      '@solana/spl-token',
-      '@solana/web3.js',
+      ...external,
       '@types/bs58',
       'axios',
       'bn.js',
