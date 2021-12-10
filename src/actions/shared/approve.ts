@@ -9,12 +9,7 @@ interface CreateApproveParams {
 }
 
 export function createApproveTxs(args: Optional<CreateApproveParams, 'authority'>) {
-  const {
-    authority = Keypair.generate(),
-    account,
-    owner,
-    amount,
-  } = args;
+  const { authority = Keypair.generate(), account, owner, amount } = args;
 
   const createApproveTx = new Transaction().add(
     Token.createApproveInstruction(
