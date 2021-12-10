@@ -141,7 +141,6 @@ export const placeBid = async ({
     wallet,
     txs: txBatch.toTransactions(),
     signers: txBatch.signers,
-    options: { commitment },
   });
 
   return { txId, bidderPotToken, bidderMeta };

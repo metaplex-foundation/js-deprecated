@@ -59,10 +59,11 @@ export const instantSale = async ({
     wallet,
     amount: instantSalePrice,
     auction,
-    // wait for all accounts to be created
-    commitment: 'finalized',
   });
   txIds.push(placeBidTxId);
+
+  // wait for all accounts to be created
+  await connection.confirmTransaction(placeBidTxId, 'finalized');
 
   const {
     data: { bidState },

@@ -173,10 +173,10 @@ export const redeemParticipationBidV3 = async ({
     wallet,
     txs: txInitBatch.toTransactions(),
     signers: txInitBatch.signers,
-    options: {
-      commitment: 'finalized',
-    },
   });
+
+  // wait for all accounts to be created
+  await connection.confirmTransaction(initTxId, 'finalized');
 
   const mainTxId = await sendTransaction({
     connection,

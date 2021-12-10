@@ -1,4 +1,4 @@
-import { ConfirmOptions, Keypair, sendAndConfirmRawTransaction } from '@solana/web3.js';
+import { Keypair, SendOptions } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { Transaction } from '@metaplex-foundation/mpl-core';
@@ -8,7 +8,7 @@ interface ISendTransactionParams {
   wallet: Wallet;
   txs: Transaction[];
   signers?: Keypair[];
-  options?: ConfirmOptions;
+  options?: SendOptions;
 }
 
 export const sendTransaction = async ({
@@ -26,5 +26,5 @@ export const sendTransaction = async ({
   }
   tx = await wallet.signTransaction(tx);
 
-  return sendAndConfirmRawTransaction(connection, tx.serialize(), options);
+  return connection.sendRawTransaction(tx.serialize(), options);
 };
