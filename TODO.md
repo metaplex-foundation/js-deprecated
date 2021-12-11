@@ -103,15 +103,15 @@
       - [ ] SetVaultAndAuctionAuthorities
       - [ ] UnwindVault
   - [ ] Candy Machine
-    - [ ] Accounts
+    - [ ] [Accounts](https://github.com/metaplex-foundation/metaplex-program-library/issues/28)
       - [ ] Candy Machine
-    - [ ] Instructions
+    - [ ] [Instructions](https://github.com/metaplex-foundation/metaplex-program-library/issues/28)
       - [ ] Mint
       - [ ] Update
       - [ ] Initialize
       - [ ] Initialize Config
       - [ ] Add Config Lines
-    - [ ] Actions
+    - [ ] [Actions](https://github.com/metaplex-foundation/js/issues/110)
   - [ ] Fair Launch
     - [ ] Accounts
       - [ ] Fair Launch
