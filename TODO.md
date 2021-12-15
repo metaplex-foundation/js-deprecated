@@ -17,7 +17,7 @@
       - [x] SignMetadata
       - [x] CreateMasterEdition
       - [x] MintNewEditionFromMasterEditionViaToken
-      - [ ] MintNewEditionFromMasterEditionViaVaultProxy
+      - [ ] [MintNewEditionFromMasterEditionViaVaultProxy](https://github.com/metaplex-foundation/js/issues/116)
     - [ ] Actions
       - [X] Create
       - [X] Update
