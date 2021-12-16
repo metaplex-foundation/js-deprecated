@@ -1,4 +1,3 @@
-import { Keypair } from '@solana/web3.js';
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER, NETWORK, pause } from '../utils';
@@ -12,10 +11,8 @@ jest.setTimeout(100000);
 describe('minting a limited edition from master', () => {
   const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
-  let mint: Keypair;
 
   beforeEach(() => {
-    mint = Keypair.generate();
     mockAxios200(wallet);
   });
 

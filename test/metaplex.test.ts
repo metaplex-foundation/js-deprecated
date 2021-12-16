@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals';
-import { Keypair } from '@solana/web3.js';
 import { Connection } from '../src';
 import { Auction } from '@metaplex-foundation/mpl-auction';
 import {
@@ -18,13 +17,11 @@ import {
 
 describe('Metaplex', () => {
   let connection: Connection;
-  let owner: Keypair;
 
   jest.setTimeout(80000);
 
   beforeAll(() => {
     connection = new Connection('devnet');
-    owner = Keypair.generate();
   });
 
   describe('Store', () => {
@@ -80,7 +77,7 @@ describe('Metaplex', () => {
 
     test('getBidRedemptionTickets', async () => {
       const auctionManager = await AuctionManager.load(connection, AUCTION_MANAGER_PUBKEY);
-      const bidRedemptionTickets = await auctionManager.getBidRedemptionTickets(connection);
+      await auctionManager.getBidRedemptionTickets(connection);
     });
   });
 
@@ -88,10 +85,7 @@ describe('Metaplex', () => {
     test('load', async () => {});
 
     test('getPayoutTickets', async () => {
-      const payoutTickets = await PayoutTicket.getPayoutTicketsByRecipient(
-        connection,
-        STORE_OWNER_PUBKEY,
-      );
+      await PayoutTicket.getPayoutTicketsByRecipient(connection, STORE_OWNER_PUBKEY);
     });
   });
 });

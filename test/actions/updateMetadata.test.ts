@@ -13,10 +13,8 @@ jest.setTimeout(100000);
 describe('updating metadata on a master edition', () => {
   const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
-  let mint: Keypair;
 
   beforeEach(() => {
-    mint = Keypair.generate();
     mockAxios200(wallet);
   });
 

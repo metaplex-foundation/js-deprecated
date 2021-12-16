@@ -1,5 +1,4 @@
 import { Keypair } from '@solana/web3.js';
-import axios from 'axios';
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER, NETWORK, pause } from '../utils';
@@ -14,11 +13,9 @@ jest.setTimeout(100000);
 describe('signing metadata on a master edition', () => {
   const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
-  let mint: Keypair;
   let secondSigner: Keypair;
 
   beforeEach(() => {
-    mint = Keypair.generate();
     secondSigner = Keypair.generate();
     mockAxios200(wallet, secondSigner);
   });
