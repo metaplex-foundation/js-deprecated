@@ -1,3 +1,10 @@
+## [4.10.1](https://github.com/metaplex/js/compare/v4.10.0...v4.10.1) (2021-12-16)
+
+
+### Bug Fixes
+
+* lint errors ([#120](https://github.com/metaplex/js/issues/120)) ([439aaf4](https://github.com/metaplex/js/commit/439aaf42361064c0b3dd8a6c1372357ab3c60015))
+
 # [4.10.0](https://github.com/metaplex/js/compare/v4.9.0...v4.10.0) (2021-12-10)
 
 
