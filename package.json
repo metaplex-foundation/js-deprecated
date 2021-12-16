@@ -35,7 +35,7 @@
     "fix:prettier": "yarn prettier --write",
     "fix": "yarn fix:lint && yarn fix:prettier",
     "test:build": "esr ./test/setup/build.ts",
-    "test:init": "DEBUG='mp:setup:(error|info|debug)' npx esr ./test/setup/init.ts",
+    "test:init": "DEBUG=amman* npx amman validator",
     "test:all": "yarn test:build && yarn test:init && yarn test",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -70,6 +70,7 @@
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
     "@commitlint/config-conventional": "^13.2.0",
+    "@metaplex-foundation/amman": "^0.0.7",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
