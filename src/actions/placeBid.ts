@@ -38,7 +38,6 @@ export const placeBid = async ({
   amount,
   auction,
   bidderPotToken,
-  commitment,
 }: IPlaceBidParams): Promise<IPlaceBidResponse> => {
   // get data for transactions
   const bidder = wallet.publicKey;

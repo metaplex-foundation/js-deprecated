@@ -1,5 +1,4 @@
 import BN from 'bn.js';
-import { Keypair } from '@solana/web3.js';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Connection, NodeWallet } from '../../src';
 import { FEE_PAYER, NETWORK, pause } from '../utils';
@@ -18,11 +17,6 @@ import { Account } from '@metaplex-foundation/mpl-core';
 describe('creatomg metadata and master edition PDAs', () => {
   const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
-  let mint: Keypair;
-
-  beforeEach(() => {
-    mint = Keypair.generate();
-  });
 
   test('creates both successfully', async () => {
     const mint = await Token.createMint(
