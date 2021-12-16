@@ -44,6 +44,7 @@
     "@metaplex-foundation/mpl-metaplex": "^0.0.5",
     "@metaplex-foundation/mpl-token-metadata": "^0.0.2",
     "@metaplex-foundation/mpl-token-vault": "^0.0.2",
+    "@project-serum/anchor": "^0.19.0",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.30.2",
     "@types/bs58": "^4.0.1",
