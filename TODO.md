@@ -4,7 +4,7 @@
   - [x] Builds and Deployments
   - [x] Connection, Account, Transaction, Errors
 - [x] Programs (serialize/deserialize accounts, rpc transactions, simple actions)
-  - [x] Metadata
+  - [ ] Metadata
     - [x] Accounts
       - [x] Metadata
       - [x] Master Edition
@@ -18,14 +18,14 @@
       - [x] CreateMasterEdition
       - [x] MintNewEditionFromMasterEditionViaToken
       - [ ] [MintNewEditionFromMasterEditionViaVaultProxy](https://github.com/metaplex-foundation/js/issues/116)
-    - [ ] Actions
+    - [x] Actions
       - [X] Create
       - [X] Update
       - [X] Sign
-      - [ ] Send
+      - [x] Send
       - [X] Mint Master Edition
       - [X] Mint Limited Edition from Master
-      - [ ] Burn
+      - [x] Burn
   - [ ] Metaplex
     - [ ] Accounts
       - [x] Bid Redemption Ticket
@@ -52,11 +52,11 @@
       - [x] SetWhitelistedCreator
       - [ ] RedeemUnusedWinningConfigItemsAsAuctioneer
       - [ ] DecommissionAuctionManager
-      - [ ] RedeemPrintingV2Bid
+      - [x] RedeemPrintingV2Bid
       - [ ] WithdrawMasterEdition
       - [x] InitAuctionManagerV2
       - [ ] ValidateSafetyDepositBoxV2
-      - [ ] RedeemParticipationBidV3
+      - [x] RedeemParticipationBidV3
       - [ ] SetStoreIndex
       - [ ] SetAuctionCache
     - [ ] Actions
