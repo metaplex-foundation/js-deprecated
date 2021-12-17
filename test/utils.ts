@@ -122,14 +122,7 @@ export async function pause(ms: number) {
 }
 
 export function getUserKeypairFromFile(keypairPath) {
-  const keypairDataString = readFileSync(path.resolve(keypairPath), {
-    encoding: 'utf-8',
-  });
-
-  const keypairData = keypairDataString
-    .substring(1, keypairDataString.length - 1)
-    .split(',')
-    .map((item) => +item);
-
-  return Keypair.fromSecretKey(new Uint8Array(keypairData));
+  const arr = require(keypairPath);
+  const u8Array = Uint8Array.from(arr);
+  return Keypair.fromSecretKey(u8Array);
 }
