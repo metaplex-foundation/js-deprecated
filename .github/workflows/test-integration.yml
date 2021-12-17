@@ -2,9 +2,9 @@ name: Test Integration
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 env:
   SOLANA_VERSION: 1.8.5
