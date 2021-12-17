@@ -1,4 +1,4 @@
-import { LOCAL_NETWORK } from '../utils';
+import { LOCALHOST } from '@metaplex-foundation/amman';
 import { Connection, NodeWallet } from '../../src';
 import { createExternalPriceAccount } from '../../src/actions';
 import { airdrop } from '@metaplex-foundation/amman';
@@ -8,7 +8,7 @@ describe('creating an external price account', () => {
   describe('success', () => {
     test('creates EPA', async () => {
       const payer = Keypair.generate();
-      const connection = new Connection(LOCAL_NETWORK, 'confirmed');
+      const connection = new Connection(LOCALHOST, 'confirmed');
       await airdrop(connection, payer.publicKey, 10);
       const wallet = new NodeWallet(payer);
 

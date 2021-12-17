@@ -18,10 +18,6 @@ dist/
 build/
 lib/
 coverage/
-target
-test/rust/
-metaplex-tests-ledger
-solana-validator.yml
 
 # JetBrains
 .idea/

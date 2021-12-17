@@ -1,9 +1,10 @@
 // @ts-check
 'use strict';
-
-const { LOCALHOST, tmpLedgerDir } = require('@metaplex-foundation/amman');
+const { tmpdir } = require('os');
 const path = require('path');
-const localDeployDir = path.join(__dirname, 'test', 'rust', 'target', 'deploy');
+const { LOCALHOST, tmpLedgerDir } = require('@metaplex-foundation/amman');
+
+const localDeployDir = path.join(tmpdir(), 'test', 'rust', 'target', 'deploy');
 
 const programIds = {
   metadata: 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',

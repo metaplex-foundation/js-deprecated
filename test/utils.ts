@@ -2,9 +2,9 @@
 import path from 'path';
 import { readFileSync } from 'fs';
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
+import { tmpdir } from 'os';
 
 export const NETWORK = 'devnet';
-export const LOCAL_NETWORK = 'http://localhost:8899';
 
 // Devnet fee payer
 export const FEE_PAYER = Keypair.fromSecretKey(
@@ -109,6 +109,7 @@ export const PRIZE_TRACKING_TICKET_PUBKEY = new PublicKey(
 );
 
 export const projectRoot = path.resolve(__dirname, '..', '..');
+export const tmpTestDir = path.resolve(tmpdir(), 'test');
 
 export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
 
