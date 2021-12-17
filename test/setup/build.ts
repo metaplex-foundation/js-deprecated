@@ -7,7 +7,7 @@ import axios from 'axios';
 import StreamZip from 'node-stream-zip';
 
 const rustGithubRepository = 'metaplex-program-library';
-const repostitoryDir = `${rustGithubRepository}-master`;
+const repositoryDir = `${rustGithubRepository}-master`;
 
 const rustProgramsRepository = `https://github.com/metaplex-foundation/${rustGithubRepository}/archive/refs/heads/master.zip`;
 
@@ -40,11 +40,11 @@ async function build() {
   const currentDir = process.cwd();
 
   programs.forEach((directory) => {
-    process.chdir(`${tmpTestDir}/${repostitoryDir}/${directory}`);
+    process.chdir(`${tmpTestDir}/${repositoryDir}/${directory}`);
     execSync(`cargo build-bpf`);
   });
 
-  renameSync(`${tmpTestDir}/${repostitoryDir}`, `${tmpTestDir}/rust`);
+  renameSync(`${tmpTestDir}/${repositoryDir}`, `${tmpTestDir}/rust`);
   process.chdir(currentDir);
 }
 
