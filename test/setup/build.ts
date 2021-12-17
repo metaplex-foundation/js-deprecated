@@ -21,17 +21,22 @@ async function build() {
   rmSync(tmpTestDir, { recursive: true, force: true });
   mkdirSync(tmpTestDir);
 
-  async function downloadFile(path, destinationPath) {
+  async function downloadFile(path: string, destinationPath: string): Promise<void> {
     const done = promisify(stream.finished);
     const writer = createWriteStream(destinationPath);
 
-    await axios({ method: 'get', url: path, responseType: 'stream' }).then(function (response) {
-      response.data.pipe(writer);
-      return done(writer);
-    });
+    await axios({ method: 'get', url: path, responseType: 'stream' })
+      .then(function (response) {
+        response.data.pipe(writer);
+        return done(writer);
+      })
+      .catch((error) => console.log(error));
   }
-
-  await downloadFile(rustProgramsRepository, `${tmpTestDir}/master.zip`);
+  try {
+    await downloadFile(rustProgramsRepository, `${tmpTestDir}/master.zip`);
+  } catch (error) {
+    console.log(error);
+  }
 
   const zip = new StreamZip.async({ file: `${tmpTestDir}/master.zip` });
   await zip.extract(null, tmpTestDir);
