@@ -1,8 +1,8 @@
 // import debug from 'debug';
 import path from 'path';
-import { readFileSync } from 'fs';
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
 import { tmpdir } from 'os';
+import { readFileSync } from 'fs';
 
 export const NETWORK = 'devnet';
 
@@ -122,7 +122,9 @@ export async function pause(ms: number) {
 }
 
 export function getUserKeypairFromFile(keypairPath) {
-  const arr = require(keypairPath);
-  const u8Array = Uint8Array.from(arr);
+  const arr = readFileSync(path.resolve(keypairPath), {
+    encoding: 'utf-8',
+  });
+  const u8Array = Uint8Array.from(JSON.parse(arr));
   return Keypair.fromSecretKey(u8Array);
 }
