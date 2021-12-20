@@ -25,14 +25,10 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: yarn install --immutable
-      - name: Lint
-        run: yarn lint && yarn prettier
-
       - name: Install Solana
         uses: ./.github/actions/install-solana
         with:
           solana_version: ${{ env.SOLANA_VERSION }}
-
       - name: Install Rust
         uses: ./.github/actions/install-rust
         with:
