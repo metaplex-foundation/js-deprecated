@@ -8,8 +8,12 @@ import StreamZip from 'node-stream-zip';
 
 const rustGithubRepository = 'metaplex-program-library';
 const repositoryDir = `${rustGithubRepository}-master`;
-
 const rustProgramsRepository = `https://github.com/metaplex-foundation/${rustGithubRepository}/archive/refs/heads/master.zip`;
+
+function OutputAndExitError(error: Error): void {
+  console.error(`${error.name}: ${error.message}`);
+  process.exit(1);
+}
 
 async function build() {
   const programs: string[] = [
@@ -24,23 +28,26 @@ async function build() {
   async function downloadFile(path: string, destinationPath: string): Promise<void> {
     const done = promisify(stream.finished);
     const writer = createWriteStream(destinationPath);
-
-    await axios({ method: 'get', url: path, responseType: 'stream' })
-      .then(function (response) {
+    try {
+      await axios({ method: 'get', url: path, responseType: 'stream' }).then(function (response) {
         response.data.pipe(writer);
         return done(writer);
-      })
-      .catch((error) => console.log(error));
-  }
-  try {
-    await downloadFile(rustProgramsRepository, `${tmpTestDir}/master.zip`);
-  } catch (error) {
-    console.log(error);
+      });
+    } catch (error) {
+      throw new OutputAndExitError(error);
+    }
   }
 
+  await downloadFile(rustProgramsRepository, `${tmpTestDir}/master.zip`);
+
   const zip = new StreamZip.async({ file: `${tmpTestDir}/master.zip` });
-  await zip.extract(null, tmpTestDir);
-  await zip.close();
+
+  try {
+    await zip.extract(null, tmpTestDir);
+    await zip.close();
+  } catch (error) {
+    throw new OutputAndExitError(error);
+  }
 
   const currentDir = process.cwd();
 

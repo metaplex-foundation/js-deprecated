@@ -1,4 +1,3 @@
-// import debug from 'debug';
 import path from 'path';
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
 import { tmpdir } from 'os';
@@ -112,7 +111,6 @@ export const projectRoot = path.resolve(__dirname, '..', '..');
 export const tmpTestDir = path.resolve(tmpdir(), 'test');
 
 export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
-
 export async function pause(ms: number) {
   await new Promise((response) =>
     setTimeout(() => {
