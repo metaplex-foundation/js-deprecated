@@ -2,10 +2,7 @@ import { Connection } from '../Connection';
 import { Wallet } from '../wallet';
 
 import { StringPublicKey, Transaction } from '@metaplex-foundation/mpl-core';
-import { InitVault, Vault, VaultProgram } from '@metaplex-foundation/mpl-token-vault';
-import { Keypair, PublicKey, SystemProgram, TransactionSignature } from '@solana/web3.js';
-import { AccountLayout, MintLayout, NATIVE_MINT } from '@solana/spl-token';
-import { CreateMint, CreateTokenAccount } from '../programs';
+import { PublicKey, TransactionSignature } from '@solana/web3.js';
 import { sendTransaction } from '../actions/transactions';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import {
@@ -70,7 +67,9 @@ export const makeAuction = async ({
     resource: vault.toBase58(),
   });
 
-  const auctionTx = new CreateAuction(txOptions, {
+  console.log(CreateAuction);
+
+  const auctionTx: Transaction = new CreateAuction(txOptions, {
     args: fullSettings,
     auction: auctionKey,
     creator: wallet.publicKey,

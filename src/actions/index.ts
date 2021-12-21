@@ -19,4 +19,5 @@ export * from './claimBid';
 export * from './instantSale';
 export * from './burnToken';
 export * from './sendToken';
+export * from './makeAuction';
 export * from './shared';
