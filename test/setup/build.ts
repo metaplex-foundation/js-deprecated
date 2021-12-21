@@ -10,7 +10,7 @@ const rustGithubRepository = 'metaplex-program-library';
 const repositoryDir = `${rustGithubRepository}-master`;
 const rustProgramsRepository = `https://github.com/metaplex-foundation/${rustGithubRepository}/archive/refs/heads/master.zip`;
 
-function OutputAndExitError(error: Error): void {
+function outputAndExitError(error: Error): void {
   console.error(`${error.name}: ${error.message}`);
   process.exit(1);
 }
@@ -29,12 +29,11 @@ async function build() {
     const done = promisify(stream.finished);
     const writer = createWriteStream(destinationPath);
     try {
-      await axios({ method: 'get', url: path, responseType: 'stream' }).then(function (response) {
-        response.data.pipe(writer);
-        return done(writer);
-      });
+      const response = await axios({ method: 'get', url: path, responseType: 'stream' });
+      response.data.pipe(writer);
+      await done(writer);
     } catch (error) {
-      throw new OutputAndExitError(error);
+      outputAndExitError(error);
     }
   }
 
@@ -46,7 +45,7 @@ async function build() {
     await zip.extract(null, tmpTestDir);
     await zip.close();
   } catch (error) {
-    throw new OutputAndExitError(error);
+    outputAndExitError(error);
   }
 
   const currentDir = process.cwd();
