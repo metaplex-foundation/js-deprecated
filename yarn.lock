@@ -735,10 +735,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@metaplex-foundation/amman@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/amman/-/amman-0.0.7.tgz#87b43de8466e97aab983cc4f1e7dc54dc26514ab"
-  integrity sha512-qQB9vqrZ40JhxQlpESaM+ldXlL5Nw0PXV9nsCf7pud9MenjVMXNeYVyHeRdn7fBEJpJ7zjmCmPNifLQEOZxjAg==
+"@metaplex-foundation/amman@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/amman/-/amman-0.0.8.tgz#369cef90b00a2527434ebd996f5dc83441307792"
+  integrity sha512-9t2Pf6vNdZZClAyvh6MGxWLYMidkD+S7m1W8pocXQAplF6svWx4nrTXcoJXHvjtNncZhCkzD0aBajIZURDZUvw==
   dependencies:
     "@solana/spl-token" "^0.1.8"
     "@solana/web3.js" "^1.31.0"
