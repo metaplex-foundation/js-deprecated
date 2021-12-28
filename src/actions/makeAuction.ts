@@ -15,33 +15,11 @@ import {
 } from '@metaplex-foundation/mpl-auction';
 import BN from 'bn.js';
 
-//TODO: move to mpl
-export interface IPartialCreateAuctionArgs {
-  /// How many winners are allowed for this auction. See AuctionData.
-  winners: WinnerLimit;
-  /// End time is the cut-off point that the auction is forced to end by. See AuctionData.
-  endAuctionAt: BN | null;
-  /// Gap time is how much time after the previous bid where the auction ends. See AuctionData.
-  auctionGap: BN | null;
-  /// Token mint for the SPL token used for bidding.
-  tokenMint: StringPublicKey;
-
-  priceFloor: PriceFloor;
-
-  tickSize: BN | null;
-
-  gapTickSizePercentage: number | null;
-
-  instantSalePrice: BN | null;
-
-  name: number[] | null;
-}
-
 interface MakeAuctionParams {
   connection: Connection;
   wallet: Wallet;
   vault: PublicKey;
-  auctionSettings: IPartialCreateAuctionArgs;
+  auctionSettings: CreateAuctionArgs;
 }
 
 interface MakeAuctionResponse {

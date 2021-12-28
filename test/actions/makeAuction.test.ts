@@ -1,13 +1,8 @@
 import { Connection, NodeWallet } from '../../src';
-import {
-  createVault,
-  createExternalPriceAccount,
-  makeAuction,
-  IPartialCreateAuctionArgs,
-} from '../../src/actions';
+import { createVault, createExternalPriceAccount, makeAuction } from '../../src/actions';
 import { FEE_PAYER, pause } from '../utils';
 import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
-import { WinnerLimit, WinnerLimitType } from '@metaplex-foundation/mpl-auction';
+import { CreateAuctionArgs, WinnerLimit, WinnerLimitType } from '@metaplex-foundation/mpl-auction';
 import BN from 'bn.js';
 import { NATIVE_MINT } from '@solana/spl-token';
 
@@ -32,7 +27,7 @@ describe('making an Auction', () => {
       expect(vault).toHaveProperty('data');
       expect(vault.data.state).toEqual(VaultState.Inactive);
 
-      const auctionSettings: IPartialCreateAuctionArgs = {
+      const auctionSettings: CreateAuctionArgs = {
         winners: new WinnerLimit({
           type: WinnerLimitType.Capped,
           usize: new BN(1),
@@ -40,11 +35,12 @@ describe('making an Auction', () => {
         endAuctionAt: null,
         auctionGap: null,
         gapTickSizePercentage: null,
-        instantSalePrice: null,
-        name: null,
         priceFloor: null,
         tickSize: null,
         tokenMint: NATIVE_MINT.toBase58(),
+        authority: wallet.publicKey.toBase58(),
+        instruction: 1,
+        resource: vaultResponse.vault.toBase58(),
       };
 
       const makeAuctionResponse = await makeAuction({
