@@ -12,7 +12,7 @@ surprise users when Experimental API modifications occur.
 
 ## Documentation
 
-Visit [https://bit.ly/metaplex-js-sdk](https://bit.ly/metaplex-js-sdk) to get started.
+Visit [https://docs.metaplex.com/sdk/js/getting-started](https://docs.metaplex.com/sdk/js/getting-started) to get started.
 
 ## Community
 
