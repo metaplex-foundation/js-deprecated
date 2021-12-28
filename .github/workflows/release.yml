@@ -4,31 +4,43 @@ on:
   push:
     branches: [main]
 
+env:
+  SOLANA_VERSION: 1.8.5
+  RUST_TOOLCHAIN: stable
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        persist-credentials: false
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14.17.0
-        registry-url: 'https://registry.npmjs.org'
-    - name: Install dependencies
-      run: yarn install --immutable
-    - name: Test
-      run: yarn test
-    - name: Build
-      run: yarn build
-    - name: Release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npx semantic-release
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.17.0
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Install Solana
+        uses: ./.github/actions/install-solana
+        with:
+          solana_version: ${{ env.SOLANA_VERSION }}
+      - name: Install Rust
+        uses: ./.github/actions/install-rust
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+      - name: Test
+        run: yarn test:all
+      - name: Build
+        run: yarn build
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx semantic-release
