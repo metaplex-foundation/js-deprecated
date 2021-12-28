@@ -1,4 +1,7 @@
+import path from 'path';
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
+import { tmpdir } from 'os';
+import { readFileSync } from 'fs';
 
 export const NETWORK = 'devnet';
 
@@ -104,12 +107,22 @@ export const PRIZE_TRACKING_TICKET_PUBKEY = new PublicKey(
   '78qz3gehg9YqktdaYt6o99DSUPFQ41tLMACHpnFjdYdS',
 );
 
-export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
+export const projectRoot = path.resolve(__dirname, '..', '..');
+export const tmpTestDir = path.resolve(tmpdir(), 'test');
 
+export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
 export async function pause(ms: number) {
   await new Promise((response) =>
     setTimeout(() => {
       response(0);
     }, ms),
   );
+}
+
+export function getUserKeypairFromFile(keypairPath) {
+  const arr = readFileSync(path.resolve(keypairPath), {
+    encoding: 'utf-8',
+  });
+  const u8Array = Uint8Array.from(JSON.parse(arr));
+  return Keypair.fromSecretKey(u8Array);
 }
