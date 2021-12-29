@@ -115,14 +115,5 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "resolutions": {
-    "@metaplex-foundation/metaplex-program-library": "portal:../metaplex-program-library",
-    "@metaplex-foundation/mpl-auction-house": "portal:../metaplex-program-library/auction-house/js",
-    "@metaplex-foundation/mpl-auction": "portal:../metaplex-program-library/auction/js",
-    "@metaplex-foundation/mpl-core": "portal:../metaplex-program-library/core/js",
-    "@metaplex-foundation/mpl-metaplex": "portal:../metaplex-program-library/metaplex/js",
-    "@metaplex-foundation/mpl-token-metadata": "portal:../metaplex-program-library/token-metadata/js",
-    "@metaplex-foundation/mpl-token-vault": "portal:../metaplex-program-library/token-vault/js"
   }
 }
