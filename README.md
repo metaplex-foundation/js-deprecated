@@ -19,8 +19,7 @@ Visit [https://docs.metaplex.com/sdk/js/getting-started](https://docs.metaplex.c
 _COMING SOON_
 
 ## Contributing
-
-_COMING SOON_
+See [Contribution](Contribution.md)
 
 ## Good First Issues
 
