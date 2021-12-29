@@ -1,4 +1,5 @@
 {
+  "packageManager": "yarn@3.1.1",
   "name": "@metaplex/js",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -39,7 +40,8 @@
     "test:all": "yarn test:build && yarn test:init && yarn test",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prepare": "husky install"
+    "postinstall": "husky install",
+    "link-mpl": "yarn link ../metaplex-program-library --private -r -A"
   },
   "dependencies": {
     "@metaplex-foundation/mpl-auction": "^0.0.2",
@@ -113,5 +115,14 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "resolutions": {
+    "@metaplex-foundation/metaplex-program-library": "portal:../metaplex-program-library",
+    "@metaplex-foundation/mpl-auction-house": "portal:../metaplex-program-library/auction-house/js",
+    "@metaplex-foundation/mpl-auction": "portal:../metaplex-program-library/auction/js",
+    "@metaplex-foundation/mpl-core": "portal:../metaplex-program-library/core/js",
+    "@metaplex-foundation/mpl-metaplex": "portal:../metaplex-program-library/metaplex/js",
+    "@metaplex-foundation/mpl-token-metadata": "portal:../metaplex-program-library/token-metadata/js",
+    "@metaplex-foundation/mpl-token-vault": "portal:../metaplex-program-library/token-vault/js"
   }
 }
