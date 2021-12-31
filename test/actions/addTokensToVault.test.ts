@@ -13,7 +13,8 @@ describe('addTokensToVault action', () => {
   const wallet = new NodeWallet(FEE_PAYER);
 
   describe('Positive scenario of adding tokens to vault', () => {
-    test('creation and adding of single mint token to newly created vault', async () => {
+    test('creation and adding of multiple mint tokens to newly created vault', async () => {
+      const TOKEN_AMOUNT = 2;
       const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
 
       await pause(20000);
@@ -24,56 +25,56 @@ describe('addTokensToVault action', () => {
         ...externalPriceAccountData,
       });
 
-      await pause(20000);
-
+      const testNfts = [];
       const mintRent = await connection.getMinimumBalanceForRentExemption(MintLayout.span);
-      const mint = Keypair.generate();
-      const createMintTx = new CreateMint(
-        { feePayer: FEE_PAYER.publicKey },
-        {
-          newAccountPubkey: mint.publicKey,
-          lamports: mintRent,
-        },
-      );
-
       const accountRent = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
-      const tokenAccount = Keypair.generate();
-      const createTokenAccountTx = new CreateTokenAccount(
-        { feePayer: FEE_PAYER.publicKey },
-        {
-          newAccountPubkey: tokenAccount.publicKey,
-          lamports: accountRent,
-          mint: mint.publicKey,
-        },
-      );
 
-      const mintToTokenAccountTx = new MintTo(
-        { feePayer: FEE_PAYER.publicKey },
-        {
-          mint: mint.publicKey,
-          dest: tokenAccount.publicKey,
-          amount: 1,
-        },
-      );
+      for (let i = 0; i < TOKEN_AMOUNT; i++) {
+        const mint = Keypair.generate();
+        const createMintTx = new CreateMint(
+          { feePayer: FEE_PAYER.publicKey },
+          {
+            newAccountPubkey: mint.publicKey,
+            lamports: mintRent,
+          },
+        );
 
-      await sendAndConfirmTransaction(
-        connection,
-        Transaction.fromCombined([createMintTx, createTokenAccountTx, mintToTokenAccountTx]),
-        [FEE_PAYER, mint, tokenAccount, wallet.payer],
-        {
-          commitment: 'confirmed',
-        },
-      );
+        const tokenAccount = Keypair.generate();
+        const createTokenAccountTx = new CreateTokenAccount(
+          { feePayer: FEE_PAYER.publicKey },
+          {
+            newAccountPubkey: tokenAccount.publicKey,
+            lamports: accountRent,
+            mint: mint.publicKey,
+          },
+        );
 
-      await pause(20000);
+        const mintToTokenAccountTx = new MintTo(
+          { feePayer: FEE_PAYER.publicKey },
+          {
+            mint: mint.publicKey,
+            dest: tokenAccount.publicKey,
+            amount: 1,
+          },
+        );
 
-      const testNfts = [
-        {
+        await sendAndConfirmTransaction(
+          connection,
+          Transaction.fromCombined([createMintTx, createTokenAccountTx, mintToTokenAccountTx]),
+          [FEE_PAYER, mint, tokenAccount, wallet.payer],
+          {
+            commitment: 'confirmed',
+          },
+        );
+
+        testNfts.push({
           tokenAccount: tokenAccount.publicKey,
           tokenMint: mint.publicKey,
           amount: new BN(1),
-        },
-      ];
+        });
+      }
+
+      await pause(20000);
 
       const { safetyDepositTokenStores } = await addTokensToVault({
         connection,
@@ -81,8 +82,6 @@ describe('addTokensToVault action', () => {
         vaultPub: vault,
         nfts: testNfts,
       });
-
-      await pause(20000);
 
       expect(safetyDepositTokenStores.length).toEqual(testNfts.length);
       expect(safetyDepositTokenStores[0].tokenMint).toEqual(testNfts[0].tokenMint);
