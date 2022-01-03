@@ -941,30 +941,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metaplex-foundation/mpl-auction@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@metaplex-foundation/mpl-auction@npm:0.0.2"
+"@metaplex-foundation/mpl-auction@portal:../metaplex-program-library/auction/js::locator=%40metaplex%2Fjs%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@metaplex-foundation/mpl-auction@portal:../metaplex-program-library/auction/js::locator=%40metaplex%2Fjs%40workspace%3A."
   dependencies:
     "@metaplex-foundation/mpl-core": ^0.0.2
     "@solana/spl-token": ^0.1.8
     "@solana/web3.js": ^1.31.0
-  checksum: bb8844835a6fc4313c77ea744c7a1feaa732c134098433d34f37ef5de76ea7717a710d03d6b4bdb3ab33a25b31b081ec1a6e54cef8c669c4cf0ae6208334e960
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@metaplex-foundation/mpl-core@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@metaplex-foundation/mpl-core@npm:0.0.2"
+"@metaplex-foundation/mpl-core@portal:../metaplex-program-library/core/js::locator=%40metaplex%2Fjs%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@metaplex-foundation/mpl-core@portal:../metaplex-program-library/core/js::locator=%40metaplex%2Fjs%40workspace%3A."
   dependencies:
     "@solana/web3.js": ^1.31.0
     bs58: ^4.0.1
-  checksum: f74ad09538dbd8b567c349724310ed3ca1e3c9d7e65992ea32077294b09791cd246ab2ac0c29c0a8ed00aaccb6858dbb0fffc55e7e788da7c418f2ed094a1d9a
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@metaplex-foundation/mpl-metaplex@npm:^0.0.5":
-  version: 0.0.5
-  resolution: "@metaplex-foundation/mpl-metaplex@npm:0.0.5"
+"@metaplex-foundation/mpl-metaplex@portal:../metaplex-program-library/metaplex/js::locator=%40metaplex%2Fjs%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@metaplex-foundation/mpl-metaplex@portal:../metaplex-program-library/metaplex/js::locator=%40metaplex%2Fjs%40workspace%3A."
   dependencies:
     "@metaplex-foundation/mpl-auction": ^0.0.2
     "@metaplex-foundation/mpl-core": ^0.0.2
@@ -972,31 +970,28 @@ __metadata:
     "@metaplex-foundation/mpl-token-vault": ^0.0.2
     "@solana/spl-token": ^0.1.8
     "@solana/web3.js": ^1.31.0
-  checksum: 749be4932dcfe3f5c48cc1ac194e1ee92ee92f01359699d53abf755937ab3e10026a06c68ae76924bfb4828ae24c8f378ea9fffabe98a39df353289cd6e5c3d6
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@metaplex-foundation/mpl-token-metadata@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@metaplex-foundation/mpl-token-metadata@npm:0.0.2"
+"@metaplex-foundation/mpl-token-metadata@portal:../metaplex-program-library/token-metadata/js::locator=%40metaplex%2Fjs%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@metaplex-foundation/mpl-token-metadata@portal:../metaplex-program-library/token-metadata/js::locator=%40metaplex%2Fjs%40workspace%3A."
   dependencies:
     "@metaplex-foundation/mpl-core": ^0.0.2
     "@solana/spl-token": ^0.1.8
     "@solana/web3.js": ^1.31.0
-  checksum: 03064927d289cd3de12b238c233cb06ce7476338b7bf203e5c02828048d0e51c438ba90c9151d24c379618270cfcd05cee327ca9dc7b100d1108c4301ad3388b
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@metaplex-foundation/mpl-token-vault@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@metaplex-foundation/mpl-token-vault@npm:0.0.2"
+"@metaplex-foundation/mpl-token-vault@portal:../metaplex-program-library/token-vault/js::locator=%40metaplex%2Fjs%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@metaplex-foundation/mpl-token-vault@portal:../metaplex-program-library/token-vault/js::locator=%40metaplex%2Fjs%40workspace%3A."
   dependencies:
     "@metaplex-foundation/mpl-core": ^0.0.2
     "@solana/spl-token": ^0.1.8
     "@solana/web3.js": ^1.31.0
-  checksum: 4543fc4142f59f447a19b26162d22c8547cb9b94cf2cc386f0d33db85fb06777d19d34792f7d63e0a9f4bb5549b2819e1f1b9cc2420af5effcdb84799dfe6616
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@metaplex/js@workspace:.":
   version: 0.0.0-use.local
@@ -1054,6 +1049,7 @@ __metadata:
     typescript: ^4.4.3
   peerDependencies:
     "@metaplex-foundation/mpl-auction": ^0.0.2
+    "@metaplex-foundation/mpl-auction-house": ^0.0.2
     "@metaplex-foundation/mpl-core": ^0.0.2
     "@metaplex-foundation/mpl-metaplex": ^0.0.5
     "@metaplex-foundation/mpl-token-metadata": ^0.0.2
