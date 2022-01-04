@@ -1,6 +1,7 @@
 export * from './transactions';
 export * from './initStore';
 export * from './initStoreV2';
+export * from './makeAuction';
 export * from './mintNFT';
 export * from './mintEditionFromMaster';
 export * from './closeVault';
