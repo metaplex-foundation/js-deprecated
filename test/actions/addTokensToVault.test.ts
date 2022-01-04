@@ -42,9 +42,6 @@ describe('addTokensToVault action', () => {
         connection,
         Transaction.fromCombined([createMintTx, createAssociatedTokenAccountTx, mintToTx]),
         [payer, mint, wallet.payer],
-        {
-          commitment: 'confirmed',
-        },
       );
 
       testNfts.push({
