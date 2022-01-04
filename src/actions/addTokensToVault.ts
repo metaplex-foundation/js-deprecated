@@ -19,34 +19,38 @@ interface Token2Add {
   amount: BN;
 }
 
-interface AddTokensToVaultParams {
-  connection: Connection;
-  wallet: Wallet;
-  vaultPub: PublicKey;
-  nfts: Token2Add[];
-}
-
 interface SafetyDepositTokenStore {
   txId: TransactionSignature;
   tokenStoreAccount: PublicKey;
   tokenMint: PublicKey;
 }
 
+interface AddTokensToVaultParams {
+  connection: Connection;
+  wallet: Wallet;
+  vault: PublicKey;
+  nfts: Token2Add[];
+}
+
+interface AddTokensToVaultResponse {
+  safetyDepositTokenStores: SafetyDepositTokenStore[];
+}
+
 export const addTokensToVault = async ({
   connection,
   wallet,
-  vaultPub,
+  vault,
   nfts,
-}: AddTokensToVaultParams): Promise<{ safetyDepositTokenStores: SafetyDepositTokenStore[] }> => {
+}: AddTokensToVaultParams): Promise<AddTokensToVaultResponse> => {
   const txOptions = { feePayer: wallet.publicKey };
   const safetyDepositTokenStores: SafetyDepositTokenStore[] = [];
 
-  const vaultAuthority = await Vault.getPDA(vaultPub);
+  const vaultAuthority = await Vault.getPDA(vault);
   const accountRent = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
 
   for (const nft of nfts) {
     const tokenTxBatch = new TransactionsBatch({ transactions: [] });
-    const safetyDepositBox = await SafetyDepositBox.getPDA(vaultPub, nft.tokenMint);
+    const safetyDepositBox = await SafetyDepositBox.getPDA(vault, nft.tokenMint);
 
     const tokenStoreAccount = Keypair.generate();
     const tokenStoreAccountTx = new CreateTokenAccount(txOptions, {
@@ -67,7 +71,7 @@ export const addTokensToVault = async ({
     tokenTxBatch.addSigner(transferAuthority);
 
     const addTokenTx = new AddTokenToInactiveVault(txOptions, {
-      vault: vaultPub,
+      vault,
       vaultAuthority: wallet.publicKey,
       tokenAccount: nft.tokenAccount,
       tokenStoreAccount: tokenStoreAccount.publicKey,
