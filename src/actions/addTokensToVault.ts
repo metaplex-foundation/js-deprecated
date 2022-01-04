@@ -21,6 +21,7 @@ interface Token2Add {
 
 interface SafetyDepositTokenStore {
   txId: TransactionSignature;
+  tokenAccount: PublicKey;
   tokenStoreAccount: PublicKey;
   tokenMint: PublicKey;
 }
@@ -92,6 +93,7 @@ export const addTokensToVault = async ({
       txId,
       tokenStoreAccount: tokenStoreAccount.publicKey,
       tokenMint: nft.tokenMint,
+      tokenAccount: nft.tokenAccount,
     });
   }
 
