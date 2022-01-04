@@ -1,35 +1,25 @@
 import BN from 'bn.js';
+import { Keypair } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
 import {
-  CreateAuctionArgs,
   PriceFloor,
   PriceFloorType,
   WinnerLimit,
   WinnerLimitType,
 } from '@metaplex-foundation/mpl-auction';
+import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
 
+import { makeAuction } from '../../src/actions';
 import { Connection, NodeWallet } from '../../src';
-import { FEE_PAYER, NETWORK, pause } from '../utils';
-import { createVault, createExternalPriceAccount, makeAuction } from '../../src/actions';
 
 describe('makeAuction action', () => {
-  const connection = new Connection(NETWORK);
-  const wallet = new NodeWallet(FEE_PAYER);
+  test('making an auction with newly created vault', async () => {
+    const payer = Keypair.generate();
+    const wallet = new NodeWallet(payer);
+    const connection = new Connection(LOCALHOST, 'confirmed');
+    await airdrop(connection, payer.publicKey, 10);
 
-  test('making an auction for newly created vault', async () => {
-    const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
-
-    await pause(20000);
-
-    const { vault } = await createVault({
-      connection,
-      wallet,
-      ...externalPriceAccountData,
-    });
-
-    await pause(20000);
-
-    const auctionSettings: CreateAuctionArgs = {
+    const auctionSettings = {
       instruction: 1,
       tickSize: null,
       auctionGap: null,
@@ -39,18 +29,17 @@ describe('makeAuction action', () => {
         type: WinnerLimitType.Capped,
         usize: new BN(1),
       }),
-      resource: vault.toBase58(),
       tokenMint: NATIVE_MINT.toBase58(),
-      authority: wallet.publicKey.toBase58(),
       priceFloor: new PriceFloor({ type: PriceFloorType.Minimum }),
     };
 
-    const { auction } = await makeAuction({
+    const { auction, vault } = await makeAuction({
       connection,
       wallet,
-      vault,
       auctionSettings,
     });
+
     expect(Boolean(auction)).not.toBeFalsy();
-  }, 50000);
+    expect(Boolean(vault)).not.toBeFalsy();
+  });
 });
