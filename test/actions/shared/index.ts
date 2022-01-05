@@ -1,7 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
-import { Connection, NodeWallet, Wallet } from '../../../src';
 import { Keypair } from '@solana/web3.js';
+import axios, { AxiosResponse } from 'axios';
 import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
+
+import { Connection, NodeWallet, Wallet } from '../../../src';
 
 export const uri =
   'https://bafkreibj4hjlhf3ehpugvfy6bzhhu2c7frvyhrykjqmoocsvdw24omfqga.ipfs.dweb.link';
