@@ -1,6 +1,4 @@
-import { Connection } from '../Connection';
-import { Wallet } from '../wallet';
-
+import BN from 'bn.js';
 import {
   ExternalPriceAccountData,
   Vault,
@@ -16,9 +14,11 @@ import {
 } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
 import { Transaction } from '@metaplex-foundation/mpl-core';
-import { sendTransaction } from '../actions/transactions';
-import { TransactionsBatch } from '../utils/transactions-batch';
-import BN from 'bn.js';
+
+import { Wallet } from '../../wallet';
+import { Connection } from '../../Connection';
+import { sendTransaction } from '../transactions';
+import { TransactionsBatch } from '../../utils/transactions-batch';
 
 interface CreateExternalPriceAccountParams {
   connection: Connection;

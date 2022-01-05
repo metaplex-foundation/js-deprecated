@@ -1,17 +1,15 @@
-import { Connection, NodeWallet } from '../../src';
-import { createVault, createExternalPriceAccount } from '../../src/actions';
-import { FEE_PAYER, pause } from '../utils';
 import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
-describe('creating a Vault', () => {
-  const connection = new Connection('devnet');
-  const wallet = new NodeWallet(FEE_PAYER);
+import { pause } from '../../utils';
+import { createVault, createExternalPriceAccount } from '../../../src/actions/utility';
+import { generateConnectionAndWallet } from '../shared';
 
+describe('creating a Vault', () => {
   describe('success', () => {
     test('generates vault', async () => {
-      const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
+      const { connection, wallet } = await generateConnectionAndWallet();
 
-      await pause(20000);
+      const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
 
       const vaultResponse = await createVault({
         connection,
@@ -19,10 +17,10 @@ describe('creating a Vault', () => {
         ...externalPriceAccountData,
       });
 
-      await pause(20000);
+      await pause(1000);
       const vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
       expect(vault.data.state).toEqual(VaultState.Inactive);
-    }, 50000);
+    });
   });
 });
