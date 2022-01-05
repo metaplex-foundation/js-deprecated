@@ -1,19 +1,14 @@
-import { Keypair } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
-import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
 import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
 import { pause } from '../../utils';
-import { Connection, NodeWallet } from '../../../src';
+import { generateConnectionAndWallet } from '../shared';
 import { closeVault, createVault, createExternalPriceAccount } from '../../../src/actions/utility';
 
 describe('closing a Vault', () => {
   describe('success', () => {
     test('closes vault', async () => {
-      const payer = Keypair.generate();
-      const connection = new Connection(LOCALHOST, 'confirmed');
-      await airdrop(connection, payer.publicKey, 10);
-      const wallet = new NodeWallet(payer);
+      const { connection, wallet } = await generateConnectionAndWallet();
       let vault;
 
       const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });

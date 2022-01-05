@@ -1,5 +1,4 @@
 import BN from 'bn.js';
-import { Keypair } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
 import {
   Auction,
@@ -8,18 +7,14 @@ import {
   WinnerLimit,
   WinnerLimitType,
 } from '@metaplex-foundation/mpl-auction';
-import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
 
 import { pause } from '../../utils';
-import { Connection, NodeWallet } from '../../../src';
+import { generateConnectionAndWallet } from '../shared';
 import { createExternalPriceAccount, createVault, initAuction } from '../../../src/actions/utility';
 
 describe('initAuction action', () => {
   test('making an auction for newly created vault', async () => {
-    const payer = Keypair.generate();
-    const wallet = new NodeWallet(payer);
-    const connection = new Connection(LOCALHOST, 'confirmed');
-    await airdrop(connection, payer.publicKey, 10);
+    const { connection, wallet } = await generateConnectionAndWallet();
 
     const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
 
