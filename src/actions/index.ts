@@ -3,7 +3,6 @@ export * from './initStore';
 export * from './initStoreV2';
 export * from './mintNFT';
 export * from './mintEditionFromMaster';
-export * from './closeVault';
 export * from './createMetadata';
 export * from './createMasterEdition';
 export * from './signMetadata';

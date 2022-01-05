@@ -1,6 +1,8 @@
 import { Keypair } from '@solana/web3.js';
 import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
+import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
+import { pause } from '../../utils';
 import { Connection, NodeWallet } from '../../../src';
 import { createVault, createExternalPriceAccount } from '../../../src/actions/utility';
 
@@ -14,13 +16,16 @@ describe('creating a Vault', () => {
 
       const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
 
-      const { vault } = await createVault({
+      const vaultResponse = await createVault({
         connection,
         wallet,
         ...externalPriceAccountData,
       });
 
-      expect(Boolean(vault)).not.toBeFalsy();
+      await pause(1000);
+      const vault = await Vault.load(connection, vaultResponse.vault);
+      expect(vault).toHaveProperty('data');
+      expect(vault.data.state).toEqual(VaultState.Inactive);
     });
   });
 });

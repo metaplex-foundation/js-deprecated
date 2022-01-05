@@ -1,20 +1,22 @@
+import { Keypair } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
-import { Connection, NodeWallet } from '../../src';
-import { createVault, closeVault, createExternalPriceAccount } from '../../src/actions';
-import { FEE_PAYER, pause } from '../utils';
+import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
 import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
-describe('closing a Vault', () => {
-  const connection = new Connection('devnet');
-  const wallet = new NodeWallet(FEE_PAYER);
+import { pause } from '../../utils';
+import { Connection, NodeWallet } from '../../../src';
+import { closeVault, createVault, createExternalPriceAccount } from '../../../src/actions/utility';
 
+describe('closing a Vault', () => {
   describe('success', () => {
     test('closes vault', async () => {
+      const payer = Keypair.generate();
+      const connection = new Connection(LOCALHOST, 'confirmed');
+      await airdrop(connection, payer.publicKey, 10);
+      const wallet = new NodeWallet(payer);
       let vault;
 
       const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
-
-      await pause(20000);
 
       const vaultResponse = await createVault({
         connection,
@@ -22,7 +24,8 @@ describe('closing a Vault', () => {
         ...externalPriceAccountData,
       });
 
-      await pause(20000);
+      await pause(1000);
+
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
       expect(vault.data.state).toEqual(VaultState.Inactive);
@@ -34,11 +37,11 @@ describe('closing a Vault', () => {
         priceMint: NATIVE_MINT,
       });
 
-      await pause(20000);
+      await pause(1000);
 
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
       expect(vault.data.state).toEqual(VaultState.Combined);
-    }, 70000);
+    });
   });
 });
