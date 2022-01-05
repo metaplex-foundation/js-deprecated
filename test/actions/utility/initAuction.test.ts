@@ -9,15 +9,23 @@ import {
 } from '@metaplex-foundation/mpl-auction';
 import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
 
-import { makeAuction } from '../../src/actions';
-import { Connection, NodeWallet } from '../../src';
+import { Connection, NodeWallet } from '../../../src';
+import { createExternalPriceAccount, createVault, initAuction } from '../../../src/actions/utility';
 
-describe('makeAuction action', () => {
+describe('initAuction action', () => {
   test('making an auction with newly created vault', async () => {
     const payer = Keypair.generate();
     const wallet = new NodeWallet(payer);
     const connection = new Connection(LOCALHOST, 'confirmed');
     await airdrop(connection, payer.publicKey, 10);
+
+    const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
+
+    const { vault } = await createVault({
+      connection,
+      wallet,
+      ...externalPriceAccountData,
+    });
 
     const auctionSettings = {
       instruction: 1,
@@ -33,13 +41,13 @@ describe('makeAuction action', () => {
       priceFloor: new PriceFloor({ type: PriceFloorType.Minimum }),
     };
 
-    const { auction, vault } = await makeAuction({
+    const { auction } = await initAuction({
       connection,
       wallet,
+      vault,
       auctionSettings,
     });
 
     expect(Boolean(auction)).not.toBeFalsy();
-    expect(Boolean(vault)).not.toBeFalsy();
   });
 });

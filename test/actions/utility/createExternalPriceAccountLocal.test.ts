@@ -1,8 +1,8 @@
-import { LOCALHOST } from '@metaplex-foundation/amman';
-import { Connection, NodeWallet } from '../../src';
-import { createExternalPriceAccount } from '../../src/actions';
-import { airdrop } from '@metaplex-foundation/amman';
 import { Keypair } from '@solana/web3.js';
+import { LOCALHOST, airdrop } from '@metaplex-foundation/amman';
+
+import { Connection, NodeWallet } from '../../../src';
+import { createExternalPriceAccount } from '../../../src/actions/utility';
 
 describe('creating an external price account', () => {
   describe('success', () => {

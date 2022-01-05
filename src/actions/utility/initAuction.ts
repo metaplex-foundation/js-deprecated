@@ -7,38 +7,29 @@ import {
 } from '@metaplex-foundation/mpl-auction';
 import { PublicKey, TransactionSignature } from '@solana/web3.js';
 
-import { Wallet } from '../wallet';
-import { Connection } from '../Connection';
-import { createVault } from './createVault';
-import { sendTransaction } from './transactions';
-import { createExternalPriceAccount } from './createExternalPriceAccount';
+import { Wallet } from '../../wallet';
+import { Connection } from '../../Connection';
+import { sendTransaction } from '../transactions';
 
 interface MakeAuctionParams {
   connection: Connection;
   wallet: Wallet;
+  vault: PublicKey;
   auctionSettings: Omit<CreateAuctionArgs, 'resource' | 'authority'>;
 }
 
 interface MakeAuctionResponse {
   txId: TransactionSignature;
   auction: PublicKey;
-  vault: PublicKey;
 }
 
-export const makeAuction = async ({
+export const initAuction = async ({
   connection,
   wallet,
+  vault,
   auctionSettings,
 }: MakeAuctionParams): Promise<MakeAuctionResponse> => {
   const txOptions = { feePayer: wallet.publicKey };
-
-  const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
-
-  const { vault } = await createVault({
-    connection,
-    wallet,
-    ...externalPriceAccountData,
-  });
 
   const [auctionKey, auctionExtended] = await Promise.all([
     Auction.getPDA(vault),
@@ -65,5 +56,5 @@ export const makeAuction = async ({
     wallet,
   });
 
-  return { txId, auction: auctionKey, vault };
+  return { txId, auction: auctionKey };
 };
