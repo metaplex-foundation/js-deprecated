@@ -1,3 +1,11 @@
+# [4.11.0](https://github.com/metaplex/js/compare/v4.10.1...v4.11.0) (2022-01-05)
+
+
+### Features
+
+* port addTokensToVault action to SDK ([#128](https://github.com/metaplex/js/issues/128)) ([d5c8983](https://github.com/metaplex/js/commit/d5c89839680a8dbf612c8bca067fcbf4f380827e))
+* port makeAuction action ([#131](https://github.com/metaplex/js/issues/131)) ([715d1d4](https://github.com/metaplex/js/commit/715d1d4b98c64f3656b0d4a5dc6d0b77041171bf))
+
 ## [4.10.1](https://github.com/metaplex/js/compare/v4.10.0...v4.10.1) (2021-12-16)
 
 
