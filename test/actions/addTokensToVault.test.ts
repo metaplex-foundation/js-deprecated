@@ -1,24 +1,17 @@
 import BN from 'bn.js';
 import { Transaction } from '@metaplex-foundation/mpl-core';
-import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
-import { Keypair, sendAndConfirmTransaction } from '@solana/web3.js';
+import { sendAndConfirmTransaction } from '@solana/web3.js';
 
-import { Connection, NodeWallet } from '../../src';
-import {
-  addTokensToVault,
-  createExternalPriceAccount,
-  createVault,
-  prepareTokenAccountAndMintTxs,
-} from '../../src/actions';
+import { generateConnectionAndWallet } from './shared';
+import { addTokensToVault, prepareTokenAccountAndMintTxs } from '../../src/actions';
+import { createExternalPriceAccount, createVault } from '../../src/actions/utility';
 
 describe('addTokensToVault action', () => {
   test('creation and adding of multiple mint tokens to newly created vault', async () => {
-    const payer = Keypair.generate();
-    const wallet = new NodeWallet(payer);
-    const connection = new Connection(LOCALHOST, 'confirmed');
-    await airdrop(connection, payer.publicKey, 10);
-
     const TOKEN_AMOUNT = 2;
+
+    const { connection, wallet, payer } = await generateConnectionAndWallet();
+
     const externalPriceAccountData = await createExternalPriceAccount({ connection, wallet });
 
     const { vault } = await createVault({

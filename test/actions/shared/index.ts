@@ -61,5 +61,5 @@ export const generateConnectionAndWallet = async () => {
   await airdrop(connection, payer.publicKey, 10);
   const wallet = new NodeWallet(payer);
 
-  return { connection, wallet };
+  return { connection, wallet, payer };
 };
