@@ -1,3 +1,4 @@
+export * from './addTokensToVault';
 export * from './transactions';
 export * from './initStore';
 export * from './initStoreV2';
