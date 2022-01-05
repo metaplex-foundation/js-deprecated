@@ -13,7 +13,7 @@ import {
 import { AuctionManager } from '@metaplex-foundation/mpl-metaplex';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import { getCancelBidTransactions } from './cancelBid';
-import { CreateTokenAccount } from '../programs';
+import { CreateTokenAccount } from '../transactions';
 import { createApproveTxs, createWrappedAccountTxs } from './shared';
 
 interface IPlaceBidParams {

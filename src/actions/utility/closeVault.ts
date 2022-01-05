@@ -7,7 +7,7 @@ import { ActivateVault, CombineVault, Vault } from '@metaplex-foundation/mpl-tok
 import { Wallet } from '../../wallet';
 import { Connection } from '../../Connection';
 import { sendTransaction } from '../transactions';
-import { CreateTokenAccount } from '../../programs';
+import { CreateTokenAccount } from '../../transactions';
 import { TransactionsBatch } from '../../utils/transactions-batch';
 
 interface CloseVaultParams {

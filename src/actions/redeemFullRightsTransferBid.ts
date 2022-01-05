@@ -11,7 +11,7 @@ import {
   RedeemFullRightsTransferBid,
   SafetyDepositConfig,
 } from '@metaplex-foundation/mpl-metaplex';
-import { CreateTokenAccount } from '../programs';
+import { CreateTokenAccount } from '../transactions';
 import { Vault } from '@metaplex-foundation/mpl-token-vault';
 import {
   Metadata,

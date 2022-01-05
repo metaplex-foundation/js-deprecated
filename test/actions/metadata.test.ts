@@ -11,7 +11,7 @@ import {
   MasterEdition,
   CreateMasterEdition,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { CreateMint, CreateAssociatedTokenAccount, MintTo } from '../../src/programs/shared';
+import { CreateMint, CreateAssociatedTokenAccount, MintTo } from '../../src/transactions';
 import { FEE_PAYER, NETWORK } from '../utils';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 

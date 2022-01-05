@@ -10,7 +10,7 @@ import { Connection, TransactionSignature, PublicKey, Keypair } from '@solana/we
 import { Wallet } from '../wallet';
 import { createApproveTxs } from './shared';
 import { sendTransaction } from './transactions';
-import { CreateTokenAccount } from '../programs';
+import { CreateTokenAccount } from '../transactions';
 import { TransactionsBatch } from '../utils/transactions-batch';
 
 interface Token2Add {
