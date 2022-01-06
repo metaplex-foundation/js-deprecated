@@ -1,3 +1,10 @@
+## [4.11.1](https://github.com/metaplex/js/compare/v4.11.0...v4.11.1) (2022-01-06)
+
+
+### Bug Fixes
+
+* **semantic-release:** update yarn.lock ([#134](https://github.com/metaplex/js/issues/134)) ([576a026](https://github.com/metaplex/js/commit/576a026fa1d0c9d2e76dcd3521d281b1ca4e046a))
+
 # [4.11.0](https://github.com/metaplex/js/compare/v4.10.1...v4.11.0) (2022-01-05)
 
 
