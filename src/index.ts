@@ -5,3 +5,6 @@ export * from './wallet';
 export * as utils from './utils';
 export * as actions from './actions';
 export * as programs from './programs';
+
+export * from './auctionHouse';
+

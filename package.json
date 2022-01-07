@@ -62,6 +62,7 @@
   },
   "peerDependencies": {
     "@metaplex-foundation/mpl-auction": "^0.0.2",
+    "@metaplex-foundation/mpl-auction-house": "^0.0.2",
     "@metaplex-foundation/mpl-core": "^0.0.2",
     "@metaplex-foundation/mpl-metaplex": "^0.0.5",
     "@metaplex-foundation/mpl-token-metadata": "^0.0.2",
@@ -115,5 +116,14 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "resolutions": {
+    "@metaplex-foundation/metaplex-program-library": "portal:../metaplex-program-library",
+    "@metaplex-foundation/mpl-auction-house": "portal:../metaplex-program-library/auction-house/js",
+    "@metaplex-foundation/mpl-auction": "portal:../metaplex-program-library/auction/js",
+    "@metaplex-foundation/mpl-core": "portal:../metaplex-program-library/core/js",
+    "@metaplex-foundation/mpl-metaplex": "portal:../metaplex-program-library/metaplex/js",
+    "@metaplex-foundation/mpl-token-metadata": "portal:../metaplex-program-library/token-metadata/js",
+    "@metaplex-foundation/mpl-token-vault": "portal:../metaplex-program-library/token-vault/js"
   }
 }
