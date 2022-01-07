@@ -1,3 +1,10 @@
+## [4.11.2](https://github.com/metaplex/js/compare/v4.11.1...v4.11.2) (2022-01-07)
+
+
+### Bug Fixes
+
+* **npm install:** see [#135](https://github.com/metaplex/js/issues/135) ([#136](https://github.com/metaplex/js/issues/136)) ([22fd608](https://github.com/metaplex/js/commit/22fd608f131ca28f1448e14622dc11ab0da3fd4a))
+
 ## [4.11.1](https://github.com/metaplex/js/compare/v4.11.0...v4.11.1) (2022-01-06)
 
 
