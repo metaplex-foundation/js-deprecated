@@ -40,7 +40,7 @@
     "test:all": "yarn test:build && yarn test:init && yarn test",
     "test": "jest",
     "test:watch": "jest --watch",
-    "postinstall": "husky install",
+    "prepare": "husky install",
     "link-mpl": "yarn link ../metaplex-program-library --private -r -A"
   },
   "dependencies": {
