@@ -1,3 +1,10 @@
+## [4.11.3](https://github.com/metaplex/js/compare/v4.11.2...v4.11.3) (2022-01-11)
+
+
+### Bug Fixes
+
+* **trigger release:** see [#136](https://github.com/metaplex/js/issues/136) ([fde2a8b](https://github.com/metaplex/js/commit/fde2a8b0373411d1b85d76e097c410f2c6fd5909))
+
 ## [4.11.2](https://github.com/metaplex/js/compare/v4.11.1...v4.11.2) (2022-01-07)
 
 
