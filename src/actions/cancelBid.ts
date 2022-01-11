@@ -11,7 +11,7 @@ import {
 } from '@metaplex-foundation/mpl-auction';
 import { TransactionsBatch } from '../utils/transactions-batch';
 import { AuctionManager } from '@metaplex-foundation/mpl-metaplex';
-import { CreateTokenAccount } from '../programs';
+import { CreateTokenAccount } from '../transactions';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 
 interface ICancelBidParams {

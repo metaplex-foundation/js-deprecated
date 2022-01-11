@@ -6,7 +6,7 @@ import { Keypair, PublicKey, SystemProgram, TransactionSignature } from '@solana
 import { Wallet } from '../../wallet';
 import { Connection } from '../../Connection';
 import { sendTransaction } from '../transactions';
-import { CreateMint, CreateTokenAccount } from '../../programs';
+import { CreateMint, CreateTokenAccount } from '../../transactions';
 import { TransactionsBatch } from '../../utils/transactions-batch';
 
 interface CreateVaultParams {

@@ -38,6 +38,7 @@ coverage/
 ._*
 .Spotlight-V100
 .Trashes
+*.swp
 
 # Cache
 .cache/

@@ -15,7 +15,7 @@ import {
   StartAuction,
 } from '@metaplex-foundation/mpl-metaplex';
 import { Auction } from '@metaplex-foundation/mpl-auction';
-import { CreateTokenAccount } from '../../src/programs/shared';
+import { CreateTokenAccount } from '../../src/transactions';
 import { FEE_PAYER, NETWORK, VAULT_PUBKEY } from '../utils';
 
 describe.skip('Metaplex transactions', () => {

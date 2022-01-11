@@ -4,7 +4,7 @@ import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
 import { Account, Transaction } from '@metaplex-foundation/mpl-core';
-import { CreateAssociatedTokenAccount } from '../programs/shared/transactions/CreateAssociatedTokenAccount';
+import { CreateAssociatedTokenAccount } from '../transactions/CreateAssociatedTokenAccount';
 
 interface ISendTokenParams {
   connection: Connection;

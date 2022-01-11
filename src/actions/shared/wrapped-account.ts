@@ -1,7 +1,7 @@
 import { Transaction } from '@metaplex-foundation/mpl-core';
 import { AccountLayout, NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
-import { CreateTokenAccount } from '../../programs/shared/transactions/CreateTokenAccount';
+import { CreateTokenAccount } from '../../transactions/CreateTokenAccount';
 
 interface WrappedAccountTxs {
   account: Keypair;
