@@ -1,4 +1,5 @@
 import stream from 'stream';
+import path from 'path';
 import { promisify } from 'util';
 import { execSync } from 'child_process';
 import { renameSync, rmSync, createWriteStream, mkdirSync } from 'fs';
@@ -9,6 +10,8 @@ import StreamZip from 'node-stream-zip';
 const rustGithubRepository = 'metaplex-program-library';
 const repositoryDir = `${rustGithubRepository}-master`;
 const rustProgramsRepository = `https://github.com/metaplex-foundation/${rustGithubRepository}/archive/refs/heads/master.zip`;
+
+const isLocal = process.env.LOCAL_MPL === '1';
 
 function outputAndExitError(error: Error): void {
   console.error(`${error.name}: ${error.message}`);
@@ -37,25 +40,33 @@ async function build() {
     }
   }
 
-  await downloadFile(rustProgramsRepository, `${tmpTestDir}/master.zip`);
+  if (!isLocal) {
+    await downloadFile(rustProgramsRepository, `${tmpTestDir}/master.zip`);
 
-  const zip = new StreamZip.async({ file: `${tmpTestDir}/master.zip` });
+    const zip = new StreamZip.async({ file: `${tmpTestDir}/master.zip` });
 
-  try {
-    await zip.extract(null, tmpTestDir);
-    await zip.close();
-  } catch (error) {
-    outputAndExitError(error);
+    try {
+      await zip.extract(null, tmpTestDir);
+      await zip.close();
+    } catch (error) {
+      outputAndExitError(error);
+    }
   }
 
   const currentDir = process.cwd();
 
   programs.forEach((directory) => {
-    process.chdir(`${tmpTestDir}/${repositoryDir}/${directory}`);
+    const dir = isLocal
+      ? path.resolve(currentDir, `../metaplex-program-library/${directory}`)
+      : `${tmpTestDir}/${repositoryDir}/${directory}`;
+    process.chdir(dir);
     execSync(`cargo build-bpf`);
   });
 
-  renameSync(`${tmpTestDir}/${repositoryDir}`, `${tmpTestDir}/rust`);
+  if (!isLocal) {
+    renameSync(`${tmpTestDir}/${repositoryDir}`, `${tmpTestDir}/rust`);
+  }
+
   process.chdir(currentDir);
 }
 

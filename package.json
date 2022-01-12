@@ -36,9 +36,12 @@
     "fix:prettier": "yarn prettier --write",
     "fix": "yarn fix:lint && yarn fix:prettier",
     "test:build": "esr ./test/setup/build.ts",
+    "test:build-local-mpl": "LOCAL_MPL=1 esr ./test/setup/build.ts",
     "test:init": "DEBUG=\"amman*\" amman validator",
+    "test:init-local-mpl": "DEBUG=\"amman*\" LOCAL_MPL=1 amman validator",
     "test:all": "yarn test:build && yarn test:init && yarn test",
-    "test": "jest",
+    "test:all-local-mpl": "yarn test:build-local-mpl && yarn test:init-local-mpl && yarn test",
+    "test": "jest --silent false",
     "test:watch": "jest --watch",
     "prepare": "husky install",
     "link-mpl": "yarn link ../metaplex-program-library --private -r -A"
