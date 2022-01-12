@@ -1,57 +1,75 @@
 import { Keypair } from '@solana/web3.js';
 import { Connection, NodeWallet } from '../../src';
-import { mintNFT } from '../../src/actions';
-import { FEE_PAYER, NETWORK } from '../utils';
+import { mintNFT, MintNFTParams } from '../../src/actions';
+import { pause } from '../utils';
 import { MasterEdition, Metadata } from '@metaplex-foundation/mpl-token-metadata';
-import { mockAxios200, mockAxios404, uri } from './shared';
+import { uri, generateConnectionAndWallet, mockAxios200, mockAxios404 } from './shared';
+import { airdrop } from '@metaplex-foundation/amman';
 
 jest.mock('axios');
 
 describe('minting an NFT', () => {
-  const connection = new Connection(NETWORK);
-  const wallet = new NodeWallet(FEE_PAYER);
-  let mint: Keypair;
+  let connection: Connection;
+  let wallet: NodeWallet;
+  let payer: Keypair;
 
-  beforeAll(() => {
-    jest
-      .spyOn(connection, 'sendRawTransaction')
-      .mockResolvedValue(
-        '64Tpr1DNj9UWg1P89Zss5Y4Mh2gGyRUMYZPNenZKY2hiNjsotrCDMBriDrsvhg5BJt3mY4hH6jcparNHCZGhAwf6',
-      );
+  beforeAll(async () => {
+    const result = await generateConnectionAndWallet();
+    connection = result.connection;
+    wallet = result.wallet;
+    payer = result.payer;
+
+    await airdrop(connection, payer.publicKey, 2);
   });
 
-  beforeEach(() => {
-    mint = Keypair.generate();
-    jest.spyOn(Keypair, 'generate').mockReturnValue(mint);
-  });
-
-  describe('when can find metadata json', () => {
-    beforeEach(() => {
-      mockAxios200(wallet);
+  describe('when metadata json is found', () => {
+    beforeAll(async () => {
+      mockAxios200(wallet); // metadata json found
     });
 
-    test('generates a unique mint and creates metadata plus master edition from metadata URL and max supply', async () => {
-      const mintResponse = await mintNFT({
-        connection,
-        wallet,
-        uri,
-        maxSupply: 0,
-      });
+    const values = [0, 3, undefined];
+    for (const maxSupply of values) {
+      describe(`when max supply is "${maxSupply}"`, () => {
+        test('generates a unique mint, metadata & master editions from metadata URL', async () => {
+          const arg: MintNFTParams = {
+            connection,
+            wallet,
+            uri,
+          };
 
-      const metadata = await Metadata.getPDA(mint.publicKey);
-      const edition = await MasterEdition.getPDA(mint.publicKey);
+          if (maxSupply !== undefined) {
+            arg.maxSupply = maxSupply;
+          }
 
-      expect(mintResponse).toMatchObject({
-        metadata,
-        edition,
-        mint: mint.publicKey,
+          const mintResponse = await mintNFT(arg);
+          const { mint } = mintResponse;
+
+          const metadata = await Metadata.getPDA(mint);
+          const edition = await MasterEdition.getPDA(mint);
+
+          expect(mintResponse).toMatchObject({
+            metadata,
+            edition,
+          });
+
+          await pause(2000); // HACK
+
+          const metadataEdition = await Metadata.getEdition(connection, mint) as MasterEdition;
+          expect(metadataEdition.data?.maxSupply?.toNumber()).toBe(maxSupply);
+        });
       });
-    });
-  });
+    }
+  })
 
   describe('when metadata json not found', () => {
     beforeEach(() => {
       mockAxios404();
+
+      jest
+        .spyOn(connection, 'sendRawTransaction')
+        .mockResolvedValue(
+          '64Tpr1DNj9UWg1P89Zss5Y4Mh2gGyRUMYZPNenZKY2hiNjsotrCDMBriDrsvhg5BJt3mY4hH6jcparNHCZGhAwf6',
+        );
     });
 
     test('exits the action and throws an error', async () => {
@@ -63,7 +81,7 @@ describe('minting an NFT', () => {
           maxSupply: 0,
         });
       } catch (e) {
-        expect(e).not.toBeNull();
+        expect(e.message).toMatch(/unable to get metadata/);
       }
     });
   });

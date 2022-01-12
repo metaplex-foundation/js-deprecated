@@ -14,14 +14,14 @@ import { sendTransaction } from './transactions';
 import { lookup } from '../utils/metadata';
 import { prepareTokenAccountAndMintTxs } from './shared';
 
-interface MintNFTParams {
+export interface MintNFTParams {
   connection: Connection;
   wallet: Wallet;
   uri: string;
   maxSupply?: number;
 }
 
-interface MintNFTResponse {
+export interface MintNFTResponse {
   txId: string;
   mint: PublicKey;
   metadata: PublicKey;
@@ -90,7 +90,7 @@ export const mintNFT = async ({
       updateAuthority: wallet.publicKey,
       mint: mint.publicKey,
       mintAuthority: wallet.publicKey,
-      maxSupply: maxSupply ? new BN(maxSupply) : null,
+      maxSupply: (maxSupply || maxSupply === 0) ? new BN(maxSupply) : null,
     },
   );
 
