@@ -38,6 +38,7 @@ coverage/
 ._*
 .Spotlight-V100
 .Trashes
+*.swp
 
 # Cache
 .cache/
@@ -50,3 +51,11 @@ coverage/
 
 # Bundle stats file
 stats.html
+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

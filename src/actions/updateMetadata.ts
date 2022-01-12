@@ -1,6 +1,10 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { Wallet } from '../wallet';
-import { Metadata, MetadataDataData, UpdateMetadata } from '../programs/metadata';
+import {
+  Metadata,
+  MetadataDataData,
+  UpdateMetadata,
+} from '@metaplex-foundation/mpl-token-metadata';
 import { sendTransaction } from './transactions';
 
 interface UpdateMetadataParams {

@@ -1,4 +1,9 @@
+import path from 'path';
 import { Keypair, PublicKey, TransactionCtorFields } from '@solana/web3.js';
+import { tmpdir } from 'os';
+import { readFileSync } from 'fs';
+
+export const NETWORK = 'devnet';
 
 // Devnet fee payer
 export const FEE_PAYER = Keypair.fromSecretKey(
@@ -79,16 +84,45 @@ export const PROCEEDS_ACCOUNT_PUBKEY = new PublicKey(
 export const SOURCE_PUBKEY = new PublicKey('4CkQJBxhU8EZ2UjhigbtdaPbpTe6mqf811fipYBFbSYN');
 export const DESTINATION_PUBKEY = new PublicKey('CZXESU6tu9m4YDs2wfQFbXmjbaDtJKBgurgYzGmeoArh');
 
+export const VAULT_EXTENRNAL_PRICE_ACCOUNT = new PublicKey(
+  '58S2MNcuS79ncBc5xi1T8jdS98jcXJbXqM5UvGvgmwcr',
+);
+
 export const mockTransaction: TransactionCtorFields = {
   feePayer: new PublicKey('7J6QvJGCB22vDvYB33ikrWCXRBRsFY74ntAArSK4KJUn'),
   recentBlockhash: RECENT_ISH_BLOCKHASH,
 };
-export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
+export const BID_METADATA_PUBKEY = new PublicKey('CZkFeERacU42qjGTPyjamS13fNtz7y1wYLu5jyLpN1WL');
+export const BID_REDEMPTION_PUBKEY = new PublicKey('4CkQJBxhU8EZ1UjhfgbtdaPbpTe6mqf811fipYBFbSYN');
+export const SAFETY_DEPOSIT_TOKEN_STORE_PUBKEY = new PublicKey(
+  '4CkQJBxhU8EZ1UjhfgbtdaPbpTe6mqf811fipYBFbSNM',
+);
+export const SAFETY_DEPOSIT_CONFIG_PUBKEY = new PublicKey(
+  '4CkBUBxhU8EZ1UjhfgbtdaPbpTe6mqf811fipYBFbSNM',
+);
+export const NEW_EDITION_PUBKEY = new PublicKey('4CkBUBxhU8EZ1UjhfgbtdaPbpTe6mqf822fipYBFbSNM');
+export const NEW_METADATA_PUBKEY = new PublicKey('5jF6nAQ5GTK8rsdzW8hGCEsWjY9YCV2jXCwZ111BPsWz');
+export const EDITION_MARK_PUBKEY = new PublicKey('78qz3gehg9YqktdaYt6o71DSUPFQ41tLMACHpnFjdYdS');
+export const PRIZE_TRACKING_TICKET_PUBKEY = new PublicKey(
+  '78qz3gehg9YqktdaYt6o99DSUPFQ41tLMACHpnFjdYdS',
+);
 
+export const projectRoot = path.resolve(__dirname, '..', '..');
+export const tmpTestDir = path.resolve(tmpdir(), 'test');
+
+export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
 export async function pause(ms: number) {
   await new Promise((response) =>
     setTimeout(() => {
       response(0);
     }, ms),
   );
+}
+
+export function getUserKeypairFromFile(keypairPath) {
+  const arr = readFileSync(path.resolve(keypairPath), {
+    encoding: 'utf-8',
+  });
+  const u8Array = Uint8Array.from(JSON.parse(arr));
+  return Keypair.fromSecretKey(u8Array);
 }

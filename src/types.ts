@@ -1,9 +1,4 @@
-import { PublicKey } from '@solana/web3.js';
-
-export type StringPublicKey = string;
-export type AnyPublicKey = StringPublicKey | PublicKey;
-
-export type ParamsWithStore<P> = P & { store: PublicKey };
+import { StringPublicKey } from '@metaplex-foundation/mpl-core';
 
 export type MetaDataJsonCategory = 'image' | 'video' | 'audio' | 'vr' | 'html';
 

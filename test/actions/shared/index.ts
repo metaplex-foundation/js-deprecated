@@ -1,6 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
-import { Wallet } from '../../../src';
 import { Keypair } from '@solana/web3.js';
+import axios, { AxiosResponse } from 'axios';
+import { airdrop, LOCALHOST } from '@metaplex-foundation/amman';
+
+import { Connection, NodeWallet, Wallet } from '../../../src';
 
 export const uri =
   'https://bafkreibj4hjlhf3ehpugvfy6bzhhu2c7frvyhrykjqmoocsvdw24omfqga.ipfs.dweb.link';
@@ -51,4 +53,13 @@ export const mockAxios404 = () => {
     config: {},
   };
   mockedAxiosGet.mockRejectedValue(mockedResponse);
+};
+
+export const generateConnectionAndWallet = async () => {
+  const payer = Keypair.generate();
+  const connection = new Connection(LOCALHOST, 'confirmed');
+  await airdrop(connection, payer.publicKey, 10);
+  const wallet = new NodeWallet(payer);
+
+  return { connection, wallet, payer };
 };

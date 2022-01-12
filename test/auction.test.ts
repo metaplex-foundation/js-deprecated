@@ -1,9 +1,10 @@
-import { Auction, AuctionState, AuctionExtended } from '../src/programs/auction';
+import { Auction, AuctionState, AuctionExtended } from '@metaplex-foundation/mpl-auction';
 import { Connection } from '../src';
 import {
   AUCTION_EXTENDED_PUBKEY,
   AUCTION_MANAGER_PUBKEY,
   AUCTION_PUBKEY,
+  NETWORK,
   VAULT_PUBKEY,
 } from './utils';
 
@@ -11,7 +12,7 @@ describe('Auction', () => {
   let connection: Connection;
 
   beforeAll(() => {
-    connection = new Connection('devnet');
+    connection = new Connection(NETWORK);
   });
 
   describe('Auction', () => {

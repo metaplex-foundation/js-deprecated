@@ -1,24 +1,22 @@
-import { Keypair } from '@solana/web3.js';
-import { Account, Connection, NodeWallet } from '../../src';
-import { FEE_PAYER, pause } from '../utils';
-import { Creator, MasterEdition, Metadata, MetadataDataData } from '../../src/programs/metadata';
+import BN from 'bn.js';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { Connection, NodeWallet } from '../../src';
+import { FEE_PAYER, NETWORK, pause } from '../utils';
+import {
+  Creator,
+  MasterEdition,
+  Metadata,
+  MetadataDataData,
+} from '@metaplex-foundation/mpl-token-metadata';
 import { createMetadata } from '../../src/actions/createMetadata';
 import { createMasterEdition } from '../../src/actions/createMasterEdition';
-import BN from 'bn.js';
 import { uri } from './shared';
-
-jest.setTimeout(150000); //this one takes particularly long
+import { Account } from '@metaplex-foundation/mpl-core';
 
 // NOTE: testing the two together because latter effectively requires former
 describe('creatomg metadata and master edition PDAs', () => {
-  const connection = new Connection('devnet');
+  const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
-  let mint: Keypair;
-
-  beforeEach(() => {
-    mint = Keypair.generate();
-  });
 
   test('creates both successfully', async () => {
     const mint = await Token.createMint(
@@ -74,5 +72,5 @@ describe('creatomg metadata and master edition PDAs', () => {
     const editionInfo = await Account.getInfo(connection, edition);
     const deserializedEditionData = new MasterEdition(edition, editionInfo).data;
     expect(deserializedEditionData.maxSupply.toString(10)).toEqual('100');
-  });
+  }, 150000);
 });

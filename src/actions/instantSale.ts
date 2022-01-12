@@ -1,18 +1,22 @@
-import { PublicKey } from '@solana/web3.js';
-import { AccountLayout } from '@solana/spl-token';
-import retry from 'async-retry';
+import { PublicKey, TransactionSignature } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
-import { sendTransaction } from './transactions';
-import { Auction, AuctionExtended, BidderPot } from '../programs/auction';
-import { AuctionManager, SafetyDepositConfig } from '../programs/metaplex';
+import { Auction, AuctionExtended } from '@metaplex-foundation/mpl-auction';
+import {
+  AuctionManager,
+  SafetyDepositConfig,
+  WinningConfigType,
+} from '@metaplex-foundation/mpl-metaplex';
 import { placeBid } from './placeBid';
-import { getClaimBidTransactions } from './claimBid';
-import { getRedeemBidTransactions } from './redeemBid';
-import { Vault } from '../programs/vault/accounts/Vault';
-import { Metadata } from '../programs/metadata';
-import { getBidRedemptionPDA } from './redeemBid';
-import { Account } from '../Account';
+import { claimBid } from './claimBid';
+import { Vault } from '@metaplex-foundation/mpl-token-vault';
+import { redeemFullRightsTransferBid } from './redeemFullRightsTransferBid';
+import { redeemPrintingV2Bid } from './redeemPrintingV2Bid';
+import {
+  isEligibleForParticipationPrize,
+  redeemParticipationBidV3,
+} from './redeemParticipationBidV3';
+import { cancelBid } from './cancelBid';
 
 interface IInstantSaleParams {
   connection: Connection;
@@ -22,7 +26,7 @@ interface IInstantSaleParams {
 }
 
 interface IInstantSaleResponse {
-  txId: string;
+  txIds: TransactionSignature[];
 }
 
 export const instantSale = async ({
@@ -31,89 +35,78 @@ export const instantSale = async ({
   store,
   auction,
 }: IInstantSaleParams): Promise<IInstantSaleResponse> => {
+  const txIds = [];
   // get data for transactions
-  const bidder = wallet.publicKey;
-  const accountRentExempt = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
-  const auctionManager = await AuctionManager.getPDA(auction);
-  const manager = await AuctionManager.load(connection, auctionManager);
+  const auctionManagerPDA = await AuctionManager.getPDA(auction);
+  const manager = await AuctionManager.load(connection, auctionManagerPDA);
   const vault = await Vault.load(connection, manager.data.vault);
-  const {
-    data: { tokenMint },
-  } = await Auction.load(connection, auction);
-  const auctionExtended = await AuctionExtended.getPDA(vault.pubkey);
-  const acceptPayment = new PublicKey(manager.data.acceptPayment);
+  const auctionExtendedPDA = await AuctionExtended.getPDA(vault.pubkey);
   const {
     data: { instantSalePrice },
-  } = await AuctionExtended.load(connection, auctionExtended);
-  const auctionTokenMint = new PublicKey(tokenMint);
-  const bidderPot = await BidderPot.getPDA(auction, bidder);
-  const fractionMint = new PublicKey(vault.data.fractionMint);
-  // assuming we have 1 item
+  } = await AuctionExtended.load(connection, auctionExtendedPDA);
   const [safetyDepositBox] = await vault.getSafetyDepositBoxes(connection);
-  const metadataTokenMint = new PublicKey(safetyDepositBox.data.tokenMint);
-  const safetyDepositTokenStore = new PublicKey(safetyDepositBox.data.store);
-  const safetyDepositConfig = await SafetyDepositConfig.getPDA(
-    auctionManager,
+  const safetyDepositConfigPDA = await SafetyDepositConfig.getPDA(
+    auctionManagerPDA,
     safetyDepositBox.pubkey,
   );
-  const transferAuthority = await Vault.getPDA(vault.pubkey);
-  const metadata = await Metadata.getPDA(metadataTokenMint);
+  const {
+    data: { winningConfigType, participationConfig },
+  } = await SafetyDepositConfig.load(connection, safetyDepositConfigPDA);
   ////
 
-  const { bidderPotToken, bidderMeta } = await placeBid({
+  const { txId: placeBidTxId, bidderPotToken } = await placeBid({
     connection,
     wallet,
     amount: instantSalePrice,
     auction,
   });
+  txIds.push(placeBidTxId);
 
-  // workaround to wait for bidderMeta to be created
-  await retry(async (bail) => {
-    await Account.getInfo(connection, bidderMeta);
-  });
-  const bidRedemption = await getBidRedemptionPDA(auction, bidderMeta);
+  // wait for all accounts to be created
+  await connection.confirmTransaction(placeBidTxId, 'finalized');
 
-  const redeemBatch = await getRedeemBidTransactions({
-    accountRentExempt,
-    tokenMint: metadataTokenMint,
-    bidder,
-    bidderMeta,
-    store,
-    vault: vault.pubkey,
-    auction,
-    auctionExtended,
-    auctionManager,
-    fractionMint,
-    safetyDepositTokenStore,
-    safetyDeposit: safetyDepositBox.pubkey,
-    bidRedemption,
-    safetyDepositConfig,
-    transferAuthority,
-    metadata,
-  });
+  const {
+    data: { bidState },
+  } = await Auction.load(connection, auction);
+  const winIndex = bidState.getWinnerIndex(wallet.publicKey.toBase58());
+  const hasWinner = winIndex !== null;
 
-  const claimBatch = await getClaimBidTransactions({
-    auctionTokenMint,
-    bidder,
-    store,
-    vault: vault.pubkey,
-    auction,
-    auctionExtended,
-    auctionManager,
-    acceptPayment,
-    bidderPot,
-    bidderPotToken,
-  });
+  // NOTE: it's divided into several transactions since transaction size is restricted
+  if (hasWinner) {
+    switch (winningConfigType) {
+      case WinningConfigType.FullRightsTransfer: {
+        const { txId } = await redeemFullRightsTransferBid({ connection, wallet, store, auction });
+        txIds.push(txId);
+        break;
+      }
+      case WinningConfigType.PrintingV2: {
+        const { txId } = await redeemPrintingV2Bid({ connection, wallet, store, auction });
+        txIds.push(txId);
+        break;
+      }
+      default:
+        throw new Error(`${winningConfigType} winning type isn't supported yet`);
+    }
 
-  const txs = [...redeemBatch.toTransactions(), ...claimBatch.toTransactions()];
-  const signers = [...redeemBatch.signers, ...claimBatch.signers];
+    const { txId: claimBidTxId } = await claimBid({
+      connection,
+      wallet,
+      store,
+      auction,
+      bidderPotToken,
+    });
+    txIds.push(claimBidTxId);
+  } else {
+    // if user didn't win, user must have a bid we can refund before we check for open editions
+    const { txId } = await cancelBid({ connection, wallet, auction, bidderPotToken });
+    txIds.push(txId);
+  }
 
-  const txId = await sendTransaction({
-    connection,
-    wallet,
-    txs,
-    signers,
-  });
+  const hasWonParticipationPrize = isEligibleForParticipationPrize(winIndex, participationConfig);
+  if (hasWonParticipationPrize) {
+    const { txIds } = await redeemParticipationBidV3({ connection, wallet, store, auction });
+    txIds.push(...txIds);
+  }
 
-  return { txId };
+  return { txIds: txIds };
 };

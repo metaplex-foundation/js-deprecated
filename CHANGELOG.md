@@ -1,3 +1,114 @@
+## [4.11.3](https://github.com/metaplex/js/compare/v4.11.2...v4.11.3) (2022-01-11)
+
+
+### Bug Fixes
+
+* **trigger release:** see [#136](https://github.com/metaplex/js/issues/136) ([fde2a8b](https://github.com/metaplex/js/commit/fde2a8b0373411d1b85d76e097c410f2c6fd5909))
+
+## [4.11.2](https://github.com/metaplex/js/compare/v4.11.1...v4.11.2) (2022-01-07)
+
+
+### Bug Fixes
+
+* **npm install:** see [#135](https://github.com/metaplex/js/issues/135) ([#136](https://github.com/metaplex/js/issues/136)) ([22fd608](https://github.com/metaplex/js/commit/22fd608f131ca28f1448e14622dc11ab0da3fd4a))
+
+## [4.11.1](https://github.com/metaplex/js/compare/v4.11.0...v4.11.1) (2022-01-06)
+
+
+### Bug Fixes
+
+* **semantic-release:** update yarn.lock ([#134](https://github.com/metaplex/js/issues/134)) ([576a026](https://github.com/metaplex/js/commit/576a026fa1d0c9d2e76dcd3521d281b1ca4e046a))
+
+# [4.11.0](https://github.com/metaplex/js/compare/v4.10.1...v4.11.0) (2022-01-05)
+
+
+### Features
+
+* port addTokensToVault action to SDK ([#128](https://github.com/metaplex/js/issues/128)) ([d5c8983](https://github.com/metaplex/js/commit/d5c89839680a8dbf612c8bca067fcbf4f380827e))
+* port makeAuction action ([#131](https://github.com/metaplex/js/issues/131)) ([715d1d4](https://github.com/metaplex/js/commit/715d1d4b98c64f3656b0d4a5dc6d0b77041171bf))
+
+## [4.10.1](https://github.com/metaplex/js/compare/v4.10.0...v4.10.1) (2021-12-16)
+
+
+### Bug Fixes
+
+* lint errors ([#120](https://github.com/metaplex/js/issues/120)) ([439aaf4](https://github.com/metaplex/js/commit/439aaf42361064c0b3dd8a6c1372357ab3c60015))
+
+# [4.10.0](https://github.com/metaplex/js/compare/v4.9.0...v4.10.0) (2021-12-10)
+
+
+### Features
+
+* add redeem participation bid action ([#98](https://github.com/metaplex/js/issues/98)) ([bbb50b7](https://github.com/metaplex/js/commit/bbb50b7a726e4eda599eda26cdaf8275db49ac3e))
+
+# [4.9.0](https://github.com/metaplex/js/compare/v4.8.0...v4.9.0) (2021-12-06)
+
+
+### Features
+
+* add redeem printing v2 action and update instant sale ([#91](https://github.com/metaplex/js/issues/91)) ([fd4a3b3](https://github.com/metaplex/js/commit/fd4a3b376ec94d8626ac84c54f4f4b3d45c37a11))
+
+# [4.8.0](https://github.com/metaplex/js/compare/v4.7.0...v4.8.0) (2021-12-06)
+
+
+### Features
+
+* setStoreV2 with StoreConfig ([#90](https://github.com/metaplex/js/issues/90)) ([0cea78d](https://github.com/metaplex/js/commit/0cea78db85092a21ca80e5b84e1c392e56ccb2d9))
+
+# [4.7.0](https://github.com/metaplex/js/compare/v4.6.0...v4.7.0) (2021-12-03)
+
+
+### Features
+
+* create external pricing account action ([#89](https://github.com/metaplex/js/issues/89)) ([5d16fc7](https://github.com/metaplex/js/commit/5d16fc71bb0630ef06e01e25652808d285ac85f7))
+
+# [4.6.0](https://github.com/metaplex/js/compare/v4.5.1...v4.6.0) (2021-12-02)
+
+
+### Bug Fixes
+
+* createAuctionV2 scheme ([#88](https://github.com/metaplex/js/issues/88)) ([ac808ad](https://github.com/metaplex/js/commit/ac808ad5be123db9a6b62687b3acd867d07f85fa))
+
+
+### Features
+
+* close vault action ([#86](https://github.com/metaplex/js/issues/86)) ([e2f8c43](https://github.com/metaplex/js/commit/e2f8c43fa396d4cb7ecec27cac26547bd59580e5))
+
+## [4.5.1](https://github.com/metaplex/js/compare/v4.5.0...v4.5.1) (2021-12-02)
+
+
+### Bug Fixes
+
+* vault scheme ([#87](https://github.com/metaplex/js/issues/87)) ([5194774](https://github.com/metaplex/js/commit/519477484a5e05d7c7f7a9cd44a3556d3d0825c9))
+
+# [4.5.0](https://github.com/metaplex/js/compare/v4.4.2...v4.5.0) (2021-12-01)
+
+
+### Features
+
+* add send token action ([#81](https://github.com/metaplex/js/issues/81)) ([b5f9d7c](https://github.com/metaplex/js/commit/b5f9d7c0e46e9a8b0891c147540cac5dfdbe2e82))
+* create vault + test ([#82](https://github.com/metaplex/js/issues/82)) ([c9d5524](https://github.com/metaplex/js/commit/c9d5524dd63f1826dbca584fdb408db9cab1e0a1))
+
+## [4.4.2](https://github.com/metaplex/js/compare/v4.4.1...v4.4.2) (2021-11-29)
+
+
+### Bug Fixes
+
+* restore externalPriceAccount argument in UpdateExternalPriceAccount instruction ([#76](https://github.com/metaplex/js/issues/76)) ([823e141](https://github.com/metaplex/js/commit/823e14148f4b4630862cba0b5fdef4a7a8cb7ed6))
+
+## [4.4.1](https://github.com/metaplex/js/compare/v4.4.0...v4.4.1) (2021-11-26)
+
+# [4.4.0](https://github.com/metaplex/js/compare/v4.3.0...v4.4.0) (2021-11-26)
+
+
+### Features
+
+* add `Metadata.findDataByOwner` ([#68](https://github.com/metaplex/js/issues/68)) ([248b61b](https://github.com/metaplex/js/commit/248b61baf89a69b88f9a461e32b1cbd54a9b0a18))
+* add burn token action ([#72](https://github.com/metaplex/js/issues/72)) ([3bd2381](https://github.com/metaplex/js/commit/3bd2381f846468e2a5d309a31aef7ef639d3da84))
+* add end auction transaction ([#64](https://github.com/metaplex/js/issues/64)) ([02e7cb3](https://github.com/metaplex/js/commit/02e7cb3d43372e0ef82ba6f5f59e054588c37035))
+* expose action.shared.prepareTokenAccountAndMintTx ([#74](https://github.com/metaplex/js/issues/74)) ([546fc1c](https://github.com/metaplex/js/commit/546fc1c4cd07900f2f7b5738110f8f61adc954be))
+* refactoring coingecko + add test for translateCurrency ([#65](https://github.com/metaplex/js/issues/65)) ([0dd4b4a](https://github.com/metaplex/js/commit/0dd4b4aae26cc58e40a5e78e829e48dfca511b7c))
+
 # [4.3.0](https://github.com/metaplex/js/compare/v4.2.1...v4.3.0) (2021-11-16)
 
 

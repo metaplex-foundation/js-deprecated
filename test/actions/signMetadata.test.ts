@@ -1,23 +1,21 @@
 import { Keypair } from '@solana/web3.js';
-import axios from 'axios';
-import { Account, Connection, NodeWallet } from '../../src';
+import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
-import { FEE_PAYER, pause } from '../utils';
-import { Metadata } from '../../src/programs/metadata';
+import { FEE_PAYER, NETWORK, pause } from '../utils';
+import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { signMetadata } from '../../src/actions/signMetadata';
 import { mockAxios200, uri } from './shared';
+import { Account } from '@metaplex-foundation/mpl-core';
 
 jest.mock('axios');
 jest.setTimeout(100000);
 
 describe('signing metadata on a master edition', () => {
-  const connection = new Connection('devnet');
+  const connection = new Connection(NETWORK);
   const wallet = new NodeWallet(FEE_PAYER);
-  let mint: Keypair;
   let secondSigner: Keypair;
 
   beforeEach(() => {
-    mint = Keypair.generate();
     secondSigner = Keypair.generate();
     mockAxios200(wallet, secondSigner);
   });

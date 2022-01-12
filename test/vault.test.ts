@@ -1,12 +1,12 @@
 import { Connection } from '../src';
-import { VAULT_PUBKEY } from './utils';
-import { Vault, VaultKey } from '../src/programs/vault';
+import { NETWORK, VAULT_PUBKEY } from './utils';
+import { Vault, VaultKey } from '@metaplex-foundation/mpl-token-vault';
 
 describe('Vault', () => {
   let connection: Connection;
 
   beforeAll(() => {
-    connection = new Connection('devnet');
+    connection = new Connection(NETWORK);
   });
 
   describe('Vault', () => {

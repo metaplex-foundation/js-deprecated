@@ -1,7 +1,7 @@
 import { Keypair, SendOptions } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
-import { Transaction } from '../Transaction';
+import { Transaction } from '@metaplex-foundation/mpl-core';
 
 interface ISendTransactionParams {
   connection: Connection;

@@ -1,12 +1,12 @@
 import { Connection } from '../src';
-import { MASTER_EDITION_PUBKEY, METADATA_PUBKEY, STORE_OWNER_PUBKEY } from './utils';
-import { Metadata, MetadataKey, MasterEdition } from '../src/programs/metadata';
+import { MASTER_EDITION_PUBKEY, METADATA_PUBKEY, NETWORK, STORE_OWNER_PUBKEY } from './utils';
+import { Metadata, MetadataKey, MasterEdition } from '@metaplex-foundation/mpl-token-metadata';
 
-describe('Metadata', () => {
+describe.skip('Metadata', () => {
   let connection: Connection;
 
   beforeAll(() => {
-    connection = new Connection('devnet');
+    connection = new Connection(NETWORK);
   });
 
   describe('Metadata', () => {
@@ -23,7 +23,7 @@ describe('Metadata', () => {
       });
 
       expect(metadata[0].data.key).toBe(MetadataKey.MetadataV1);
-    });
+    }, 10000);
   });
 
   describe('Master edition', () => {
@@ -32,6 +32,6 @@ describe('Metadata', () => {
       const editions = await masterEdition.getEditions(connection);
 
       expect(editions[0].data.parent).toEqual(MASTER_EDITION_PUBKEY.toString());
-    });
+    }, 10000);
   });
 });

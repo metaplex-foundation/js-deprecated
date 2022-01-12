@@ -2,9 +2,9 @@ import { PublicKey } from '@solana/web3.js';
 import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
-import { Auction, AuctionExtended, BidderPot } from '../programs/auction';
+import { Auction, AuctionExtended, BidderPot } from '@metaplex-foundation/mpl-auction';
 import { TransactionsBatch } from '../utils/transactions-batch';
-import { AuctionManager, ClaimBid } from '../programs/metaplex';
+import { AuctionManager, ClaimBid } from '@metaplex-foundation/mpl-metaplex';
 
 interface IClaimBidParams {
   connection: Connection;
