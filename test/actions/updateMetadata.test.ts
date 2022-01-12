@@ -1,3 +1,4 @@
+import BN from 'bn.js';
 import { Keypair } from '@solana/web3.js';
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
@@ -39,7 +40,7 @@ describe('updating metadata on a master edition', () => {
       connection,
       wallet,
       uri,
-      maxSupply: 100,
+      maxSupply: new BN(100),
     });
 
     // unfortunately it takes some time for the master mint to propagate

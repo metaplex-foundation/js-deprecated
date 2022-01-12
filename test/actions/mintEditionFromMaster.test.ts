@@ -1,3 +1,4 @@
+import BN from 'bn.js';
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
 import { FEE_PAYER, NETWORK, pause } from '../utils';
@@ -21,7 +22,7 @@ describe('minting a limited edition from master', () => {
       connection,
       wallet,
       uri,
-      maxSupply: 100,
+      maxSupply: new BN(100),
     });
 
     // unfortunately it takes some time for the master mint to propagate
