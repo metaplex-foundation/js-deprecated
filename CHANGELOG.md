@@ -1,3 +1,10 @@
+## [4.11.4](https://github.com/metaplex/js/compare/v4.11.3...v4.11.4) (2022-01-13)
+
+
+### Bug Fixes
+
+* add back Optional type import ([#144](https://github.com/metaplex/js/issues/144)) ([4b933d4](https://github.com/metaplex/js/commit/4b933d401f25eb5c9122f875c95b915ef975af4f))
+
 ## [4.11.3](https://github.com/metaplex/js/compare/v4.11.2...v4.11.3) (2022-01-11)
 
 
