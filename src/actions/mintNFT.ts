@@ -90,7 +90,7 @@ export const mintNFT = async ({
       updateAuthority: wallet.publicKey,
       mint: mint.publicKey,
       mintAuthority: wallet.publicKey,
-      maxSupply: (maxSupply || maxSupply === 0) ? new BN(maxSupply) : null,
+      maxSupply: maxSupply || maxSupply === 0 ? new BN(maxSupply) : null,
     },
   );
 

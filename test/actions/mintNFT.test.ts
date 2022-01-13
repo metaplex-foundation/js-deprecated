@@ -54,12 +54,12 @@ describe('minting an NFT', () => {
 
           await sleep(2000); // HACK
 
-          const metadataEdition = await Metadata.getEdition(connection, mint) as MasterEdition;
+          const metadataEdition = (await Metadata.getEdition(connection, mint)) as MasterEdition;
           expect(metadataEdition.data?.maxSupply?.toNumber()).toBe(maxSupply);
         });
       });
     }
-  })
+  });
 
   describe('when metadata json not found', () => {
     beforeEach(() => {
