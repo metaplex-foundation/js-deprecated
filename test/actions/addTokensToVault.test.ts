@@ -3,8 +3,12 @@ import { Transaction } from '@metaplex-foundation/mpl-core';
 import { sendAndConfirmTransaction } from '@solana/web3.js';
 
 import { generateConnectionAndWallet } from './shared';
-import { addTokensToVault, prepareTokenAccountAndMintTxs } from '../../src/actions';
-import { createExternalPriceAccount, createVault } from '../../src/actions/utility';
+import {
+  addTokensToVault,
+  prepareTokenAccountAndMintTxs,
+  createExternalPriceAccount,
+  createVault,
+} from '../../src/actions';
 
 describe('addTokensToVault action', () => {
   test('creation and adding of multiple mint tokens to newly created vault', async () => {

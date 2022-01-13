@@ -18,3 +18,4 @@ export * from './instantSale';
 export * from './burnToken';
 export * from './sendToken';
 export * from './shared';
+export * from './utility';
