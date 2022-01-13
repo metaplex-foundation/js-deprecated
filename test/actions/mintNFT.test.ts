@@ -1,7 +1,7 @@
 import { Keypair } from '@solana/web3.js';
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT, MintNFTParams } from '../../src/actions';
-import { pause } from '../utils';
+import { sleep } from '../utils';
 import { MasterEdition, Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { uri, generateConnectionAndWallet, mockAxios200, mockAxios404 } from './shared';
 import { airdrop } from '@metaplex-foundation/amman';
@@ -52,7 +52,7 @@ describe('minting an NFT', () => {
             edition,
           });
 
-          await pause(2000); // HACK
+          await sleep(2000); // HACK
 
           const metadataEdition = await Metadata.getEdition(connection, mint) as MasterEdition;
           expect(metadataEdition.data?.maxSupply?.toNumber()).toBe(maxSupply);

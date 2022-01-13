@@ -1,7 +1,7 @@
 import { Keypair } from '@solana/web3.js';
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
-import { FEE_PAYER, NETWORK, pause } from '../utils';
+import { FEE_PAYER, NETWORK, sleep } from '../utils';
 import { Creator, Metadata, MetadataDataData } from '@metaplex-foundation/mpl-token-metadata';
 import { updateMetadata } from '../../src/actions/updateMetadata';
 import { mockAxios200, uri } from './shared';
@@ -44,7 +44,7 @@ describe('updating metadata on a master edition', () => {
 
     // unfortunately it takes some time for the master mint to propagate
     // empirically, I found anything below 20s to be unreliable
-    await pause(20000);
+    await sleep(20000);
 
     // before update
     const metadata = await Metadata.getPDA(masterMintResponse.mint);
@@ -63,7 +63,7 @@ describe('updating metadata on a master edition', () => {
       primarySaleHappened: true,
     });
 
-    await pause(20000);
+    await sleep(20000);
 
     //after update
     info = await Account.getInfo(connection, metadata);

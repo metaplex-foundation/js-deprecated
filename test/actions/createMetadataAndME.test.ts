@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Connection, NodeWallet } from '../../src';
-import { FEE_PAYER, NETWORK, pause } from '../utils';
+import { FEE_PAYER, NETWORK, sleep } from '../utils';
 import {
   Creator,
   MasterEdition,
@@ -51,7 +51,7 @@ describe('creatomg metadata and master edition PDAs', () => {
       metadataData,
     });
 
-    await pause(20000);
+    await sleep(20000);
 
     const metadata = await Metadata.getPDA(mint.publicKey);
     const metadataInfo = await Account.getInfo(connection, metadata);
@@ -66,7 +66,7 @@ describe('creatomg metadata and master edition PDAs', () => {
     });
 
     // had to increase to 25s, or it was failing
-    await pause(25000);
+    await sleep(25000);
 
     const edition = await MasterEdition.getPDA(mint.publicKey);
     const editionInfo = await Account.getInfo(connection, edition);

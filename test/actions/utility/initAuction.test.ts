@@ -8,7 +8,7 @@ import {
   WinnerLimitType,
 } from '@metaplex-foundation/mpl-auction';
 
-import { pause } from '../../utils';
+import { sleep } from '../../utils';
 import { generateConnectionAndWallet } from '../shared';
 import { createExternalPriceAccount, createVault, initAuction } from '../../../src/actions/utility';
 
@@ -45,7 +45,7 @@ describe('initAuction action', () => {
       auctionSettings,
     });
 
-    await pause(1000);
+    await sleep(1000);
 
     const auctionInstance = await Auction.load(connection, auction);
 
