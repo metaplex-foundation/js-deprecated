@@ -1,3 +1,10 @@
+## [4.11.5](https://github.com/metaplex/js/compare/v4.11.4...v4.11.5) (2022-01-13)
+
+
+### Bug Fixes
+
+* utility exports ([#146](https://github.com/metaplex/js/issues/146)) ([aaa33fa](https://github.com/metaplex/js/commit/aaa33fa7c176eaf5e6d11395f6d4ccc8c33fd604)), closes [#131](https://github.com/metaplex/js/issues/131) [#145](https://github.com/metaplex/js/issues/145)
+
 ## [4.11.4](https://github.com/metaplex/js/compare/v4.11.3...v4.11.4) (2022-01-13)
 
 

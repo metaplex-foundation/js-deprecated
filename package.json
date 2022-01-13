@@ -12,7 +12,7 @@
     "/lib",
     "/src"
   ],
-  "version": "4.11.4",
+  "version": "4.11.5",
   "license": "MIT",
   "description": "Metaplex JavaScript API",
   "keywords": [
