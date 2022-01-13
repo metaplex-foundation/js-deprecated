@@ -42,3 +42,5 @@ export type MetadataJson = {
   collection?: MetadataJsonCollection;
   properties: MetadataJsonProperties;
 };
+
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
