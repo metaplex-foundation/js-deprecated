@@ -1,3 +1,10 @@
+## [4.11.6](https://github.com/metaplex/js/compare/v4.11.5...v4.11.6) (2022-01-17)
+
+
+### Bug Fixes
+
+* allow Master Edition max supply to be 0 ([#147](https://github.com/metaplex/js/issues/147)) ([7839353](https://github.com/metaplex/js/commit/7839353a409b16490cf05ae9fa68c8b52f187b1c))
+
 ## [4.11.5](https://github.com/metaplex/js/compare/v4.11.4...v4.11.5) (2022-01-13)
 
 
