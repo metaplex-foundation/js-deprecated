@@ -1,6 +1,6 @@
 import { Connection, NodeWallet } from '../../src';
 import { mintNFT } from '../../src/actions';
-import { FEE_PAYER, NETWORK, pause } from '../utils';
+import { FEE_PAYER, NETWORK, sleep } from '../utils';
 import { MasterEdition, Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { mintEditionFromMaster } from '../../src/actions/mintEditionFromMaster';
 import { mockAxios200, uri } from './shared';
@@ -26,7 +26,7 @@ describe('minting a limited edition from master', () => {
 
     // unfortunately it takes some time for the master mint to propagate
     // empirically, I found anything below 20s to be unreliable
-    await pause(20000);
+    await sleep(20000);
 
     const editionMintResponse = await mintEditionFromMaster({
       connection,

@@ -111,12 +111,8 @@ export const projectRoot = path.resolve(__dirname, '..', '..');
 export const tmpTestDir = path.resolve(tmpdir(), 'test');
 
 export const serializeConfig = { verifySignatures: false, requireAllSignatures: false };
-export async function pause(ms: number) {
-  await new Promise((response) =>
-    setTimeout(() => {
-      response(0);
-    }, ms),
-  );
+export async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function getUserKeypairFromFile(keypairPath) {

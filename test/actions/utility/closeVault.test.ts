@@ -1,7 +1,7 @@
 import { NATIVE_MINT } from '@solana/spl-token';
 import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
-import { pause } from '../../utils';
+import { sleep } from '../../utils';
 import { generateConnectionAndWallet } from '../shared';
 import { closeVault, createVault, createExternalPriceAccount } from '../../../src/actions/utility';
 
@@ -19,7 +19,7 @@ describe('closing a Vault', () => {
         ...externalPriceAccountData,
       });
 
-      await pause(1000);
+      await sleep(1000);
 
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
@@ -32,7 +32,7 @@ describe('closing a Vault', () => {
         priceMint: NATIVE_MINT,
       });
 
-      await pause(1000);
+      await sleep(1000);
 
       vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');

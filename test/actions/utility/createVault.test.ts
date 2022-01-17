@@ -1,6 +1,6 @@
 import { Vault, VaultState } from '@metaplex-foundation/mpl-token-vault';
 
-import { pause } from '../../utils';
+import { sleep } from '../../utils';
 import { createVault, createExternalPriceAccount } from '../../../src/actions/utility';
 import { generateConnectionAndWallet } from '../shared';
 
@@ -17,7 +17,7 @@ describe('creating a Vault', () => {
         ...externalPriceAccountData,
       });
 
-      await pause(1000);
+      await sleep(1000);
       const vault = await Vault.load(connection, vaultResponse.vault);
       expect(vault).toHaveProperty('data');
       expect(vault.data.state).toEqual(VaultState.Inactive);
