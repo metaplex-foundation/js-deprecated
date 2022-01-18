@@ -1,12 +1,6 @@
 {
   "entryPoints": [
-    "src/actions/index.ts",
-    "src/programs/auction/index.ts",
-    "src/programs/metadata/index.ts",
-    "src/programs/metaplex/index.ts",
-    "src/programs/index.ts",
-    "src/programs/vault/index.ts",
-    "src/index.ts"
+    "src/"
   ],
   "excludeInternal": true,
   "excludePrivate": true,

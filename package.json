@@ -27,7 +27,8 @@
     "url": "https://github.com/metaplex/js.git"
   },
   "scripts": {
-    "build:docs": "typedoc",
+    "doc": "typedoc",
+    "doc:update": "./sh/update-docs",
     "build": "rimraf lib && rollup -c",
     "dev": "rollup -c --watch",
     "lint": "eslint \"{src,test}/**/*.ts\" --format stylish",

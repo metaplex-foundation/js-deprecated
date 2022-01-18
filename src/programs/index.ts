@@ -1,3 +1,4 @@
+/** @internal */
 export * as transactions from '../transactions';
 
 export * as auction from '@metaplex-foundation/mpl-auction';
