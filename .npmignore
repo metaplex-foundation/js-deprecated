@@ -1,8 +1,0 @@
-.DS_Store
-*.log
-node_modules/
-.idea
-.yarn
-test/
-src/
-stats.html
