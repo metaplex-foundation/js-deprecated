@@ -12,7 +12,8 @@ surprise users when Experimental API modifications occur.
 
 ## Documentation
 
-Visit [https://docs.metaplex.com/sdk/js/getting-started](https://docs.metaplex.com/sdk/js/getting-started) to get started.
+- [API Docs](https://metaplex-foundation.github.io/js)
+- [Guides](https://docs.metaplex.com/sdk/js/getting-started)
 
 ## Community
 

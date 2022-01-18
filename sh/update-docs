@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+MAIN_BRANCH='main'
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+if [[ $CURRENT_BRANCH != $MAIN_BRANCH ]]; then
+  echo "Aborting doc generation. Please switch to the $MAIN_BRANCH branch to generate documentation."
+  exit 1
+fi
+
+if [[ -z $(git status --porcelain) ]];
+then
+  echo "Publishing docs to gh-pages.."
+  yarn gh-pages -d docs
+  echo "Docs will be live in a few seconds: https://metaplex-foundation.github.io/js"
+else
+    echo "Aborting doc generation. Please commit any changes before updating docs."
+    echo ""
+    git status
+fi
