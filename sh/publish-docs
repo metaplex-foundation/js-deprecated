@@ -8,9 +8,6 @@ if [[ $CURRENT_BRANCH != $MAIN_BRANCH ]]; then
   exit 1
 fi
 
-# typedoc deletes our empty directory placeholder. gh-pages gets mad about dirty state. reset.
-git checkout docs/.gitkeep
-
 if [[ -z $(git status --porcelain) ]];
 then
   echo "Publishing docs to gh-pages.."
