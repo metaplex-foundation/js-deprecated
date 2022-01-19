@@ -1,3 +1,10 @@
+## [4.11.7](https://github.com/metaplex/js/compare/v4.11.6...v4.11.7) (2022-01-19)
+
+
+### Bug Fixes
+
+* github workflow for API docs publishing ([#151](https://github.com/metaplex/js/issues/151)) ([897e756](https://github.com/metaplex/js/commit/897e756c0118ec185589e68b109d10f79d5dc124))
+
 ## [4.11.6](https://github.com/metaplex/js/compare/v4.11.5...v4.11.6) (2022-01-17)
 
 
