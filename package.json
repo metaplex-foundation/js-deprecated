@@ -28,7 +28,7 @@
   },
   "scripts": {
     "doc": "typedoc",
-    "doc:update": "yarn doc && ./sh/update-docs",
+    "doc:update": "yarn doc && ./sh/publish-docs",
     "build": "rimraf lib && rollup -c",
     "dev": "rollup -c --watch",
     "lint": "eslint \"{src,test}/**/*.ts\" --format stylish",

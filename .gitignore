@@ -47,7 +47,7 @@ coverage/
 *keypair.json
 
 # Docs
-**/docs
+docs
 
 # Bundle stats file
 stats.html
