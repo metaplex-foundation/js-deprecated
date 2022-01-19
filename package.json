@@ -27,7 +27,8 @@
     "url": "https://github.com/metaplex/js.git"
   },
   "scripts": {
-    "build:docs": "typedoc",
+    "doc": "typedoc",
+    "doc:update": "yarn doc && ./sh/update-docs",
     "build": "rimraf lib && rollup -c",
     "dev": "rollup -c --watch",
     "lint": "eslint \"{src,test}/**/*.ts\" --format stylish",
@@ -55,7 +56,7 @@
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.30.2",
     "@types/bs58": "^4.0.1",
-    "axios": "^0.21.4",
+    "axios": "^0.25.0",
     "bn.js": "^5.2.0",
     "borsh": "^0.4.0",
     "bs58": "^4.0.1",
@@ -93,6 +94,7 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "gh-pages": "^3.2.3",
     "husky": "^7.0.2",
     "jest": "^27.1.0",
     "node-stream-zip": "^1.15.0",
