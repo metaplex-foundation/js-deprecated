@@ -7,14 +7,14 @@ Thank you for your interest in contributing to the Metaplex JS SDK. In this doc 
 ### Reporting new issues
 
 If you find a bug or have an idea for a new feature, [open an Issue
-here](https://github.com/metaplex/js/issues), following the instructions to
+here](https://github.com/metaplex-foundation/js/issues), following the instructions to
 ensure the issue is triaged properly.
 
 ### Working on existing issues
 
 Search through the [currently open issues](https://github.com/metaplex-foundation/js/issues) for something you find interesting.
 If you're new to this project you might also [filter by the "good first issue"
-label](https://github.com/metaplex/js/issues?q=is%3Aopen+is%3Aissue+label%3A"good+first+issue"). Issues that are not yet assigned are free to tackle!
+label](https://github.com/metaplex-foundation/js/issues?q=is%3Aopen+is%3Aissue+label%3A"good+first+issue"). Issues that are not yet assigned are free to tackle!
 
 ### Contributing code changes
 
