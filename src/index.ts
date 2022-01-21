@@ -6,3 +6,7 @@ export * as utils from './utils';
 export * as actions from './actions';
 export * as programs from './programs';
 export * as transactions from './transactions';
+export * from './utils/transactions-batch';
+export * from './actions';
+export * from './programs';
+export * from './transactions';
