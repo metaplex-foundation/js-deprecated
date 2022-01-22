@@ -28,6 +28,7 @@
   },
   "scripts": {
     "doc": "typedoc",
+    "doc:watch": "typedoc --watch",
     "doc:update": "yarn doc && ./sh/publish-docs",
     "build": "rimraf lib && rollup -c",
     "dev": "rollup -c --watch",

@@ -18,14 +18,14 @@ import {
   UpdatePrimarySaleHappenedViaToken,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-interface IRedeemBidParams {
+export interface RedeemFullRightsTransferBidParams {
   connection: Connection;
   wallet: Wallet;
   auction: PublicKey;
   store: PublicKey;
 }
 
-interface IRedeemBidResponse {
+export interface RedeemFullRightsTransferBidResponse {
   txId: string;
 }
 
@@ -34,7 +34,7 @@ export const redeemFullRightsTransferBid = async ({
   wallet,
   store,
   auction,
-}: IRedeemBidParams): Promise<IRedeemBidResponse> => {
+}: RedeemFullRightsTransferBidParams): Promise<RedeemFullRightsTransferBidResponse> => {
   // get data for transactions
   const bidder = wallet.publicKey;
   const accountRentExempt = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
@@ -86,7 +86,7 @@ export const redeemFullRightsTransferBid = async ({
   return { txId };
 };
 
-interface IRedeemBidTransactionsParams {
+interface RedeemFRTBidTransactionsParams {
   bidder: PublicKey;
   accountRentExempt: number;
   bidderPotToken?: PublicKey;
@@ -123,7 +123,7 @@ export const getRedeemFRTBidTransactions = async ({
   safetyDepositConfig,
   transferAuthority,
   metadata,
-}: IRedeemBidTransactionsParams) => {
+}: RedeemFRTBidTransactionsParams) => {
   const txBatch = new TransactionsBatch({ transactions: [] });
 
   // create a new account for redeeming

@@ -4,14 +4,14 @@ import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
 import { SetStoreV2, Store, StoreConfig } from '@metaplex-foundation/mpl-metaplex';
 
-interface IInitStoreV2Params {
+export interface InitStoreV2Params {
   connection: Connection;
   wallet: Wallet;
   isPublic?: boolean;
   settingsUri?: string | null;
 }
 
-interface IInitStoreV2Response {
+export interface InitStoreV2Response {
   storeId: PublicKey;
   configId: PublicKey;
   txId: string;
@@ -22,7 +22,7 @@ export const initStoreV2 = async ({
   wallet,
   settingsUri = null,
   isPublic = true,
-}: IInitStoreV2Params): Promise<IInitStoreV2Response> => {
+}: InitStoreV2Params): Promise<InitStoreV2Response> => {
   const storeId = await Store.getPDA(wallet.publicKey);
   const configId = await StoreConfig.getPDA(storeId);
   const tx = new SetStoreV2(

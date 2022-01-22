@@ -22,18 +22,18 @@ import { RedeemPrintingV2Bid } from '@metaplex-foundation/mpl-metaplex';
 import { prepareTokenAccountAndMintTxs } from './shared';
 import { getBidRedemptionPDA } from './redeemFullRightsTransferBid';
 
-interface IRedeemBidParams {
+export interface RedeemBidParams {
   connection: Connection;
   wallet: Wallet;
   auction: PublicKey;
   store: PublicKey;
 }
 
-interface IRedeemBidResponse {
+export interface RedeemBidResponse {
   txId: string;
 }
 
-interface IRedeemBidTransactionsParams {
+export interface RedeemBidTransactionsParams {
   bidder: PublicKey;
   bidderPotToken?: PublicKey;
   bidderMeta: PublicKey;
@@ -63,7 +63,7 @@ export const redeemPrintingV2Bid = async ({
   wallet,
   store,
   auction,
-}: IRedeemBidParams): Promise<IRedeemBidResponse> => {
+}: RedeemBidParams): Promise<RedeemBidResponse> => {
   const bidder = wallet.publicKey;
   const {
     data: { bidState },
@@ -186,7 +186,7 @@ export const getRedeemPrintingV2BidTransactions = async ({
 
   winIndex,
   editionOffset,
-}: IRedeemBidTransactionsParams) => {
+}: RedeemBidTransactionsParams) => {
   const txBatch = new TransactionsBatch({ transactions: [] });
 
   const redeemPrintingV2BidTx = new RedeemPrintingV2Bid(

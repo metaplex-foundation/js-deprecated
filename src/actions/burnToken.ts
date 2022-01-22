@@ -5,18 +5,18 @@ import { sendTransaction } from './transactions';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 import { Token, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token';
 
-interface IBurnTokenParams {
+export interface BurnTokenParams {
   connection: Connection;
   wallet: Wallet;
   token: PublicKey;
   mint: PublicKey;
   amount: number | u64;
   owner?: PublicKey;
-  // close token account after
+  /** Set to `true` if you wish to close the token account after burning the token **/
   close?: boolean;
 }
 
-interface IBurnTokenResponse {
+export interface BurnTokenResponse {
   txId: string;
 }
 
@@ -28,7 +28,7 @@ export const burnToken = async ({
   amount,
   owner,
   close = true,
-}: IBurnTokenParams): Promise<IBurnTokenResponse> => {
+}: BurnTokenParams): Promise<BurnTokenResponse> => {
   const tx = new Transaction({ feePayer: wallet.publicKey }).add(
     Token.createBurnInstruction(
       TOKEN_PROGRAM_ID,

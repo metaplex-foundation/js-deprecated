@@ -3,7 +3,7 @@ import { Wallet } from '../wallet';
 import { Metadata, SignMetadata } from '@metaplex-foundation/mpl-token-metadata';
 import { sendTransaction } from './transactions';
 
-interface SignMetadataParams {
+export interface SignMetadataParams {
   connection: Connection;
   wallet: Wallet;
   editionMint: PublicKey;

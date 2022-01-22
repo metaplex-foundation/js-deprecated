@@ -6,7 +6,7 @@ import { Auction, AuctionExtended, BidderPot } from '@metaplex-foundation/mpl-au
 import { TransactionsBatch } from '../utils/transactions-batch';
 import { AuctionManager, ClaimBid } from '@metaplex-foundation/mpl-metaplex';
 
-interface IClaimBidParams {
+export interface ClaimBidParams {
   connection: Connection;
   wallet: Wallet;
   auction: PublicKey;
@@ -14,7 +14,7 @@ interface IClaimBidParams {
   bidderPotToken: PublicKey;
 }
 
-interface IClaimBidResponse {
+export interface ClaimBidResponse {
   txId: string;
 }
 
@@ -24,7 +24,7 @@ export const claimBid = async ({
   store,
   auction,
   bidderPotToken,
-}: IClaimBidParams): Promise<IClaimBidResponse> => {
+}: ClaimBidParams): Promise<ClaimBidResponse> => {
   // get data for transactions
   const bidder = wallet.publicKey;
   const auctionManager = await AuctionManager.getPDA(auction);

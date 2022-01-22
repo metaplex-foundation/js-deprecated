@@ -18,14 +18,14 @@ import {
 } from './redeemParticipationBidV3';
 import { cancelBid } from './cancelBid';
 
-interface IInstantSaleParams {
+export interface InstantSaleParams {
   connection: Connection;
   wallet: Wallet;
   auction: PublicKey;
   store: PublicKey;
 }
 
-interface IInstantSaleResponse {
+export interface InstantSaleResponse {
   txIds: TransactionSignature[];
 }
 
@@ -34,7 +34,7 @@ export const instantSale = async ({
   wallet,
   store,
   auction,
-}: IInstantSaleParams): Promise<IInstantSaleResponse> => {
+}: InstantSaleParams): Promise<InstantSaleResponse> => {
   const txIds = [];
   // get data for transactions
   const auctionManagerPDA = await AuctionManager.getPDA(auction);

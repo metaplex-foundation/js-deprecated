@@ -6,7 +6,7 @@ import { sendTransaction } from './transactions';
 import { Account, Transaction } from '@metaplex-foundation/mpl-core';
 import { CreateAssociatedTokenAccount } from '../transactions/CreateAssociatedTokenAccount';
 
-interface ISendTokenParams {
+export interface SendTokenParams {
   connection: Connection;
   wallet: Wallet;
   // token account address
@@ -17,7 +17,7 @@ interface ISendTokenParams {
   amount: number | u64;
 }
 
-interface ISendTokenResponse {
+export interface SendTokenResponse {
   txId: string;
 }
 
@@ -28,7 +28,7 @@ export const sendToken = async ({
   destination,
   mint,
   amount,
-}: ISendTokenParams): Promise<ISendTokenResponse> => {
+}: SendTokenParams): Promise<SendTokenResponse> => {
   const txs = [];
   const destAta = await Token.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,

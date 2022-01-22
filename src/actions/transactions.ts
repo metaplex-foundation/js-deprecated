@@ -3,7 +3,7 @@ import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 
-interface ISendTransactionParams {
+export interface ISendTransactionParams {
   connection: Connection;
   wallet: Wallet;
   txs: Transaction[];

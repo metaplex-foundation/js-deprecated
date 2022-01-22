@@ -4,13 +4,13 @@ import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
 import { SetStore, Store } from '@metaplex-foundation/mpl-metaplex';
 
-interface IInitStoreParams {
+export interface InitStoreParams {
   connection: Connection;
   wallet: Wallet;
   isPublic?: boolean;
 }
 
-interface IInitStoreResponse {
+export interface InitStoreResponse {
   storeId: PublicKey;
   txId: string;
 }
@@ -19,7 +19,7 @@ export const initStore = async ({
   connection,
   wallet,
   isPublic = true,
-}: IInitStoreParams): Promise<IInitStoreResponse> => {
+}: InitStoreParams): Promise<InitStoreResponse> => {
   const storeId = await Store.getPDA(wallet.publicKey);
   const tx = new SetStore(
     { feePayer: wallet.publicKey },

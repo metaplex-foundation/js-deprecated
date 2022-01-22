@@ -14,15 +14,17 @@ import { AuctionManager } from '@metaplex-foundation/mpl-metaplex';
 import { CreateTokenAccount } from '../transactions';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 
-interface ICancelBidParams {
+export interface CancelBidParams {
   connection: Connection;
+  /** Wallet of the original bidder **/
   wallet: Wallet;
+  /** Program account of the auction for the bid to be cancelled **/
   auction: PublicKey;
   bidderPotToken: PublicKey;
   destAccount?: PublicKey;
 }
 
-interface ICancelBidResponse {
+export interface CancelBidResponse {
   txId: string;
 }
 
@@ -32,7 +34,7 @@ export const cancelBid = async ({
   auction,
   bidderPotToken,
   destAccount,
-}: ICancelBidParams): Promise<ICancelBidResponse> => {
+}: CancelBidParams): Promise<CancelBidResponse> => {
   const bidder = wallet.publicKey;
   const auctionManager = await AuctionManager.getPDA(auction);
   const manager = await AuctionManager.load(connection, auctionManager);
