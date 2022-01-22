@@ -14,13 +14,18 @@ import { AuctionManager } from '@metaplex-foundation/mpl-metaplex';
 import { CreateTokenAccount } from '../transactions';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 
+/**
+ * Parameters for {@link cancelBid}
+ */
 export interface CancelBidParams {
   connection: Connection;
   /** Wallet of the original bidder **/
   wallet: Wallet;
   /** Program account of the auction for the bid to be cancelled **/
   auction: PublicKey;
+  /** SPL associated token account where the tokens are deposited **/
   bidderPotToken: PublicKey;
+  /** The bidders token account they'll receive refund with **/
   destAccount?: PublicKey;
 }
 
@@ -28,6 +33,9 @@ export interface CancelBidResponse {
   txId: string;
 }
 
+/**
+ * Cancel a bid on a running auction. Any bidder can cancel any time during an auction, but only non-winners of the auction can cancel after it ends. When users cancel, they receive full refunds.
+ */
 export const cancelBid = async ({
   connection,
   wallet,
@@ -72,7 +80,7 @@ export const cancelBid = async ({
   return { txId };
 };
 
-interface ICancelBidTransactionsParams {
+interface CancelBidTransactionsParams {
   destAccount?: PublicKey;
   bidder: PublicKey;
   accountRentExempt: number;
@@ -96,7 +104,7 @@ export const getCancelBidTransactions = async ({
   auctionExtended,
   auctionTokenMint,
   vault,
-}: ICancelBidTransactionsParams): Promise<TransactionsBatch> => {
+}: CancelBidTransactionsParams): Promise<TransactionsBatch> => {
   const txBatch = new TransactionsBatch({ transactions: [] });
   if (!destAccount) {
     const account = Keypair.generate();
