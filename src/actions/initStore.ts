@@ -4,9 +4,15 @@ import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
 import { SetStore, Store } from '@metaplex-foundation/mpl-metaplex';
 
+/** Parameters for {@link initStore} **/
 export interface InitStoreParams {
   connection: Connection;
+  /** Administrator wallet for the store **/
   wallet: Wallet;
+  /**
+   * - `true`: anyone can list on the store
+   * - `false`: only whitelisted creators can list on the store
+   **/
   isPublic?: boolean;
 }
 
@@ -15,6 +21,11 @@ export interface InitStoreResponse {
   txId: string;
 }
 
+/**
+ * Initialize a {@link Store} account.
+ * This action will get a {@link Store} program derived account address for the provided wallet and initialize a store with that address, setting the given `wallet` as the admin
+ * @deprecated This action is deprecated, please use {@link initStoreV2} instead
+ */
 export const initStore = async ({
   connection,
   wallet,
