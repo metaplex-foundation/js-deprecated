@@ -6,11 +6,18 @@ import { Auction, AuctionExtended, BidderPot } from '@metaplex-foundation/mpl-au
 import { TransactionsBatch } from '../utils/transactions-batch';
 import { AuctionManager, ClaimBid } from '@metaplex-foundation/mpl-metaplex';
 
+/**
+ * Parameters for {@link claimBid}
+ */
 export interface ClaimBidParams {
   connection: Connection;
+  /** Wallet of the bidder the bid that is being cancelled belongs to **/
   wallet: Wallet;
+  /** The address of the auction program account for the bid that is being cancelled **/
   auction: PublicKey;
+  /** The address of the store the auction manager the bid is being cancelled on belongs to **/
   store: PublicKey;
+  /** Bidder pot SPL associated token account **/
   bidderPotToken: PublicKey;
 }
 
@@ -18,6 +25,9 @@ export interface ClaimBidResponse {
   txId: string;
 }
 
+/**
+ * Claim a winning bid as the auctioneer. Pulling money out of the auction contract as an auctioneer can only be done after an auction has ended and must be done for each winning bid, one after the other.
+ */
 export const claimBid = async ({
   connection,
   wallet,
