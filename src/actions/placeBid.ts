@@ -39,7 +39,7 @@ export interface PlaceBidResponse {
 }
 
 /**
- * Place a bit by taking it from the provided wallet and placing it in the bidder pot account.
+ * Place a bid by taking it from the provided wallet and placing it in the bidder pot account.
  */
 export const placeBid = async ({
   connection,
