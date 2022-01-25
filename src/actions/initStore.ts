@@ -24,7 +24,6 @@ export interface InitStoreResponse {
 /**
  * Initialize a {@link Store} account.
  * This action will get a {@link Store} program derived account address for the provided wallet and initialize a store with that address, setting the given `wallet` as the admin
- * @deprecated This action is deprecated, please use {@link initStoreV2} instead
  */
 export const initStore = async ({
   connection,

@@ -17,7 +17,7 @@ export interface SendTokenParams {
   destination: PublicKey;
   /** Mint address of the tokento transfer **/
   mint: PublicKey;
-  /** Amount of tokens to transfer. One important nuance to remember is that each token mint has a different amount of decimals, which need to be accounted while specifying the amount. For instance, to send 1 token with a 0 decimal mint you would provide `0` as the amount, but for a token mint with 6 decimals you would provide `1000000` as the amount to transfer one whole token **/
+  /** Amount of tokens to transfer. One important nuance to remember is that each token mint has a different amount of decimals, which need to be accounted while specifying the amount. For instance, to send 1 token with a 0 decimal mint you would provide `1` as the amount, but for a token mint with 6 decimals you would provide `1000000` as the amount to transfer one whole token **/
   amount: number | u64;
 }
 
