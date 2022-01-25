@@ -11,7 +11,7 @@ export interface InitStoreParams {
   wallet: Wallet;
   /**
    * - `true`: anyone can list on the store
-   * - `false`: only whitelisted creators can list on the store
+   * - `false`: only [whitelisted creators](https://docs.metaplex.com/architecture/deep_dive/metaplex#whitelistedcreator) can list on the store
    **/
   isPublic?: boolean;
 }
