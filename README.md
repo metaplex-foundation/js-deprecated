@@ -17,7 +17,7 @@ surprise users when Experimental API modifications occur.
 
 ## Community
 
-_COMING SOON_
+Join our [Discussions](https://github.com/metaplex-foundation/js/discussions)
 
 ## Contributing
 Visit [Contributing](CONTRIBUTING.md)
