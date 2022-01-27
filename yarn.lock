@@ -987,6 +987,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metaplex-foundation/mpl-token-metadata@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@metaplex-foundation/mpl-token-metadata@npm:1.1.0"
+  dependencies:
+    "@metaplex-foundation/mpl-core": ^0.0.2
+    "@solana/spl-token": ^0.1.8
+    "@solana/web3.js": ^1.31.0
+  checksum: 0c9797efde813616b954ec567ae79a1a1b13d807bc5f3b2fb3a98807fd7597b9be4c11457681f605f34d4f0c2e561c1c712f56d9ccc952e8a3191e3fa554899a
+  languageName: node
+  linkType: hard
+
 "@metaplex-foundation/mpl-token-vault@npm:^0.0.2":
   version: 0.0.2
   resolution: "@metaplex-foundation/mpl-token-vault@npm:0.0.2"
@@ -1008,7 +1019,7 @@ __metadata:
     "@metaplex-foundation/mpl-auction": ^0.0.2
     "@metaplex-foundation/mpl-core": ^0.0.2
     "@metaplex-foundation/mpl-metaplex": ^0.0.5
-    "@metaplex-foundation/mpl-token-metadata": ^0.0.2
+    "@metaplex-foundation/mpl-token-metadata": ^1.1.0
     "@metaplex-foundation/mpl-token-vault": ^0.0.2
     "@rollup/plugin-commonjs": ^20.0.0
     "@rollup/plugin-json": ^4.1.0
