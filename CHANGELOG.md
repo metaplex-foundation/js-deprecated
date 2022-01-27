@@ -1,3 +1,10 @@
+# [4.12.0](https://github.com/metaplex/js/compare/v4.11.7...v4.12.0) (2022-01-27)
+
+
+### Features
+
+* latest token-metadata features ([#168](https://github.com/metaplex/js/issues/168)) ([87ece1c](https://github.com/metaplex/js/commit/87ece1c24b37271fba5661d95888bc36af296ed6))
+
 ## [4.11.7](https://github.com/metaplex/js/compare/v4.11.6...v4.11.7) (2022-01-19)
 
 
