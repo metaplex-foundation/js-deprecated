@@ -3,7 +3,8 @@ import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 
-interface ISendTransactionParams {
+/** Parameters for {@link sendTransaction} **/
+export interface SendTransactionParams {
   connection: Connection;
   wallet: Wallet;
   txs: Transaction[];
@@ -11,13 +12,17 @@ interface ISendTransactionParams {
   options?: SendOptions;
 }
 
+/**
+ * Sign and send transactions for validation
+ * @return This action returns the resulting transaction id once it has been executed
+ */
 export const sendTransaction = async ({
   connection,
   wallet,
   txs,
   signers = [],
   options,
-}: ISendTransactionParams): Promise<string> => {
+}: SendTransactionParams): Promise<string> => {
   let tx = Transaction.fromCombined(txs, { feePayer: wallet.publicKey });
   tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
 

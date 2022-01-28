@@ -31,14 +31,14 @@ import {
   UpdatePrimarySaleHappenedViaToken,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-interface IRedeemParticipationBidV3Params {
+export interface RedeemParticipationBidV3Params {
   connection: Connection;
   wallet: Wallet;
   auction: PublicKey;
   store: PublicKey;
 }
 
-interface IRedeemParticipationBidV3Response {
+export interface RedeemParticipationBidV3Response {
   txIds: TransactionSignature[];
 }
 
@@ -47,7 +47,7 @@ export const redeemParticipationBidV3 = async ({
   wallet,
   store,
   auction,
-}: IRedeemParticipationBidV3Params): Promise<IRedeemParticipationBidV3Response> => {
+}: RedeemParticipationBidV3Params): Promise<RedeemParticipationBidV3Response> => {
   const txInitBatch = new TransactionsBatch({ transactions: [] });
   const txMainBatch = new TransactionsBatch({ transactions: [] });
 

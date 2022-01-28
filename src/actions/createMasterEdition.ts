@@ -8,17 +8,28 @@ import {
 import { sendTransaction } from './transactions';
 import BN from 'bn.js';
 
-interface CreateMasterEditionParams {
+/** Parameters for {@link createMasterEdition} **/
+export interface CreateMasterEditionParams {
   connection: Connection;
+  /** The signer and fee payer for the operation. This wallet must be the same signer used to create the {@link Metadata} program account. **/
   wallet: Wallet;
+  /** This has to be the same mint provided when creating the {@link Metadata} program account and that account must already exist prior to creating the {@link MasterEdition} account. **/
   editionMint: PublicKey;
+  /**
+   * You can optionally specify an updateAuthority different from the provided {@link wallet}
+   * @default The updateAuthority will be set to the provided {@link wallet} address if not otherwise specified.
+   **/
   updateAuthority?: PublicKey;
   maxSupply?: BN;
 }
 
-/*
- * NOTE 1: a metadata account must already exist
- * NOTE 2: must have exactly 1 editionMint token with 0 decimals outstanding
+/**
+ * Creates a MasterEdition program account.
+ *
+ * Please note that for this action to execute successfully:
+ * 1. A metadata account must already exist
+ * 2. There must be exactly 1 editionMint token with 0 decimals outstanding
+ * @return This action returns the resulting transaction id once it has been executed
  */
 export const createMasterEdition = async (
   { connection, wallet, editionMint, updateAuthority, maxSupply } = {} as CreateMasterEditionParams,

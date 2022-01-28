@@ -13,14 +13,14 @@ import BN from 'bn.js';
 import { prepareTokenAccountAndMintTxs } from './shared';
 import { sendTransaction } from './transactions';
 
-interface MintEditionFromMasterParams {
+export interface MintEditionFromMasterParams {
   connection: Connection;
   wallet: Wallet;
   masterEditionMint: PublicKey;
   updateAuthority?: PublicKey;
 }
 
-interface MintEditionFromMasterResponse {
+export interface MintEditionFromMasterResponse {
   txId: string;
   mint: PublicKey;
   metadata: PublicKey;
