@@ -105,7 +105,6 @@ export const placeBid = async ({
     closeTokenAccountTx,
   } = await createWrappedAccountTxs(connection, bidder, amount.toNumber() + accountRentExempt * 2);
   txBatch.addTransaction(createTokenAccountTx);
-  txBatch.addAfterTransaction(closeTokenAccountTx);
   txBatch.addSigner(payingAccount);
   ////
 
@@ -123,6 +122,9 @@ export const placeBid = async ({
   txBatch.addAfterTransaction(createRevokeTx);
   txBatch.addSigner(transferAuthority);
   ////
+  
+  // token account must be closed after the revoke instruction
+  txBatch.addAfterTransaction(closeTokenAccountTx);
 
   // create place bid transaction
   const placeBidTransaction = new PlaceBid(
