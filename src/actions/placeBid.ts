@@ -82,19 +82,11 @@ export const placeBid = async ({
     ////
   } else {
     // create a new account for bid
-    const account = Keypair.generate();
-    const createBidderPotTransaction = new CreateTokenAccount(
-      { feePayer: bidder },
-      {
-        newAccountPubkey: account.publicKey,
-        lamports: accountRentExempt,
-        mint: auctionTokenMint,
-        owner: auction,
-      },
-    );
-    txBatch.addSigner(account);
-    txBatch.addTransaction(createBidderPotTransaction);
-    bidderPotToken = account.publicKey;
+    bidderPotToken = await AuctionProgram.findProgramAddress([
+      Buffer.from(AuctionProgram.PREFIX),
+      bidderPot.toBuffer(),
+      Buffer.from('bidder_pot_token'),
+    ]);
     ////
   }
 
