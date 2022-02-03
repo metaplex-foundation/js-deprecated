@@ -5,6 +5,7 @@ import { Wallet } from '../wallet';
 import { Connection } from '../Connection';
 import { sendTransaction } from './transactions';
 import {
+  AuctionProgram,
   AuctionExtended,
   BidderMetadata,
   BidderPot,
