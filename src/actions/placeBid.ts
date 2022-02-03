@@ -67,7 +67,7 @@ export const placeBid = async ({
 
   if (bidderPotToken) {
     // cancel prev bid
-    txBatch = await getCancelBidTransactions({
+    txBatch = getCancelBidTransactions({
       destAccount: null,
       bidder,
       accountRentExempt,
