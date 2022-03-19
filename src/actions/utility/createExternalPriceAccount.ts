@@ -77,15 +77,15 @@ export const createExternalPriceAccount = async ({
     externalPriceAccountData,
   });
   txBatch.addTransaction(updateEPA);
+
   const externalPriceAccountResponse = {
     externalPriceAccount: externalPriceAccount.publicKey,
     priceMint: NATIVE_MINT,
+    transactionBatch: [txBatch]
   } as CreateExternalPriceAccountResponse
 
   if (isUninitialized) {
-    return Object.assign(externalPriceAccountResponse, {
-      transactionBatch: [txBatch]
-    } as CreateExternalPriceAccountResponse)
+    return externalPriceAccountResponse
   }
 
   const txId = await sendTransaction({
@@ -97,7 +97,6 @@ export const createExternalPriceAccount = async ({
 
   return {
     txId,
-    externalPriceAccount: externalPriceAccount.publicKey,
-    priceMint: NATIVE_MINT,
+    ...externalPriceAccountResponse,
   };
 };
