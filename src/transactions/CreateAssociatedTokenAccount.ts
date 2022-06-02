@@ -4,7 +4,6 @@ import {
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
-  TransactionCtorFields,
   TransactionInstruction,
 } from '@solana/web3.js';
 import { Buffer } from 'buffer';
@@ -16,7 +15,10 @@ type CreateAssociatedTokenAccountParams = {
 };
 
 export class CreateAssociatedTokenAccount extends Transaction {
-  constructor(options: TransactionCtorFields, params: CreateAssociatedTokenAccountParams) {
+  constructor(
+    options: ConstructorParameters<typeof Transaction>[0],
+    params: CreateAssociatedTokenAccountParams,
+  ) {
     const { feePayer } = options;
     const { associatedTokenAddress, walletAddress, splTokenMintAddress } = params;
     super(options);

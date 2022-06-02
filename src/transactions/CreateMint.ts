@@ -1,6 +1,6 @@
 import { Transaction } from '@metaplex-foundation/mpl-core';
 import { MintLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { PublicKey, SystemProgram, TransactionCtorFields } from '@solana/web3.js';
+import { PublicKey, SystemProgram } from '@solana/web3.js';
 
 type CreateMintParams = {
   newAccountPubkey: PublicKey;
@@ -11,7 +11,7 @@ type CreateMintParams = {
 };
 
 export class CreateMint extends Transaction {
-  constructor(options: TransactionCtorFields, params: CreateMintParams) {
+  constructor(options: ConstructorParameters<typeof Transaction>[0], params: CreateMintParams) {
     const { feePayer } = options;
     const { newAccountPubkey, lamports, decimals, owner, freezeAuthority } = params;
 

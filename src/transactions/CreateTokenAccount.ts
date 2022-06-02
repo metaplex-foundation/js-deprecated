@@ -1,6 +1,6 @@
 import { Transaction } from '@metaplex-foundation/mpl-core';
 import { AccountLayout, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { PublicKey, SystemProgram, TransactionCtorFields } from '@solana/web3.js';
+import { PublicKey, SystemProgram } from '@solana/web3.js';
 
 type CreateTokenAccountParams = {
   newAccountPubkey: PublicKey;
@@ -10,7 +10,10 @@ type CreateTokenAccountParams = {
 };
 
 export class CreateTokenAccount extends Transaction {
-  constructor(options: TransactionCtorFields, params: CreateTokenAccountParams) {
+  constructor(
+    options: ConstructorParameters<typeof Transaction>[0],
+    params: CreateTokenAccountParams,
+  ) {
     const { feePayer } = options;
     const { newAccountPubkey, lamports, mint, owner } = params;
 

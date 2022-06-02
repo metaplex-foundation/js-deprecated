@@ -1,10 +1,5 @@
 import { Transaction } from '@metaplex-foundation/mpl-core';
-import {
-  PublicKey,
-  SystemProgram,
-  TransactionCtorFields,
-  TransactionInstruction,
-} from '@solana/web3.js';
+import { PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
 import { config } from '@metaplex-foundation/mpl-core';
 import { Buffer } from 'buffer';
 
@@ -15,7 +10,7 @@ type PayForFilesParams = {
 };
 
 export class PayForFiles extends Transaction {
-  constructor(options: TransactionCtorFields, params: PayForFilesParams) {
+  constructor(options: ConstructorParameters<typeof Transaction>[0], params: PayForFilesParams) {
     const { feePayer } = options;
     const { lamports, fileHashes, arweaveWallet } = params;
 

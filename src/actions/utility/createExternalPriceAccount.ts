@@ -5,13 +5,7 @@ import {
   VaultProgram,
   UpdateExternalPriceAccount,
 } from '@metaplex-foundation/mpl-token-vault';
-import {
-  Keypair,
-  PublicKey,
-  SystemProgram,
-  TransactionCtorFields,
-  TransactionSignature,
-} from '@solana/web3.js';
+import { Keypair, PublicKey, SystemProgram, TransactionSignature } from '@solana/web3.js';
 import { NATIVE_MINT } from '@solana/spl-token';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 
@@ -37,7 +31,7 @@ export const createExternalPriceAccount = async ({
   wallet,
 }: CreateExternalPriceAccountParams): Promise<CreateExternalPriceAccountResponse> => {
   const txBatch = new TransactionsBatch({ transactions: [] });
-  const txOptions: TransactionCtorFields = { feePayer: wallet.publicKey };
+  const txOptions: ConstructorParameters<typeof Transaction>[0] = { feePayer: wallet.publicKey };
 
   const epaRentExempt = await connection.getMinimumBalanceForRentExemption(
     Vault.MAX_EXTERNAL_ACCOUNT_SIZE,

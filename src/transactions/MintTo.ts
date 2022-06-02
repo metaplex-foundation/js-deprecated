@@ -1,5 +1,5 @@
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { PublicKey, TransactionCtorFields } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { Transaction } from '@metaplex-foundation/mpl-core';
 
@@ -11,7 +11,7 @@ type MintToParams = {
 };
 
 export class MintTo extends Transaction {
-  constructor(options: TransactionCtorFields, params: MintToParams) {
+  constructor(options: ConstructorParameters<typeof Transaction>[0], params: MintToParams) {
     const { feePayer } = options;
     const { mint, dest, authority, amount } = params;
 
