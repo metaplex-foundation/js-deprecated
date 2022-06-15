@@ -36,6 +36,7 @@ export async function prepareTokenAccountAndMintTxs(
     TOKEN_PROGRAM_ID,
     mint.publicKey,
     owner,
+    true,
   );
 
   const createAssociatedTokenAccountTx = new CreateAssociatedTokenAccount(
