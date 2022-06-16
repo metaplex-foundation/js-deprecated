@@ -23,18 +23,27 @@ import { TransactionsBatch } from '../../utils/transactions-batch';
 interface CreateExternalPriceAccountParams {
   connection: Connection;
   wallet: Wallet;
+  isUninitialized?: boolean;
 }
 
 interface CreateExternalPriceAccountResponse {
   txId: TransactionSignature;
   externalPriceAccount: PublicKey;
   priceMint: PublicKey;
+  transactionBatch?: Array<TransactionsBatch>
 }
 
-// This command creates the external pricing oracle
+/***
+ * This command creates the external pricing oracle
+ * @param connection
+ * @param wallet
+ * @param isUninitialized {boolean} optional
+ *    Indicate that transaction should be immediately signed by owner or just get instructions to merge into bigger transaction
+ */
 export const createExternalPriceAccount = async ({
   connection,
   wallet,
+  isUninitialized,
 }: CreateExternalPriceAccountParams): Promise<CreateExternalPriceAccountResponse> => {
   const txBatch = new TransactionsBatch({ transactions: [] });
   const txOptions: TransactionCtorFields = { feePayer: wallet.publicKey };
@@ -69,6 +78,16 @@ export const createExternalPriceAccount = async ({
   });
   txBatch.addTransaction(updateEPA);
 
+  const externalPriceAccountResponse = {
+    externalPriceAccount: externalPriceAccount.publicKey,
+    priceMint: NATIVE_MINT,
+    transactionBatch: [txBatch]
+  } as CreateExternalPriceAccountResponse
+
+  if (isUninitialized) {
+    return externalPriceAccountResponse
+  }
+
   const txId = await sendTransaction({
     connection,
     signers: txBatch.signers,
@@ -78,7 +97,6 @@ export const createExternalPriceAccount = async ({
 
   return {
     txId,
-    externalPriceAccount: externalPriceAccount.publicKey,
-    priceMint: NATIVE_MINT,
+    ...externalPriceAccountResponse,
   };
 };
