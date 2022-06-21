@@ -57,7 +57,7 @@ export const cancelBid = async ({
   const bidderMeta = await BidderMetadata.getPDA(auction, bidder);
 
   const accountRentExempt = await connection.getMinimumBalanceForRentExemption(AccountLayout.span);
-  const txBatch = await getCancelBidTransactions({
+  const txBatch = getCancelBidTransactions({
     destAccount,
     bidder,
     accountRentExempt,
@@ -93,7 +93,7 @@ interface CancelBidTransactionsParams {
   vault: PublicKey;
 }
 
-export const getCancelBidTransactions = async ({
+export const getCancelBidTransactions = ({
   destAccount,
   bidder,
   accountRentExempt,
@@ -104,7 +104,7 @@ export const getCancelBidTransactions = async ({
   auctionExtended,
   auctionTokenMint,
   vault,
-}: CancelBidTransactionsParams): Promise<TransactionsBatch> => {
+}: CancelBidTransactionsParams): TransactionsBatch => {
   const txBatch = new TransactionsBatch({ transactions: [] });
   if (!destAccount) {
     const account = Keypair.generate();
